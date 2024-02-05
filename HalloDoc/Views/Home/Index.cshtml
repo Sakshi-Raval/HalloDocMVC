@@ -1,0 +1,66 @@
+﻿﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/style.css">
+    <title>Patient Site</title>
+    <style>
+
+    </style>
+
+</head>
+
+<body>
+    <div class="container-fluid " style="position: relative;">
+        <div class="row mt-5 justify-content-center">
+            <div class="col-5 col-md-4 col-lg-3 mb-5 ps-5">
+                <img src="~/images/hallodoc.png" alt="logo" class="img-fluid">
+                <button class="btn btn-outline-info ms-auto my-auto border darkBtn" type="button"
+                    onclick="toggleDarkMode()" style=" position: absolute;top: 5%;right: 15%;"><svg
+                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286" />
+                    </svg></button>
+            </div>
+        </div>
+        <div class="row mt-5 justify-content-center">
+            <div class="d-grid gap-2 col-8 col-md-6 mx-auto">
+                <a asp-action="SubmitReq" class="btn btn-info p-3 text-white fw-medium fs-3" type="button">Submit A Request</a>
+                <a asp-action="Login" class="btn regPatientBtn p-3 mt-5 text-white fw-medium fs-3" type="button">Registered Patients</a>
+            </div>
+        </div>
+        <div class="row mt-5 justify-content-center">
+            <div class="col-5 col-md-4 col-lg-3">
+                <footer class="text-center footer footerSite1 p-3 rounded bg-secondary bg-opacity-10">
+                    <a href="#" class="text-muted text-decoration-none fs-6">Terms and
+                        Conditions</a><span class="text-muted mx-3">|</span><a href="#"
+                        class="text-muted text-decoration-none fs-6">Privacy Policy</a>
+                </footer>
+                <footer class="text-center footer footerSite2 p-3 rounded bg-secondary bg-opacity-10">
+                    <a href="#" class="text-muted text-decoration-none fs-6">T&C</a><span class="text-muted mx-3">|</span><a href="#"
+                        class="text-muted text-decoration-none fs-6">Privacy Policy</a>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            var element = document.body;
+            element.classList.toggle("dark-mode");
+        }
+    </script>
+</body>
+
+</html>

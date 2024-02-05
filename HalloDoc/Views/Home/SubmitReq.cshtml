@@ -1,0 +1,44 @@
+﻿﻿@{
+    ViewData["Title"] = "Submit Reqeust";
+}
+
+
+<div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-9 col-xl-8 text-center">
+        <h2 class="display-6 fw-bold my-4 d-inline-block">I am a..</h2>
+        <a asp-action="Index" class="float-end my-4 btn btn-outline-info backBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                 height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+            </svg>Back
+        </a>
+    </div>
+</div>
+<div class="container-fluid" style="min-height:71vh">
+    <div class="row justify-content-center">
+        <div class="d-grid col-6 col-md-5 col-lg-4 col-xl-3 mt-2">
+            <a class="text-decoration-none btn fw-medium fs-4 my-3 pb-3 text-start patientBtn" asp-action="PatientRequest">PATIENT</a>
+            <a class="text-decoration-none btn btn-outline-info fw-medium fs-4 my-3 pb-3 text-start famBtn" asp-action="FamilyRequest">FAMILY/FRIEND</a>
+            <a class="text-decoration-none btn btn-outline-success fw-medium fs-4 my-3 pb-3 text-start concBtn" asp-action="ConciergeRequest">CONCIERGE</a>
+            <a class="text-decoration-none btn fw-medium fs-4 my-3 pb-3 text-start busBtn" asp-action="BusinessRequest">BUSINESS PARTNER</a>
+        </div>
+    </div>
+
+</div>
+
+@* <div class="container-fluid">
+        <div class="row ">
+            <div class="col-12 footer footerSubmit bg-dark py-3 text-wrap " style="max-width: 100%;">
+
+            </div>
+        </div>
+    </div> *@
+<script>
+    function toggleDarkMode() {
+        var element = document.body;
+        element.classList.toggle("dark-mode");
+    }
+</script>
+
+

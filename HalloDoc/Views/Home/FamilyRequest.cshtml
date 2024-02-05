@@ -1,0 +1,206 @@
+﻿﻿@{
+    ViewData["Title"] = "Family Reqeust";
+}
+@section Scripts{
+
+    <script>
+        const myModal = new bootstrap.Modal("#myModal");
+        $(document).ready(function () {  
+            myModal.show();
+        });
+        function hideAlertBox() {
+            myModal.hide();
+        }
+        
+    </script>
+}
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-confirm modal-dialog-centered">
+        <div class="modal-content px-3" style="width: auto;">
+            <div class="modal-header pt-5" style="border-bottom: none;">
+                <div class="icon-box text-warning text-center" style="width: 100%; height: 100%;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
+                    </svg>
+                </div>
+            </div>
+            <div class="modal-body my-3 text-center">
+                <h4 class="h4 text-muted fw-medium">Information</h4>
+                <p class="text-muted">
+                    When submitting a request, you must provide the correct contact information
+                    for the patient or the responsibly party. Failure to provide the correct email and phone number
+                    will delay the service or be declined.
+                </p>
+                <button class="btn btn-info text-white close my-3" data-dismiss="modal" onclick="hideAlertBox()">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid " style="min-height: 100vh;">
+    <div class="row justify-content-center">
+        <div class="col-10 col-md-8 col-lg-6 justify-content-end">
+            <a asp-action="SubmitReq"
+               class="float-end my-4 btn btn-outline-info backBtn">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="16" height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1"
+                     viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                </svg>Back
+            </a>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-10 col-md-8 col-lg-6 rounded mb-3" style="box-shadow: 2px 2px 20px rgb(179, 177, 177);">
+            <div class="container-fluid mt-3 p-0">
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="h6 py-3">Family/Friend Information</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="famfname" placeholder="Your First Name"
+                                   required>
+                            <label for="famfname" class="text-muted floating-label">Your First Name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="famlname" placeholder="Your Last Name"
+                                   required>
+                            <label for="famlname" class="text-muted floating-label">Your Last Name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <input type="tel" id="fam_phone" class="input w-100 h-100 phone">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="famEmail" placeholder="name@example.com"
+                                   required>
+                            <label for="famEmail" class="text-muted floating-label">Your Email</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="relation"
+                                   placeholder="Relation with Patient" required>
+                            <label for="relation" class="text-muted floating-label">Relation with Patient</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <h6 class="h6 py-3">Patient Information</h6>
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="Symptoms" id="symptoms"
+                                  style="height: 15vh;"></textarea>
+                        <label for="symptoms" class="text-muted floating-label ms-2">
+                            Enter Brief Details of Symptoms
+                            (Optional)
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="fname" placeholder="First Name" required>
+                            <label for="fname" class="text-muted floating-label">First Name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="lname" placeholder="Last Name" required>
+                            <label for="lname" class="text-muted floating-label">Last Name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="dob" placeholder="Date of Birth" required>
+                            <label for="dob" class="text-muted floating-label">Date of Birth</label>
+                        </div>
+                        <h6 class="h6 py-3">Patient Contact Information</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="patientEmail"
+                                   placeholder="name@example.com" required>
+                            <label for="patientEmail" class="text-muted floating-label">Email address</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <input type="tel" id="patient_phone" class="input w-100 h-100 phone">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="h6 py-3">Patient Location</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="street" placeholder="Street" required>
+                            <label for="street" class="text-muted floating-label">Street</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="city" placeholder="City" required>
+                            <label for="city" class="text-muted floating-label">City</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="state" placeholder="State" required>
+                            <label for="state" class="text-muted floating-label">State</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="zip" placeholder="Zip Code" required>
+                            <label for="zip" class="text-muted floating-label">Zip Code</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="roomNum"
+                                   placeholder="Room #/ Suite (Optional)">
+                            <label for="roomNum" class="text-muted floating-label">Room #/ Suite (Optional)</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="h6 py-3">(Optional) Upload Photo or Document</h6>
+                    </div>
+                    <div class="d-flex">
+                        <label for="fileUpload" class="col d-flex">
+                            <div class="col bg-white p-1 ps-3 text-muted border">
+                                <span id="infoArea">Select File</span>
+                            </div>
+                            <div id="btn" class="p-1 btn btn-info">
+
+                                <i class="bi bi-cloud-arrow-up text-white"></i>
+                                <span style="color:white;" class="ps-1">Upload</span>
+
+                            </div>
+                            <input type="file" class="form-control-file" id="fileUpload" hidden>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
+                        <button class="btn btn-info me-md-2 text-white fw-medium" type="submit">Submit</button>
+                        <button class="btn btn-outline-info fw-medium link-info" type="reset">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

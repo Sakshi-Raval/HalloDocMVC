@@ -1,0 +1,257 @@
+.dark-mode {
+    background-color: #747875;
+    color: white;
+}
+
+.backLink {
+    display: none;
+}
+
+.logo {
+    display: block;
+}
+
+.backImgContainer {
+    height: 100vh;
+    background-image: url(/images/11116016_415.jpg);
+    background-size: 100% 100%;
+}
+
+.input-image{
+    position:absolute !important;
+    display: block;
+    right: 10px;
+    top: 10px;
+    border-radius: 5px;
+}
+
+.footerLogin {
+    position: fixed;
+    bottom: 1%;
+    /* left: 65%;
+    text-align: center; */
+}
+
+.navLogo {
+    margin-bottom: 0;
+    width: 40%;
+}
+
+.navBar {
+    box-shadow: 2px 2px 20px rgb(179, 177, 177);
+}
+
+.patientBtn {
+    color: #4367d3 !important;
+    background-color: #e8eaf1;
+    border-color: #4367d3;
+}
+
+    .patientBtn:hover {
+        background-color: #ffffff;
+
+    }
+
+.famBtn {
+    background-color: #d5f5f5;
+}
+
+.famBtn:hover {
+    background-color: white !important;
+    color: #40c7e9 !important;
+}
+
+.busBtn {
+    color: #d90f81 !important;
+    background-color: #F7E5EE;
+    border-color: #d90f81;
+}
+
+    .busBtn:hover {
+      
+        background-color: #ffffff;
+     
+    }
+
+.concBtn {
+    background-color: #c3debf;
+}
+
+.concBtn:hover {
+    background-color: white !important;
+    color: #298014 !important;
+}
+
+.backBtn:hover {
+    color: white !important;
+    background-color: #40c7e9 !important;
+}
+
+.regPatientBtn {
+    background-color: rgb(7, 7, 112);
+}
+
+.darkBtn:hover {
+    color: white !important;
+}
+/* label{
+    color: #40c7e9;
+  } */
+textarea:focus {
+    outline: none !important;
+    border-color: #40c7e9 !important;
+    box-shadow: none !important;
+    /* color: #40c7e9 ; */
+}
+
+input:focus {
+    outline: none !important;
+    border-color: #40c7e9 !important;
+    box-shadow: none !important;
+    /* color: #40c7e9 ; */
+}
+
+.form-control:focus + .floating-label {
+    color: #40c7e9 !important;
+}
+
+.footerReq {
+    position: relative;
+    bottom: 1%;
+}
+
+.footerSubmit {
+    position: relative;
+    bottom: 1%;
+}
+
+.footerSite1 {
+    position: relative;
+    bottom: 10%;
+    /* left: 40%; */
+    /* width: fit-content; */
+}
+
+.footerSite2 {
+    display: none;
+}
+
+.input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #dad7d7;
+}
+
+    .input::placeholder {
+        color: #BBB;
+    }
+
+.intl-tel-input {
+    width: 100% !important;
+}
+
+    .intl-tel-input .selected-flag {
+        z-index: 4;
+    }
+
+    .intl-tel-input .country-list {
+        z-index: 5;
+    }
+
+.input-group .intl-tel-input .form-control {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 0;
+}
+
+.iti {
+    width: 100% !important;
+    height: 75%;
+}
+
+@media (max-width: 767.98px) {
+    .backImgContainer {
+        position: relative;
+        height: 100vh;
+        width: 100vw;
+        filter: blur(10px);
+        z-index: -1;
+    }
+
+    .footerLogin {
+        left: 10%;
+    }
+
+    .formDiv {
+        position: fixed;
+        top: 15vh;
+        left: 0;
+    }
+
+    .backLink {
+        display: flex;
+        position: relative;
+        left: 5%;
+    }
+
+    .logo {
+        display: none;
+    }
+
+    .footerSubmit {
+        font-size: .5rem;
+    }
+
+    .footerReq {
+        font-size: .5rem;
+    }
+
+    .backToLogin {
+        display: none;
+        
+    }
+}
+
+@media(max-width: 576px) {
+    body {
+        font-size: smaller;
+    }
+}
+
+@media (max-width: 471px) {
+    .darkBtn {
+        position: absolute;
+        top: 25%;
+        right: 5%;
+    }
+
+    .footerSubmit {
+        font-size: smaller;
+    }
+
+    .busBtn, .concBtn, .famBtn, .patientBtn {
+        font-size: smaller;
+    }
+
+    .footerSite1 {
+        display: none;
+    }
+
+    .footerSite2 {
+        display: block;
+        position: relative;
+        bottom: 10%;
+    }
+}
+/* html, body { height: 100%;}
+
+  body > footer {
+    position: sticky;
+    top: 100vh;
+  } */
+
+/* input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input:not([type="button"]):not([type="submit"]):not([type="reset"]):focus, textarea:hover, textarea:focus, select:hover, select:focus {
+    border-color: aqua;
+    box-shadow: none;
+  } */
