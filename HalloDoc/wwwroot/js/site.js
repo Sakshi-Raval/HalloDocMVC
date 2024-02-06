@@ -3,6 +3,8 @@
 
 // Write your JavaScript code.
 
+
+//International phone number
 document.write('<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/intl-tel-input@16.0.3/build/css/intlTelInput.css">');
 var input = document.querySelectorAll(".phone");
 input.forEach(function (inp) {
@@ -14,11 +16,40 @@ input.forEach(function (inp) {
     window.iti = iti;
 });
 
+//Dark Mode
 
-function toggleDarkMode() {
-    var element = document.body;
-    element.classList.toggle("dark-mode");
-}
+const darkBtn = document.getElementById("darkBtn");
+const element = document.body;
+let darkMode = localStorage.getItem("dark-mode");
+
+const enableDarkMode = () => {
+    element.classList.add("dark-theme");
+    localStorage.setItem("dark-mode", "enabled");
+};
+
+const disableDarkMode = () => {
+    element.classList.remove("dark-theme");
+    localStorage.setItem("dark-mode", "disabled");
+};
+
+if (darkMode == "enabled") {
+    enableDarkMode();
+}//set state of darkMode on page load
+
+darkBtn.addEventListener("click", (e) => {
+    darkMode = localStorage.getItem("dark-mode");   //update darkMode when clicked
+    if (darkMode == "disabled") {
+        enableDarkMode();
+    }
+    else {
+        disableDarkMode();
+    }
+                
+});
+
+
+
+//Today's date as default
 var date = new Date();
 
 var day = date.getDate();
@@ -31,6 +62,7 @@ if (day < 10) day = "0" + day;
 var today = year + "-" + month + "-" + day;
 document.getElementById("dob").value = today;
 
+//File upload
 var input = document.getElementById("fileUpload");
 var infoArea = document.getElementById("infoArea");
 

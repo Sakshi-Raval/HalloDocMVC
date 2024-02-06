@@ -1,32 +1,14 @@
 ﻿﻿@{
-    Layout = null;
+    Layout = "_NewLayout";
+    ViewData["Title"] = "Patient Site";
 }
-<!DOCTYPE html>
-<html lang="en">
 
-
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="~/css/site.css">
-    <link rel="stylesheet" href="~/css/style.css">
-    <title>Patient Site</title>
-    <style>
-
-    </style>
-
-</head>
-
-<body>
     <div class="container-fluid " style="position: relative;">
         <div class="row mt-5 justify-content-center">
             <div class="col-5 col-md-4 col-lg-3 mb-5 ps-5">
                 <img src="~/images/hallodoc.png" alt="logo" class="img-fluid">
-                <button class="btn btn-outline-info ms-auto my-auto border darkBtn" type="button"
-                    onclick="toggleDarkMode()" style=" position: absolute;top: 5%;right: 15%;"><svg
+                <button class="btn btn-outline-info ms-auto my-auto border" type="button" id="darkBtn"
+                    style=" position: absolute;top: 5%;right: 15%;"><svg
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon"
                         viewBox="0 0 16 16">
                         <path
@@ -55,12 +37,3 @@
         </div>
     </div>
 
-    <script>
-        function toggleDarkMode() {
-            var element = document.body;
-            element.classList.toggle("dark-mode");
-        }
-    </script>
-</body>
-
-</html>
