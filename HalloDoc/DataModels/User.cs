@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,16 +6,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HalloDoc.DataModels;
 
-[Table("admin")]
-public partial class Admin
+[Table("users")]
+public partial class User
 {
     [Key]
-    [Column("adminid")]
-    public int Adminid { get; set; }
+    [Column("userid")]
+    public int Userid { get; set; }
 
     [Column("aspnetuserid")]
     [StringLength(128)]
-    public string Aspnetuserid { get; set; } = null!;
+    public string? Aspnetuserid { get; set; }
 
     [Column("firstname")]
     [StringLength(100)]
@@ -34,28 +33,37 @@ public partial class Admin
     [StringLength(20)]
     public string? Mobile { get; set; }
 
-    [Column("address1")]
-    [StringLength(500)]
-    public string? Address1 { get; set; }
+    [Column("ismobile")]
+    public bool? Ismobile { get; set; }
 
-    [Column("address2")]
-    [StringLength(500)]
-    public string? Address2 { get; set; }
+    [Column("street")]
+    [StringLength(100)]
+    public string? Street { get; set; }
 
     [Column("city")]
     [StringLength(100)]
     public string? City { get; set; }
 
+    [Column("state")]
+    [StringLength(100)]
+    public string? State { get; set; }
+
     [Column("regionid")]
     public int? Regionid { get; set; }
 
-    [Column("zip")]
+    [Column("zipcode")]
     [StringLength(10)]
-    public string? Zip { get; set; }
+    public string? Zipcode { get; set; }
 
-    [Column("altphone")]
+    [Column("strmonth")]
     [StringLength(20)]
-    public string? Altphone { get; set; }
+    public string? Strmonth { get; set; }
+
+    [Column("intyear")]
+    public int? Intyear { get; set; }
+
+    [Column("intdate")]
+    public int? Intdate { get; set; }
 
     [Column("createdby")]
     [StringLength(128)]
@@ -74,22 +82,20 @@ public partial class Admin
     [Column("status")]
     public short? Status { get; set; }
 
-    [Column("isdeleted", TypeName = "bit(1)")]
-    public BitArray? Isdeleted { get; set; }
+    [Column("isdeleted")]
+    public bool? Isdeleted { get; set; }
 
-    [Column("roleid")]
-    public int? Roleid { get; set; }
+    [Column("ip")]
+    [StringLength(20)]
+    public string? Ip { get; set; }
 
-    [InverseProperty("Admin")]
-    public virtual ICollection<Adminregion> Adminregions { get; set; } = new List<Adminregion>();
+    [Column("isrequestwithemail")]
+    public bool? Isrequestwithemail { get; set; }
 
     [ForeignKey("Aspnetuserid")]
-    [InverseProperty("Admins")]
-    public virtual Aspnetuser Aspnetuser { get; set; } = null!;
+    [InverseProperty("Users")]
+    public virtual Aspnetuser? Aspnetuser { get; set; }
 
-    [InverseProperty("Admin")]
-    public virtual ICollection<Requeststatuslog> Requeststatuslogs { get; set; } = new List<Requeststatuslog>();
-
-    [InverseProperty("Admin")]
-    public virtual ICollection<Requestwisefile> Requestwisefiles { get; set; } = new List<Requestwisefile>();
+    [InverseProperty("User")]
+    public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
 }

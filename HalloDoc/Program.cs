@@ -1,8 +1,10 @@
+using HalloDoc.DataContext;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container.(dependency injections)
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddDbContext<ApplicationDbContext>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -50,4 +50,7 @@ public partial class Concierge
     [ForeignKey("Regionid")]
     [InverseProperty("Concierges")]
     public virtual Region? Region { get; set; }
+
+    [InverseProperty("Concierge")]
+    public virtual ICollection<Requestconcierge> Requestconcierges { get; set; } = new List<Requestconcierge>();
 }

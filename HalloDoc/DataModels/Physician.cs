@@ -142,4 +142,19 @@ public partial class Physician
 
     [InverseProperty("Physician")]
     public virtual ICollection<Physicianregion> Physicianregions { get; set; } = new List<Physicianregion>();
+
+    [InverseProperty("Physician")]
+    public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
+
+    [InverseProperty("Physician")]
+    public virtual ICollection<Requeststatuslog> RequeststatuslogPhysicians { get; set; } = new List<Requeststatuslog>();
+
+    [InverseProperty("Transtophysician")]
+    public virtual ICollection<Requeststatuslog> RequeststatuslogTranstophysicians { get; set; } = new List<Requeststatuslog>();
+
+    [InverseProperty("Physician")]
+    public virtual ICollection<Requestwisefile> Requestwisefiles { get; set; } = new List<Requestwisefile>();
+
+    [InverseProperty("Physician")]
+    public virtual ICollection<Shift> Shifts { get; set; } = new List<Shift>();
 }

@@ -75,4 +75,7 @@ public partial class Business
     [ForeignKey("Regionid")]
     [InverseProperty("Businesses")]
     public virtual Region? Region { get; set; }
+
+    [InverseProperty("Business")]
+    public virtual ICollection<Requestbusiness> Requestbusinesses { get; set; } = new List<Requestbusiness>();
 }

@@ -32,4 +32,10 @@ public partial class Region
 
     [InverseProperty("Region")]
     public virtual ICollection<Physicianregion> Physicianregions { get; set; } = new List<Physicianregion>();
+
+    [InverseProperty("Region")]
+    public virtual ICollection<Requestclient> Requestclients { get; set; } = new List<Requestclient>();
+
+    [InverseProperty("Region")]
+    public virtual ICollection<Shiftdetailregion> Shiftdetailregions { get; set; } = new List<Shiftdetailregion>();
 }

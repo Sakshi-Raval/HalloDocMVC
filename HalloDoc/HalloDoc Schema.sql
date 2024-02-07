@@ -247,10 +247,148 @@ CREATE TABLE Region (
 	Abbreviation VARCHAR(50)
 );
 
+DROP TABLE IF EXISTS Request;
+CREATE TABLE Request (
+	RequestId SERIAL PRIMARY KEY,
+	RequestTypeId INT NOT NULL CHECK(RequestTypeId IN(1,2,3,4)),
+	UserId INT REFERENCES Users(UserId),
+	FirstName VARCHAR(100),
+	LastName VARCHAR(100),
+	PhoneNumber VARCHAR(23),
+	Email VARCHAR(50),
+	Status SMALLINT NOT NULL CHECK(Status BETWEEN 1 AND 15),
+	PhysicianId INT REFERENCES Physician(PhysicianId),
+	ConfirmationNumber VARCHAR(20),
+	CreatedDate TIMESTAMP NOT NULL,
+	IsDeleted BIT,
+	ModifiedDate TIMESTAMP,
+	DeclinedBy VARCHAR(250),
+	IsUrgentEmailSent BIT NOT NULL,
+	LastWellnessDate TIMESTAMP,
+	IsMobile BIT,
+	CallType SMALLINT,
+	CompletedByPhysician BIT,
+	LastReservationDate TIMESTAMP,
+	AcceptedDate TIMESTAMP,
+	RelationName VARCHAR(100),
+	CaseNumber VARCHAR(50),
+	IP VARCHAR(20),
+	CaseTag VARCHAR(50),
+	CaseTagPhysician VARCHAR(50),
+	PatientAccountId VARCHAR(128),
+	CreatedUserId INT
+);
+
+DROP TABLE IF EXISTS RequestBusiness;
+CREATE TABLE RequestBusiness (
+	RequestBusinessId SERIAL PRIMARY KEY,
+	RequestId INT NOT NULL REFERENCES Request(RequestId),
+	BusinessId INT NOT NULL REFERENCES Business(BusinessId),
+	IP VARCHAR(20)
+);
+
+DROP TABLE IF EXISTS RequestClient;
+CREATE TABLE RequestClient (
+	RequestClientId SERIAL PRIMARY KEY,
+	RequestId INT NOT NULL REFERENCES Request(RequestId),
+	FirstName VARCHAR(100) NOT NULL,
+	LastName VARCHAR(100),
+	PhoneNumber VARCHAR(23),
+	Location VARCHAR(100),
+	Address VARCHAR(500),
+	RegionId INT REFERENCES Region(RegionId),
+	NotiMobile VARCHAR(20),
+	NotiEmail VARCHAR(50),
+	Notes VARCHAR(500),
+	Email VARCHAR(50),
+	strMonth VARCHAR(20),
+	intYear INT,
+	intDate INT,
+	IsMobile BIT,
+	Street VARCHAR(100),
+	City VARCHAR(100),
+	State VARCHAR(100),
+	ZipCode VARCHAR(10),
+	CommunicationType SMALLINT,
+	RemindReservationCount SMALLINT,
+	RemindHouseCallCount SMALLINT,
+	IsSetFollowupSent SMALLINT,
+	IP VARCHAR(20),
+	IsReservationReminderSent SMALLINT,
+	Latitude DECIMAL(9,2),
+	Longitude DECIMAL(9,2)
+);
+
+DROP TABLE IF EXISTS RequestClosed;
+CREATE TABLE RequestClosed (
+	RequestClosedId SERIAL PRIMARY KEY,
+	RequestId INT NOT NULL REFERENCES Request(RequestId),
+	RequestStatusLogId INT NOT NULL REFERENCES RequestStatusLog(RequestStatusLogId),
+	PhyNotes VARCHAR(500),
+	ClientNotes VARCHAR(500),
+	IP VARCHAR(20)
+);
+
+DROP TABLE IF EXISTS RequestConcierge;
+CREATE TABLE RequestConcierge (
+	Id SERIAL PRIMARY KEY,
+	RequestId INT NOT NULL REFERENCES Request(RequestId),
+	ConciergeId INT NOT NULL REFERENCES Concierge(ConciergeId),
+	IP VARCHAR(20)
+);
+
+DROP TABLE IF EXISTS RequestNotes ;
+CREATE TABLE RequestNotes (
+	RequestNotesId SERIAL PRIMARY KEY,
+	RequestId INT NOT NULL REFERENCES Request(RequestId),
+	strMonth VARCHAR(20),
+	intYear INT,
+	intDate INT,
+	PhysicianNotes VARCHAR(500),
+	AdminNotes VARCHAR(500),
+	CreatedBy VARCHAR(128) NOT NULL,
+	CreatedDate TIMESTAMP NOT NULL,
+	ModifiedBy VARCHAR(128),
+	ModifiedDate TIMESTAMP,
+	IP VARCHAR(20),
+	AdministrativeNotes VARCHAR(500)
+);
+
+DROP TABLE IF EXISTS RequestStatusLog ;
+CREATE TABLE RequestStatusLog (
+	RequestStatusLogId SERIAL PRIMARY KEY,
+	RequestId INT NOT NULL REFERENCES Request(RequestId),
+	Status SMALLINT NOT NULL,
+	PhysicianId INT REFERENCES Physician(PhysicianId),
+	AdminId INT REFERENCES Admin(AdminId),
+	TransToPhysicianId INT REFERENCES Physician(PhysicianId),
+	Notes VARCHAR(500),
+	CreatedDate TIMESTAMP NOT NULL,
+	IP VARCHAR(20),
+	TransToAdmin BIT
+);
+
 DROP TABLE IF EXISTS RequestType ;
 CREATE TABLE RequestType (
 	RequestTypeId SERIAL PRIMARY KEY,
 	Name VARCHAR(50) NOT NULL
+);
+
+DROP TABLE IF EXISTS RequestWiseFile ;
+CREATE TABLE RequestWiseFile (
+	RequestWiseFileID SERIAL PRIMARY KEY,
+	RequestId INT NOT NULL REFERENCES Request(RequestId),
+	FileName VARCHAR(500) NOT NULL,
+	CreatedDate TIMESTAMP NOT NULL,
+	PhysicianId INT REFERENCES Physician(PhysicianId),
+	AdminId INT REFERENCES Admin(AdminId),
+	DocType SMALLINT CHECK(DocType IN(1,2,3)),
+	IsFrontSide BIT,
+	IsCompensation BIT,
+	IP VARCHAR(20),
+	IsFinalize BIT,
+	IsDeleted BIT,
+	IsPatientRecords BIT
 );
 
 DROP TABLE IF EXISTS Roles ;
@@ -273,18 +411,43 @@ CREATE TABLE RoleMenu (
 	MenuId INT REFERENCES Menu(MenuId)
 );
 
--- DROP TABLE IF EXISTS Shift;
--- CREATE TABLE Shift (
--- 	ShiftId SERIAL PRIMARY KEY ,
--- 	PhysicianId INT NOT NULL REFERENCES Physician(PhysicianId),
--- 	StartDate DATE NOT NULL,
--- 	IsRepeat BIT NOT NULL,
--- 	WeekDays CHAR(7), 
--- 	RepeatUpto INT, 
--- 	CreatedBy VARCHAR(128) NOT NULL REFERENCES AspNetUsers(Id),
--- 	CreatedDate TIMESTAMP NOT NULL,
--- 	IPL
--- );
+DROP TABLE IF EXISTS Shift;
+CREATE TABLE Shift (
+	ShiftId SERIAL PRIMARY KEY ,
+	PhysicianId INT NOT NULL REFERENCES Physician(PhysicianId),
+	StartDate DATE NOT NULL,
+	IsRepeat BIT NOT NULL,
+	WeekDays CHAR(7), 
+	RepeatUpto INT, 
+	CreatedBy VARCHAR(128) NOT NULL REFERENCES AspNetUsers(Id),
+	CreatedDate TIMESTAMP NOT NULL,
+	IP VARCHAR(20) 
+);
+
+DROP TABLE IF EXISTS ShiftDetail ;
+CREATE TABLE ShiftDetail(
+	ShiftDetailId SERIAL PRIMARY KEY,
+	ShiftId INT NOT NULL REFERENCES Shift(ShiftId),
+	ShiftDate TIMESTAMP NOT NULL,
+	RegionId INT,
+	StartTime TIME NOT NULL,
+	EndTime TIME NOT NULL,
+	Status SMALLINT NOT NULL,
+	IsDeleted BIT NOT NULL,
+	ModifiedBy VARCHAR(128) REFERENCES AspNetUsers(Id),
+	ModifiedDate TIMESTAMP,
+	LastRunningDate TIMESTAMP,
+	EventId VARCHAR(100),
+	IsSync BIT
+);
+
+DROP TABLE IF EXISTS ShiftDetailRegion ;
+CREATE TABLE ShiftDetailRegion (
+	ShiftDetailRegionId SERIAL PRIMARY KEY,
+	ShiftDetailId INT NOT NULL REFERENCES ShiftDetail(ShiftDetailId),
+	RegionId INT NOT NULL REFERENCES Region(RegionId),
+	IsDeleted BOOLEAN
+);
 
 DROP TABLE IF EXISTS SMSLog ;
 CREATE TABLE SMSLog(
@@ -301,6 +464,33 @@ CREATE TABLE SMSLog(
 	IsSMSSent boolean,
 	SentTries int NOT NULL,
 	Action INT
+);
+
+DROP TABLE IF EXISTS Users ;
+CREATE TABLE Users (
+	UserId SERIAL PRIMARY KEY,
+	AspNetUserId VARCHAR(128) REFERENCES AspNetUsers(Id),
+	FirstName VARCHAR(100) NOT NULL,
+	LastName VARCHAR(100),
+	Email VARCHAR(50) NOT NULL,
+	Mobile VARCHAR(20),
+	IsMobile BOOLEAN,
+	Street VARCHAR(100),
+	City VARCHAR(100),
+	State VARCHAR(100),
+	RegionId INT,
+	ZipCode VARCHAR(10),
+	strMonth VARCHAR(20),
+	intYear INT,
+	intDate INT,
+	CreatedBy VARCHAR(128) NOT NULL,
+	CreatedDate TIMESTAMP NOT NULL,
+	ModifiedBy VARCHAR(128),
+	ModifiedDate TIMESTAMP,
+	Status SMALLINT,
+	IsDeleted BOOLEAN,
+	IP VARCHAR(20),
+	IsRequestWithEmail BOOLEAN
 );
 
 
