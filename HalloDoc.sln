@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HalloDoc", "HalloDoc\HalloDoc.csproj", "{D991D6A0-831A-44B3-9344-AB8E36977AE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HalloDoc", "HalloDoc\HalloDoc.csproj", "{D991D6A0-831A-44B3-9344-AB8E36977AE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{197778A1-BD6D-4D5C-ABE1-0913E3DB5980}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessAccess", "BusinessAcess\BusinessAccess.csproj", "{652D192C-654C-4598-911B-8217B1AA2897}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{D991D6A0-831A-44B3-9344-AB8E36977AE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D991D6A0-831A-44B3-9344-AB8E36977AE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D991D6A0-831A-44B3-9344-AB8E36977AE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{197778A1-BD6D-4D5C-ABE1-0913E3DB5980}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{197778A1-BD6D-4D5C-ABE1-0913E3DB5980}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{197778A1-BD6D-4D5C-ABE1-0913E3DB5980}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{197778A1-BD6D-4D5C-ABE1-0913E3DB5980}.Release|Any CPU.Build.0 = Release|Any CPU
+		{652D192C-654C-4598-911B-8217B1AA2897}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{652D192C-654C-4598-911B-8217B1AA2897}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{652D192C-654C-4598-911B-8217B1AA2897}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{652D192C-654C-4598-911B-8217B1AA2897}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

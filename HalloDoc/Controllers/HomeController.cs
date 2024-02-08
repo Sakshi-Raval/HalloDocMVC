@@ -1,17 +1,20 @@
-﻿using HalloDoc.Models;
+﻿using DataAccess.DataContext;
+using DataAccess.DataModels.DTO;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Net.Http.Headers;
-
 namespace HalloDoc.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context; 
         }
 
         public IActionResult Index()
@@ -28,6 +31,24 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> Login(string Username, string? Passwordhash, [Bind("Username", "Passwordhash")] AspnetuserDTO aspnetuserDTO)
+        {
+            if (_context.Aspnetusers == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Aspnetusers'  is null.");
+            }
+            var status = _context.Aspnetusers.Where(m => m.Username == aspnetuserDTO.Username && m.Passwordhash == aspnetuserDTO.Passwordhash).FirstOrDefault();
+            if (status == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            return RedirectToAction("SubmitReq", "Home");
+           
+        }
+
         public IActionResult SubmitReq()
         {
             return View();

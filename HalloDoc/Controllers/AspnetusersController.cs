@@ -10,89 +10,87 @@ using DataAccess.DataContext;
 
 namespace HalloDoc.Controllers
 {
-    public class RegionsController : Controller
+    public class AspnetusersController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public RegionsController(ApplicationDbContext context)
+        public AspnetusersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Regions
+        // GET: Aspnetusers
         public async Task<IActionResult> Index()
         {
-              return _context.Regions != null ? 
-                          View(await _context.Regions.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Regions'  is null.");
+              return _context.Aspnetusers != null ? 
+                          View(await _context.Aspnetusers.ToListAsync()) :
+                          Problem("Entity set 'ApplicationDbContext.Aspnetusers'  is null.");
         }
 
-       
-             
-        // GET: Regions/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Aspnetusers/Details/5
+        public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.Regions == null)
+            if (id == null || _context.Aspnetusers == null)
             {
                 return NotFound();
             }
 
-            var region = await _context.Regions
-                .FirstOrDefaultAsync(m => m.Regionid == id);
-            if (region == null)
+            var aspnetuser = await _context.Aspnetusers
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (aspnetuser == null)
             {
                 return NotFound();
             }
 
-            return View(region);
+            return View(aspnetuser);
         }
 
-        // GET: Regions/Create
+        // GET: Aspnetusers/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Regions/Create
+        // POST: Aspnetusers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Regionid,Name,Abbreviation")] Region region)
+        public async Task<IActionResult> Create([Bind("Id,Username,Passwordhash,Email,Phonenumber,Ip,Createddate,Modifieddate")] Aspnetuser aspnetuser)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(region);
+                _context.Add(aspnetuser);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(region);
+            return View(aspnetuser);
         }
 
-        // GET: Regions/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Aspnetusers/Edit/5
+        public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.Regions == null)
+            if (id == null || _context.Aspnetusers == null)
             {
                 return NotFound();
             }
 
-            var region = await _context.Regions.FindAsync(id);
-            if (region == null)
+            var aspnetuser = await _context.Aspnetusers.FindAsync(id);
+            if (aspnetuser == null)
             {
                 return NotFound();
             }
-            return View(region);
+            return View(aspnetuser);
         }
 
-        // POST: Regions/Edit/5
+        // POST: Aspnetusers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Regionid,Name,Abbreviation")] Region region)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Username,Passwordhash,Email,Phonenumber,Ip,Createddate,Modifieddate")] Aspnetuser aspnetuser)
         {
-            if (id != region.Regionid)
+            if (id != aspnetuser.Id)
             {
                 return NotFound();
             }
@@ -101,12 +99,12 @@ namespace HalloDoc.Controllers
             {
                 try
                 {
-                    _context.Update(region);
+                    _context.Update(aspnetuser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RegionExists(region.Regionid))
+                    if (!AspnetuserExists(aspnetuser.Id))
                     {
                         return NotFound();
                     }
@@ -117,49 +115,49 @@ namespace HalloDoc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(region);
+            return View(aspnetuser);
         }
 
-        // GET: Regions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Aspnetusers/Delete/5
+        public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.Regions == null)
+            if (id == null || _context.Aspnetusers == null)
             {
                 return NotFound();
             }
 
-            var region = await _context.Regions
-                .FirstOrDefaultAsync(m => m.Regionid == id);
-            if (region == null)
+            var aspnetuser = await _context.Aspnetusers
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (aspnetuser == null)
             {
                 return NotFound();
             }
 
-            return View(region);
+            return View(aspnetuser);
         }
 
-        // POST: Regions/Delete/5
+        // POST: Aspnetusers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.Regions == null)
+            if (_context.Aspnetusers == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Regions'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Aspnetusers'  is null.");
             }
-            var region = await _context.Regions.FindAsync(id);
-            if (region != null)
+            var aspnetuser = await _context.Aspnetusers.FindAsync(id);
+            if (aspnetuser != null)
             {
-                _context.Regions.Remove(region);
+                _context.Aspnetusers.Remove(aspnetuser);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RegionExists(int id)
+        private bool AspnetuserExists(string id)
         {
-          return (_context.Regions?.Any(e => e.Regionid == id)).GetValueOrDefault();
+          return (_context.Aspnetusers?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

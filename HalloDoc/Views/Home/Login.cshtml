@@ -1,4 +1,5 @@
-﻿﻿@{
+﻿@model DataAccess.DataModels.DTO.AspnetuserDTO;
+@{
     Layout = "_NewLayout";
     ViewData["Title"] = "Patient Site";
 }
@@ -45,11 +46,12 @@
                     </div>
                     <div class="row justify-content-center">
                         <div class="col-8 text-center loginForm">
-                            <form action="#" class="">
+                            <form asp-action="Login" class="">
                                 <div class="input-group mb-4 mt-2" style="max-width: 100%">
                                     <div class="form-floating w-100">
-                                        <input type="text" class="form-control" id="username" placeholder="Username">
-                                        <label for="username" class="text-info">Username</label>
+                                        <input type="text" asp-for="Username" class="form-control" id="username" placeholder="Username">
+                                        <label asp-for="Username" class="text-info">Username</label>
+                                        <span asp-validation-for="Username" class="text-danger"></span>
                                         <button class="btn input-image bg-white text-muted">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                  fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16"
@@ -64,8 +66,9 @@
                                 </div>
                                 <div class="input-group mb-4">
                                     <div class="form-floating w-100">
-                                        <input type="password" class="form-control" id="password" placeholder="Password">
-                                        <label for="password" class="text-info">Password</label>
+                                    <input type="password" asp-for="Passwordhash" class="form-control" id="password" placeholder="Password">
+                                    <label asp-for="Passwordhash" class="text-info">Password</label>
+                                    <span asp-validation-for="Passwordhash" class="text-danger" ></span>
                                     </div>
                                     <button class="btn input-image bg-white text-muted">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
