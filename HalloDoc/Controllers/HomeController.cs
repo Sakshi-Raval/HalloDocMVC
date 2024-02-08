@@ -36,16 +36,20 @@ namespace HalloDoc.Controllers
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Login(string Username, string? Passwordhash, [Bind("Username", "Passwordhash")] AspnetuserDTO aspnetuserDTO)
         {
-            if (_context.Aspnetusers == null)
+            if (ModelState.IsValid)
             {
-                return Problem("Entity set 'ApplicationDbContext.Aspnetusers'  is null.");
+                if (_context.Aspnetusers == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Aspnetusers'  is null.");
+                }
+                var status = _context.Aspnetusers.Where(m => m.Username == aspnetuserDTO.Username && m.Passwordhash == aspnetuserDTO.Passwordhash).FirstOrDefault();
+                if (status == null)
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+                return RedirectToAction("SubmitReq", "Home");
             }
-            var status = _context.Aspnetusers.Where(m => m.Username == aspnetuserDTO.Username && m.Passwordhash == aspnetuserDTO.Passwordhash).FirstOrDefault();
-            if (status == null)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            return RedirectToAction("SubmitReq", "Home");
+            return View();
            
         }
 

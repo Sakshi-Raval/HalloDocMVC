@@ -11,6 +11,7 @@ namespace DataAccess.DataModels.DTO
         public string Username { get; set; } = null!;
 
         [Required]
+        [Display(Name ="Password")]
         [Column("passwordhash", TypeName = "character varying")]
         public string? Passwordhash { get; set; }
     }

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HalloDoc", "HalloDoc\HalloD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{197778A1-BD6D-4D5C-ABE1-0913E3DB5980}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessAccess", "BusinessAcess\BusinessAccess.csproj", "{652D192C-654C-4598-911B-8217B1AA2897}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic", "BusinessAcess\BusinessLogic.csproj", "{652D192C-654C-4598-911B-8217B1AA2897}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
