@@ -4,6 +4,8 @@
 }
 
 
+
+
 <div class="row justify-content-center">
     <div class="col-10 col-md-8 col-lg-6 justify-content-end">
         <a asp-action="SubmitReq" asp-controller="Home"
@@ -65,12 +67,7 @@
                     <input type="tel" asp-for="Phone" id="phone" class="input w-100 h-100 phone">
                 </div>
             </div>
-                @if (TempData["record"] == "Present")
-                {
-                    <div class="hide col-md-6"></div>
-                }
-                else
-                {
+
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="password" asp-for="Password" class="form-control" id="password" required>
@@ -83,7 +80,7 @@
                             <label asp-for="ConfirmPassword" class="text-muted floating-label">Password</label>
                         </div>
                     </div>
-                }
+
                 <div class="row">
                 <div class="col-12">
                     <h6 class="h6 py-3">Patient Location</h6>
@@ -149,3 +146,7 @@
         </form>
     </div>
 </div>
+
+@section Scripts{
+    $(document).ready({});
+}
