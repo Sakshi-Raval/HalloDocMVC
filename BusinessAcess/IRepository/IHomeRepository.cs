@@ -8,10 +8,6 @@ namespace BusinessLogic.IRepository
 {
     public interface IHomeRepository
     {
-        public async Task<T> Login( string Username, string? Passwordhash)
-        {
-            return view
-        }
-
+        
     }
 }

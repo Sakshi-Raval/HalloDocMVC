@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataAccess.DataModels.DTO
+namespace DataAccess.ViewModel
 {
-    public class AspnetuserDTO
+    public class AspnetuserViewModel
     {
         [Required]
         [Column("username")]
@@ -11,7 +11,7 @@ namespace DataAccess.DataModels.DTO
         public string Username { get; set; } = null!;
 
         [Required]
-        [Display(Name ="Password")]
+        [Display(Name = "Password")]
         [Column("passwordhash", TypeName = "character varying")]
         public string? Passwordhash { get; set; }
     }

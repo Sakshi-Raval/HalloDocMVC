@@ -1,5 +1,5 @@
 ﻿using DataAccess.DataContext;
-using DataAccess.DataModels.DTO;
+using DataAccess.ViewModel;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -34,7 +34,7 @@ namespace HalloDoc.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Login(string Username, string? Passwordhash, [Bind("Username", "Passwordhash")] AspnetuserDTO aspnetuserDTO)
+        public async Task<IActionResult> Login(string Username, string? Passwordhash, [Bind("Username", "Passwordhash")] AspnetuserViewModel aspnetuserDTO)
         {
             if (ModelState.IsValid)
             {
