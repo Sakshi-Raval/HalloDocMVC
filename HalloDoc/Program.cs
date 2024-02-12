@@ -1,3 +1,5 @@
+using BusinessLogic.IRepository;
+using BusinessLogic.Repository;
 using DataAccess.DataContext;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.(dependency injections)
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddScoped<IPatientRequest, PatientRequestRepo>();
+builder.Services.AddScoped<IOtherRequest, OtherRequestRepo>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,4 +30,4 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+app.Run(); 

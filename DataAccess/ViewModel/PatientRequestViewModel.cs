@@ -13,13 +13,17 @@ namespace DataAccess.ViewModel
     public class PatientRequestViewModel
     {
         public string? Symptoms { get; set; }
+        [DataType(DataType.Password)]
         public string? Password {  get; set; }
+        [Compare("Password", ErrorMessage ="Password and Confirm Password do not match")]
         public string? ConfirmPassword {  get; set; }
         [Required]
         public string Firstname { get; set; }
         public string? Lastname { get; set; }
+        [DataType(DataType.Date)]
         public DateOnly? DOB {  get; set; }
         [Required]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         public string Phone { get; set; }
         public string? Street { get; set; }

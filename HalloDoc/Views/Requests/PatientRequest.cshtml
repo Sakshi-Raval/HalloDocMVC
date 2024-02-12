@@ -4,7 +4,7 @@
 }
 
 
-
+<partial name="_Notification" />
 
 <div class="row justify-content-center">
     <div class="col-10 col-md-8 col-lg-6 justify-content-end">
@@ -21,8 +21,8 @@
 </div>
 <div class="row justify-content-center">
     <div class="col-10 col-md-8 col-lg-6 rounded mb-3" style="box-shadow: 2px 2px 20px rgb(179, 177, 177);">
-        <form asp-action="PatientRequest"> 
-        <div class="container-fluid mt-3 p-0">
+        <form asp-action="PatientRequest">
+            <div class="container-fluid mt-3 p-0">
             <div class="row">
                 <h6 class="h6 py-3">Patient Information</h6>
                 <div class="form-floating mb-3">
@@ -39,6 +39,7 @@
                     <div class="form-floating mb-3">
                         <input type="text" asp-for="Firstname" class="form-control" id="fname" placeholder="First Name" required>
                         <label asp-for="Firstname" class="text-muted floating-label">First Name</label>
+                            <span asp-validation-for="Firstname" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -61,26 +62,40 @@
                         <input type="email" asp-for="Email" class="form-control" id="patientEmail"
                                placeholder="name@example.com" required>
                         <label asp-for="Email" class="text-muted floating-label">Email address</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-6 col-12">
                     <input type="tel" asp-for="Phone" id="phone" class="input w-100 h-100 phone">
+                        <span asp-validation-for="Phone" class="text-danger"></span>
                 </div>
             </div>
-
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input type="password" asp-for="Password" class="form-control" id="password" required>
-                            <label asp-for="Password" class="text-muted floating-label">Password</label>
+                <div class="row" id="passwordMainDiv" style="display:none">
+                <div   class="col-md-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <h6 class="h6 py-3">Password Details</h6>
+                            </div>
+                        </div>
+                    <div class="row">
+                        <div class="col-md-6" id="passwordDiv">
+                    
+                            <div class="form-floating mb-3 ">
+                                <input type="password" asp-for="Password" class="form-control" id="password">
+                                <label asp-for="Password" class="text-muted floating-label">Password</label>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6" id="confirmPasswordDiv">
+                            <div class="form-floating mb-3">
+                                <input type="text" asp-for="ConfirmPassword" class="form-control" id="confirmpassword" >
+                                <label asp-for="ConfirmPassword" class="text-muted floating-label">Confirm Password</label>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input type="text" asp-for="ConfirmPassword" class="form-control" id="confirmpassword" required>
-                            <label asp-for="ConfirmPassword" class="text-muted floating-label">Password</label>
-                        </div>
-                    </div>
-
+                </div>
+                </div>
                 <div class="row">
                 <div class="col-12">
                     <h6 class="h6 py-3">Patient Location</h6>
@@ -148,5 +163,35 @@
 </div>
 
 @section Scripts{
-    $(document).ready({});
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#patientEmail').on('blur', function () {
+                var email = $(this).val();
+                $.ajax({
+                    url: '/Requests/CheckEmail',
+                    type: 'POST',
+                    data: { email: email },
+                    success: function (data) {
+                        if (!data) {
+                            $('#passwordMainDiv').show();
+
+                        }
+                        else {
+                            $('#passwordMainDiv').hide();
+                            $('#fname').val(data.firstname).prop('disabled',true);
+                            $('#lname').val(data.lastname).prop('readonly', true);
+                            $('#phone').val(data.mobile).prop('readonly', true);
+                            $('#street').val(data.street).prop('readonly', true);
+                            $('#city').val(data.city).prop('readonly', true);
+                            $('#state').val(data.state).prop('readonly', true);
+                            $('#zip').val(data.zipcode).prop('readonly', true);
+                            
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 }
