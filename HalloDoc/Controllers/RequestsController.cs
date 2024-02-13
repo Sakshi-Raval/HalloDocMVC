@@ -77,8 +77,32 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult ConciergeRequest(OtherRequestViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                _iOtherRequest.CreateOtherRequest(model);
+                TempData["message"] = "Request created successfully";
+
+                return RedirectToAction("ConciergeRequest", "Requests");
+            }
+            return View();
+        }
         public IActionResult BusinessRequest()
         {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult BusinessRequest(OtherRequestViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                _iOtherRequest.CreateOtherRequest(model);
+                TempData["message"] = "Request created successfully";
+
+                return RedirectToAction("BusinessRequest", "Requests");
+            }
             return View();
         }
     }

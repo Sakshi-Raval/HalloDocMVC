@@ -37,7 +37,7 @@ namespace BusinessLogic.Repository
                 aspnetuser.Phonenumber = model.Phone;
                 aspnetuser.Createddate = DateTime.Now;
                 _context.Add(aspnetuser);
-                 _context.SaveChangesAsync();
+                 _context.SaveChanges();
 
 
                 user.Aspnetuserid = aspnetuser.Id;
@@ -49,6 +49,7 @@ namespace BusinessLogic.Repository
                 user.City = model.City;
                 user.State = model.State;
                 user.Zipcode = model.Zip;
+                //user.Intdate = model.DOB.Day;
                 //user.Strmonth = model.DOB.Month.ToString();
                 //user.Intyear = model.DOB.Year;
                 user.Createdby = "xyz";
@@ -57,7 +58,7 @@ namespace BusinessLogic.Repository
                 user.Isdeleted = false;
                 user.Isrequestwithemail = true;
                 _context.Add(user);
-                 _context.SaveChangesAsync();
+                 _context.SaveChanges();
 
                 request.Requesttypeid = 1;
                 request.Userid = user.Userid;
@@ -68,7 +69,7 @@ namespace BusinessLogic.Repository
                 request.Status = 1;
                 request.Createddate = DateTime.Now;
                 _context.Add(request);
-                 _context.SaveChangesAsync();
+                 _context.SaveChanges();
 
                 requestclient.Requestid = request.Requestid;
                 requestclient.Notes = model.Symptoms;
@@ -81,7 +82,7 @@ namespace BusinessLogic.Repository
                 requestclient.City = model.City;
                 requestclient.Zipcode = model.Zip;
                 _context.Add(requestclient);
-                 _context.SaveChangesAsync();
+                 _context.SaveChanges();
                 
 
             }
@@ -98,7 +99,7 @@ namespace BusinessLogic.Repository
                 request.Status = 1;
                 request.Createddate = DateTime.Now;
                 _context.Add(request);
-                 _context.SaveChangesAsync();
+                 _context.SaveChanges();
 
                 requestclient.Requestid = request.Requestid;
                 requestclient.Notes = model.Symptoms;
@@ -111,7 +112,7 @@ namespace BusinessLogic.Repository
                 requestclient.City = status.City;
                 requestclient.Zipcode = status.Zipcode;
                 _context.Add(requestclient);
-                 _context.SaveChangesAsync();
+                 _context.SaveChanges();
                 
             }
 

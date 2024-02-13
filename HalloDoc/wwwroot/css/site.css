@@ -1,3 +1,6 @@
+*{
+    font-family: poppins;
+}
 .dark-theme {
     background-color: #4a4948;
     color: white;
@@ -244,6 +247,15 @@ input:focus {
         bottom: 10%;
     }
 }
+.nav-tabs .active {
+    border: none;
+    color: #10bce9 !important;
+    border-bottom: 3px solid #10bce9 !important;
+}
+/*
+.nav-link {
+    color: black;
+}*/
 /* html, body { height: 100%;}
 
   body > footer {

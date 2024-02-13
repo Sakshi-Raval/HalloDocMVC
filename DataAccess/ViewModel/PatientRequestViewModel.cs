@@ -15,7 +15,7 @@ namespace DataAccess.ViewModel
         public string? Symptoms { get; set; }
         [DataType(DataType.Password)]
         public string? Password {  get; set; }
-        [Compare("Password", ErrorMessage ="Password and Confirm Password do not match")]
+        [Compare("Password", ErrorMessage = "Password and Confirm Password do not match")]
         public string? ConfirmPassword {  get; set; }
         [Required]
         public string Firstname { get; set; }
@@ -23,8 +23,9 @@ namespace DataAccess.ViewModel
         [DataType(DataType.Date)]
         public DateOnly? DOB {  get; set; }
         [Required]
-        [DataType(DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress, ErrorMessage = "Enter email in correct format (example@email.com)")]
         public string Email { get; set; }
+        [DataType(DataType.PhoneNumber, ErrorMessage = "Enter phone number in correct format")]
         public string Phone { get; set; }
         public string? Street { get; set; }
         public string? City { get; set; }

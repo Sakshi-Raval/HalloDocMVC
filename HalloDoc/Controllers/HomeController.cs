@@ -4,6 +4,8 @@ using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Net.Http.Headers;
+using DataAccess.DataModels;
+
 namespace HalloDoc.Controllers
 {
     public class HomeController : Controller
@@ -45,9 +47,13 @@ namespace HalloDoc.Controllers
                 var status = _context.Aspnetusers.Where(m => m.Username == aspnetuserDTO.Username && m.Passwordhash == aspnetuserDTO.Passwordhash).FirstOrDefault();
                 if (status == null)
                 {
+                    TempData["UnsuccessfulLogin"] = "Login Unsuccessful";
                     return RedirectToAction("Login", "Home");
                 }
-                return RedirectToAction("SubmitReq", "Home");
+                TempData["Login"] = "Login Successful";
+                //User user = _context.Users.Where(m => m.Email == status.Email).FirstOrDefault();
+                //ViewBag.User = user;
+                return RedirectToAction("PatientDashboard", "Patient");
             }
             return View();
            
@@ -61,22 +67,7 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
-        public IActionResult PatientRequest()
-        {
-            return View();
-        }
-        public IActionResult FamilyRequest()
-        {
-            return View();
-        }
-        public IActionResult ConciergeRequest()
-        {
-            return View();
-        }
-        public IActionResult BusinessRequest()
-        {
-            return View();
-        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

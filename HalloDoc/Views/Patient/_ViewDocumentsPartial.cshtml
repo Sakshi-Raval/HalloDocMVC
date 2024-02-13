@@ -1,0 +1,49 @@
+﻿
+<div class="container-fluid rounded mx-3 mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-sm-6 d-inline-flex justify-content-between">
+            <div class="d-flex">
+                <h3 class="h3 mt-3">Documents</h3></div>
+            <div class="d-flex">
+            <button class="btn btn-outline-info my-3 ms-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                     height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                </svg>Back
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row rounded justify-content-center" >
+        <div class="col-md-8 col-sm-6 rounded" style=" box-shadow: 2px 2px 20px rgb(179, 177, 177)">
+            <div class="m-2 fs-6 text-black-50">Patient Name</div>
+            <div><span class="text-info fs-5 m-2">Patient</span><span class="fs-6 text-black-50">(MMMM)</span></div>
+            <div><span class="fs-6 text-black-50 m-2">Check here for any files that you or the doctors or your subsequesnt requestors have attached for you to review.</span></div>
+            <div class="d-flex my-3 mx-2">
+                <label for="fileUpload" class="col d-flex rounded">
+                    <div class="col bg-white p-1 ps-3 text-muted border"><span id="infoArea">Select File</span></div>
+                    <div id="btn" class="p-1 btn btn-info">
+
+                        <i class="bi bi-cloud-arrow-up text-white"></i>
+                        <span style="color:white;" class="ps-1">Upload</span>
+
+                    </div>
+                    <input type="file"  class="form-control-file" id="fileUpload" hidden>
+                </label>
+            </div>
+                <div class="d-inline-flex row justify-content-between">
+                    <div class="d-flex col">
+                        <h5 class="h5 mt-3">Documents</h5>
+                    </div>
+                    <div class="d-flex col">
+                        <button class="btn btn-outline-info my-3 ms-auto">
+                            Download All
+                        </button>
+                    </div>
+                </div>
+           
+        </div>
+    </div>
+</div>
+

@@ -23,9 +23,6 @@ namespace BusinessLogic.Repository
             //Aspnetuser aspnetuser = new();
             //User user = new User();
             Request request = new();
-            Requestclient requestclient = new();
-
-
             request.Requesttypeid = 2;
             //request.Userid = user.Userid;
             request.Firstname = model.OtherFirstname;
@@ -35,22 +32,25 @@ namespace BusinessLogic.Repository
             request.Status = 1;
             request.Createddate = DateTime.Now;
             request.Relationname = model.Relation;
+            request.Casenumber = model.CaseNum;
+            request.Casenumber = model.CaseNum;
             _context.Add(request);
-             _context.SaveChangesAsync();
+             _context.SaveChanges();
 
+            Requestclient requestclient = new();
             requestclient.Requestid = request.Requestid;
-            Console.WriteLine(model.patientRequest);
-            requestclient.Notes = model.patientRequest.Symptoms.ToString();
-            requestclient.Firstname = model.patientRequest.Firstname;
-            requestclient.Lastname = model.patientRequest.Lastname;
-            requestclient.Phonenumber = model.patientRequest.Phone;
-            requestclient.Email = model.patientRequest.Email;
-            requestclient.Street = model.patientRequest.Street;
-            requestclient.State = model.patientRequest.State;
-            requestclient.City = model.patientRequest.City;
-            requestclient.Zipcode = model.patientRequest.Zip;
+            //Console.WriteLine(model.patientRequest);
+            requestclient.Notes = model.Symptoms;
+            requestclient.Firstname = model.Firstname;
+            requestclient.Lastname = model.Lastname;
+            requestclient.Phonenumber = model.Phone;
+            requestclient.Email = model.Email;
+            requestclient.Street = model.Street;
+            requestclient.State = model.State;
+            requestclient.City = model.City;
+            requestclient.Zipcode = model.Zip;
             _context.Add(requestclient);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 }

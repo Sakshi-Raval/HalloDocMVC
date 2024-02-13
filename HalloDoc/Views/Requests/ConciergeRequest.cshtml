@@ -1,6 +1,9 @@
-﻿﻿@{
+﻿@model OtherRequestViewModel
+@{
     ViewData["Title"] = "Concierge Reqeust";
 }
+<partial name="_Notification" />
+<partial name="_ValidationScriptsPartial" />
 
 <div class="container-fluid" style="min-height: 100vh;">
     <div class="row justify-content-center">
@@ -18,6 +21,7 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-10 col-md-8 col-lg-6 rounded mb-3" style="box-shadow: 2px 2px 20px rgb(179, 177, 177);">
+            <form asp-action="ConciergeRequest">
             <div class="container-fluid mt-3 p-0">
                 <div class="row">
                     <div class="col-12">
@@ -27,30 +31,35 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="concfname" placeholder="Your First Name" required>
-                            <label for="concfname" class="text-muted floating-label">Your First Name</label>
+                            <input asp-for="OtherFirstname" type="text" class="form-control" id="concfname" placeholder="Your First Name" >
+                            <label asp-for="OtherFirstname" for="concfname" class="text-muted floating-label">Your First Name</label>
+                            <span asp-validation-for="OtherFirstname" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="conclname" placeholder="Your Last Name" required>
-                            <label for="conclname" class="text-muted floating-label">Your Last Name</label>
+                                <input type="text" asp-for="OtherLastname" class="form-control" id="conclname" placeholder="Your Last Name" >
+                                <label for="conclname" asp-for="OtherLastname" class="text-muted floating-label">Your Last Name</label>
+                                <span asp-validation-for="OtherLastname" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6 col-12">
-                        <input type="tel" id="conc_phone" class="input w-100 h-100 phone">
+                            <input type="tel" asp-for="OtherPhone" id="conc_phone" class="input w-100 h-100 phone">
+                            <span asp-validation-for="OtherPhone" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="concEmail"
-                                   placeholder="name@example.com" required>
-                            <label for="concEmail" class="text-muted floating-label">Your Email</label>
+                                <input type="email" asp-for="OtherEmail" class="form-control" id="concEmail"
+                                   placeholder="name@example.com" >
+                                <label for="concEmail" asp-for="OtherEmail" class="text-muted floating-label">Your Email</label>
+                                <span asp-validation-for="OtherEmail" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="hotel" placeholder="Hotel/Property Name" required>
-                            <label for="hotel" class="text-muted floating-label">Hotel/Property Name</label>
+                                <input type="text" asp-for="HotelName" class="form-control" id="hotel" placeholder="Hotel/Property Name" >
+                                <label for="hotel" asp-for="HotelName" class="text-muted floating-label">Hotel/Property Name</label>
+                                <span asp-validation-for="HotelName" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -62,35 +71,40 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="concstreet" placeholder="Street" required>
-                            <label for="concstreet" class="text-muted floating-label">Street</label>
+                                <input type="text" asp-for="Street" class="form-control" id="concstreet" placeholder="Street" >
+                                <label for="concstreet" asp-for="Street" class="text-muted floating-label">Street</label>
+                                <span asp-validation-for="Street" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="conccity" placeholder="City" required>
-                            <label for="conccity" class="text-muted floating-label">City</label>
+                                <input type="text" asp-for="City" class="form-control" id="conccity" placeholder="City" >
+                                <label for="conccity" asp-for="City" class="text-muted floating-label">City</label>
+                                <span asp-validation-for="City" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="concstate" placeholder="State" required>
-                            <label for="concstate" class="text-muted floating-label">State</label>
+                                <input type="text" asp-for="State" class="form-control" id="concstate" placeholder="State" >
+                                <label for="concstate" asp-for="State" class="text-muted floating-label">State</label>
+                                <span asp-validation-for="State" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="number" class="form-control" id="conczip" placeholder="Zip Code" required>
-                            <label for="conczip" class="text-muted floating-label">Zip Code</label>
+                                <input type="number" asp-for="Zip" class="form-control" id="conczip" placeholder="Zip Code" >
+                                <label for="conczip" asp-for="Zip" class="text-muted floating-label">Zip Code</label>
+                                <span asp-validation-for="Zip" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <h6 class="h6 py-3">Patient Information</h6>
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" placeholder="Symptoms" id="symptoms"
+                            <textarea class="form-control" asp-for="Symptoms" placeholder="Symptoms" id="symptoms"
                                   style="height: 15vh;"></textarea>
-                        <label for="symptoms" class="text-muted floating-label ms-2">
+                            <label for="symptoms" asp-for="Symptoms" class="text-muted floating-label ms-2">
+                                <span asp-validation-for="Symptoms" class="text-danger"></span>
                             Enter Brief Details of Symptoms
                             (Optional)
                         </label>
@@ -99,20 +113,23 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="fname" placeholder="First Name" required>
-                            <label for="fname" class="text-muted floating-label">First Name</label>
+                                <input type="text" asp-for="Firstname" class="form-control" id="fname" placeholder="First Name" >
+                                <label for="fname" asp-for="Firstname" class="text-muted floating-label">First Name</label>
+                                <span asp-validation-for="Firstname" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="lname" placeholder="Last Name" required>
-                            <label for="lname" class="text-muted floating-label">Last Name</label>
+                                <input type="text" asp-for="Lastname" class="form-control" id="lname" placeholder="Last Name" >
+                                <label for="lname" asp-for="Lastname" class="text-muted floating-label">Last Name</label>
+                                <span asp-validation-for="Lastname" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="date" class="form-control" id="dob" placeholder="Date of Birth" required>
-                            <label for="dob" class="text-muted floating-label">Date of Birth</label>
+                                <input type="date" asp-for="DOB" class="form-control" id="dob" placeholder="Date of Birth" >
+                                <label for="dob" asp-for="DOB" class="text-muted floating-label">Date of Birth</label>
+                                <span asp-validation-for="DOB" class="text-danger"></span>
                         </div>
                         <h6 class="h6 py-3">Patient Contact Information</h6>
                     </div>
@@ -120,14 +137,16 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="patientEmail"
-                                   placeholder="name@example.com" required>
-                            <label for="patientEmail" class="text-muted floating-label">Email address</label>
+                                <input type="email" asp-for="Email" class="form-control" id="patientEmail"
+                                   placeholder="name@example.com" >
+                                <label for="patientEmail" asp-for="Email" class="text-muted floating-label">Email address</label>
+                                <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                     </div>
                     <div class="col-md-6 col-12">
-                        <input type="tel" id="patient_phone" class="input w-100 h-100 phone">
+                            <input type="tel" asp-for="Phone" id="patient_phone" class="input w-100 h-100 phone">
+                            <span asp-validation-for="Phone" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row">
@@ -138,9 +157,10 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="number" class="form-control" id="roomNum"
+                                <input type="number" asp-for="RoomNum" class="form-control" id="roomNum"
                                    placeholder="Room #/ Suite (Optional)">
-                            <label for="roomNum" class="text-muted floating-label">Room #/ Suite (Optional)</label>
+                                <label for="roomNum" asp-for="RoomNum" class="text-muted floating-label">Room #/ Suite (Optional)</label>
+                                <span asp-validation-for="RoomNum" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -151,6 +171,7 @@
                     </div>
                 </div>
             </div>
+            </form>
         </div>
     </div>
 </div>

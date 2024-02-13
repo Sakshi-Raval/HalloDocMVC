@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Patient Dashboard";
+    Layout = "_PatientLayout";
+}
+@section Scripts{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src=""></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    @if (TempData["Login"] != null)
+    {
+        <script type="text/javascript">
+            toastr.success('@TempData["Login"]');
+        </script>
+    }
+    
+}
+<div class="formdiv">
+    <ul class="nav nav-tabs border-0" id="myTab" role="tablist" style="box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3)">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link tabs active" style="color:black" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Dashboard</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link tabs" style="color:black" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Profile</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade pt-2 active show" id="home" role="tabpanel" aria-labelledby="home-tab">
+            @* <partial name="_MedicalHistoryPartial" /> *@
+            <partial name="_ViewDocumentsPartial" />
+        </div>
+        <div class="tab-pane fade pt-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <partial name="_ProfilePartial" />
+        </div>
+    </div>
+</div>
