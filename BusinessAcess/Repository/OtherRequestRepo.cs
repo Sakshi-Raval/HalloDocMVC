@@ -2,6 +2,7 @@
 using DataAccess.DataContext;
 using DataAccess.DataModels;
 using DataAccess.ViewModel;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,11 @@ namespace BusinessLogic.Repository
     public class OtherRequestRepo : IOtherRequest
     {
         private readonly ApplicationDbContext _context;
-        public OtherRequestRepo(ApplicationDbContext context)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public OtherRequestRepo(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
         public void CreateOtherRequest(OtherRequestViewModel model)
         {
@@ -51,6 +54,25 @@ namespace BusinessLogic.Repository
             requestclient.Zipcode = model.Zip;
             _context.Add(requestclient);
             _context.SaveChanges();
+
+            if (model.File != null && model.File.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+                var filePath = Path.Combine(uploadsFolder, model.File.FileName);
+                Requestwisefile requestwisefile = new();
+                requestwisefile.Requestid = request.Requestid;
+                requestwisefile.Filename = model.File.FileName;
+                requestwisefile.Createddate = DateTime.Now;
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    model.File.CopyTo(stream);
+                }
+               
+            }
         }
     }
 }

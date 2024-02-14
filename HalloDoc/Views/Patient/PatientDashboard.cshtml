@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<MedicalHistoryViewModel>
+@{
     ViewData["Title"] = "Patient Dashboard";
     Layout = "_PatientLayout";
 }
@@ -26,8 +27,9 @@
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade pt-2 active show" id="home" role="tabpanel" aria-labelledby="home-tab">
-            @* <partial name="_MedicalHistoryPartial" /> *@
-            <partial name="_ViewDocumentsPartial" />
+            
+            @Html.Partial("_MedicalHistoryPartial", Model)
+            @* <partial name="_ViewDocumentsPartial" /> *@
         </div>
         <div class="tab-pane fade pt-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <partial name="_ProfilePartial" />

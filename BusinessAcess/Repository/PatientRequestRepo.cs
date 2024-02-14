@@ -2,6 +2,7 @@
 using DataAccess.DataContext;
 using DataAccess.DataModels;
 using DataAccess.ViewModel;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,12 @@ namespace BusinessLogic.Repository
     public class PatientRequestRepo : IPatientRequest
     {
         private readonly ApplicationDbContext _context;
-        public PatientRequestRepo(ApplicationDbContext context)
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        public PatientRequestRepo(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
         {
             _context=context;
+            _hostingEnvironment=hostingEnvironment;
         }
         public void CreatePatientRequest(PatientRequestViewModel model)
         {
@@ -49,9 +53,9 @@ namespace BusinessLogic.Repository
                 user.City = model.City;
                 user.State = model.State;
                 user.Zipcode = model.Zip;
-                //user.Intdate = model.DOB.Day;
-                //user.Strmonth = model.DOB.Month.ToString();
-                //user.Intyear = model.DOB.Year;
+                user.Intdate = model.DOB.Day;
+                user.Strmonth = model.DOB.Month.ToString();
+                user.Intyear = model.DOB.Year;
                 user.Createdby = "xyz";
                 user.Createddate = DateTime.Now;
                 user.Status = 1;
@@ -114,6 +118,26 @@ namespace BusinessLogic.Repository
                 _context.Add(requestclient);
                  _context.SaveChanges();
                 
+            }
+            if(model.File != null && model.File.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                Requestwisefile requestwisefile = new();
+                requestwisefile.Requestid = request.Requestid;
+                requestwisefile.Filename = model.File.FileName;
+                requestwisefile.Createddate = DateTime.Now;
+                _context.Add(requestwisefile);
+                _context.SaveChanges();
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+                var filePath = Path.Combine(uploadsFolder, model.File.FileName);
+                using (var stream =System.IO.File.Create(filePath))
+                {
+                    model.File.CopyTo(stream);
+                }
             }
 
         }

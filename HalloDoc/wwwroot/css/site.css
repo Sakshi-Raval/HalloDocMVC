@@ -124,7 +124,7 @@ input:focus {
 }
 
 .footerSubmit {
-    position: relative;
+    position: fixed;
     bottom: 1%;
 }
 

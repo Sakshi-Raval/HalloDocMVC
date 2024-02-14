@@ -51,8 +51,8 @@ namespace HalloDoc.Controllers
                     return RedirectToAction("Login", "Home");
                 }
                 TempData["Login"] = "Login Successful";
-                //User user = _context.Users.Where(m => m.Email == status.Email).FirstOrDefault();
-                //ViewBag.User = user;
+                HttpContext.Session.SetString("Aspnetuserid", status.Id);
+                HttpContext.Session.SetString("Email", status.Email);
                 return RedirectToAction("PatientDashboard", "Patient");
             }
             return View();

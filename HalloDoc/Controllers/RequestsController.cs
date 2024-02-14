@@ -32,7 +32,8 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public JsonResult CheckEmail(string email)
         {
-            User emailExists = _context.Users.Where(u=> u.Email == email).FirstOrDefault();
+            var emailExists = _context.Users.Where(u=> u.Email == email).FirstOrDefault();
+            Console.WriteLine(emailExists);
             return Json(emailExists);
 
         }

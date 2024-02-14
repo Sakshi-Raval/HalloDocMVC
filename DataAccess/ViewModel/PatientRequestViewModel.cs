@@ -15,13 +15,15 @@ namespace DataAccess.ViewModel
         public string? Symptoms { get; set; }
         [DataType(DataType.Password)]
         public string? Password {  get; set; }
+        [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Password and Confirm Password do not match")]
         public string? ConfirmPassword {  get; set; }
         [Required]
         public string Firstname { get; set; }
+        [Required]
         public string? Lastname { get; set; }
         [DataType(DataType.Date)]
-        public DateOnly? DOB {  get; set; }
+        public DateOnly DOB {  get; set; }
         [Required]
         [DataType(DataType.EmailAddress, ErrorMessage = "Enter email in correct format (example@email.com)")]
         public string Email { get; set; }
@@ -32,6 +34,7 @@ namespace DataAccess.ViewModel
         public string? State { get; set; }
         public string? Zip { get; set; }
         public string? RoomNum { get; set; }
+        
         public IFormFile? File {  get; set; }
     }
 }
