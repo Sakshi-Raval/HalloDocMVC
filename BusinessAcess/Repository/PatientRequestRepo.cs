@@ -119,25 +119,33 @@ namespace BusinessLogic.Repository
                  _context.SaveChanges();
                 
             }
-            if(model.File != null && model.File.Length > 0)
+           
+            if(model.File != null )
             {
-                var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                Requestwisefile requestwisefile = new();
-                requestwisefile.Requestid = request.Requestid;
-                requestwisefile.Filename = model.File.FileName;
-                requestwisefile.Createddate = DateTime.Now;
-                _context.Add(requestwisefile);
-                _context.SaveChanges();
+                foreach (var file in model.File)
+                {
+                    if (file.Length > 0)
+                    {
+                        var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                        Requestwisefile requestwisefile = new();
+                        requestwisefile.Requestid = request.Requestid;
+                        requestwisefile.Filename = file.FileName;
+                        requestwisefile.Createddate = DateTime.Now;
+                        _context.Add(requestwisefile);
+                        _context.SaveChanges();
 
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
+                        if (!Directory.Exists(uploadsFolder))
+                        {
+                            Directory.CreateDirectory(uploadsFolder);
+                        }
+                        var filePath = Path.Combine(uploadsFolder, file.FileName);
+                        using (var stream = System.IO.File.Create(filePath))
+                        {
+                            file.CopyTo(stream);
+                        }
+                    }
                 }
-                var filePath = Path.Combine(uploadsFolder, model.File.FileName);
-                using (var stream =System.IO.File.Create(filePath))
-                {
-                    model.File.CopyTo(stream);
-                }
+                
             }
 
         }

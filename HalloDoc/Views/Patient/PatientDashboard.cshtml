@@ -6,14 +6,43 @@
 @section Scripts{
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script src=""></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    
     @if (TempData["Login"] != null)
     {
-        <script type="text/javascript">
+        <script>
             toastr.success('@TempData["Login"]');
+
         </script>
     }
+    <script>
+            function ViewDocument(requestid) {
+                var xhr = new XMLHttpRequest();
+            xhr.open('GET', '@Url.Action("_ViewDocumentsPartial", "Patient")'+'?f=' + requestid.toString(), true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById('viewDocumentPage').innerHTML = xhr.responseText;
+                    document.getElementById('patientRequests').style.display = 'none';
+                    document.getElementById('viewDocumentPage').style.display = 'block';
+                    } else {
+                        // Handle error or other states if needed
+                    }
+                };
+                xhr.send();
+            }
+
+            function ShowRequestsPage() {
+
+            var patientRequests = document.getElementById('patientRequests');
+            patientRequests.style.display = 'block';
+            document.getElementById('viewDocumentPage').style.display = 'none';
+
+            }
+    </script>
+      
+   
+
+
     
 }
 <div class="formdiv">
@@ -27,10 +56,49 @@
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade pt-2 active show" id="home" role="tabpanel" aria-labelledby="home-tab">
-            
-            @Html.Partial("_MedicalHistoryPartial", Model)
-            @* <partial name="_ViewDocumentsPartial" /> *@
+            <div id="patientRequests">
+            <div class="container-fluid rounded mx-3 mt-4 " >
+                <h3 class="h3 mb-3">Medical History</h3>
+                <div class="rounded" style="width:auto; box-shadow: 2px 2px 20px rgb(179, 177, 177)">
+                    <div class=" d-flex justify-content-end"><button class="btn btn-outline-info my-3 ">Create New Request</button></div>
+                    <div style="">
+                            <table class="table table-responsive">
+                            <tbody>
+                                <tr class="bg-light">
+                                    <th scope="col">Created Date</th>
+                                    <th scope="col">Current Status</th>
+                                    <th scope="col">Documents</th>
+                                </tr>
+
+                                @foreach (var item in Model)
+                                {
+                                      
+                                    <tr>
+                                            <td class="my-auto">@item.CreatedDate</td>
+                                            <td class="my-auto">@item.Status</td>
+                                        @if (item.DocumentCount > 0){
+                                       
+                                             <td>
+                                                    <button class="btn btn-outline-info me-2" id="documentBtn" onclick="ViewDocument('@item.requestid')" style="width:30%;height: 30%">
+                                                   (@item.DocumentCount)Documents
+                                                   </button>
+                                             </td>
+                                        }
+                                        else
+                                        {
+                                            <td>       </td>
+                                        }
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </div>
         </div>
+        <div id="viewDocumentPage"></div>
         <div class="tab-pane fade pt-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <partial name="_ProfilePartial" />
         </div>

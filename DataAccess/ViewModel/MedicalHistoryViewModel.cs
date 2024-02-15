@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace DataAccess.ViewModel
         public string CreatedDate { get; set; }
         public int Status { get; set; }
         public int DocumentCount { get; set; }
+        public int requestid { get; set; }
 
     }
 }

@@ -69,7 +69,14 @@ var infoArea = document.getElementById("infoArea");
 input.addEventListener('change', showFileName);
 
 function showFileName() {
-    var file_input = event.srcElement;
-    var fileName = file_input.files[0].name;
-    infoArea.textContent = fileName;
+    //var file_input = event.srcElement;
+    //var fileName = file_input.files[0].name;
+    //infoArea.textContent = fileName;
+    var fileNames = '';
+    var files = event.target.files;
+    for (var i = 0; i < files.length; i++) {
+        fileNames += files[i].name+', ';
+    }
+    fileNames = fileNames.slice(0, -2);
+    infoArea.textContent = fileNames;
 }

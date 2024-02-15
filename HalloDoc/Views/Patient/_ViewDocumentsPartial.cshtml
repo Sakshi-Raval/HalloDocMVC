@@ -1,11 +1,14 @@
-﻿
+﻿@model List<ViewDocumentsViewModel>
+@{
+    Layout = null;
+}
 <div class="container-fluid rounded mx-3 mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-8 col-sm-6 d-inline-flex justify-content-between">
+        <div class="col-md-8 col-10 d-inline-flex justify-content-between">
             <div class="d-flex">
                 <h3 class="h3 mt-3">Documents</h3></div>
             <div class="d-flex">
-            <button class="btn btn-outline-info my-3 ms-auto">
+                <button class="btn btn-outline-info my-3 ms-auto" onclick="ShowRequestsPage()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16"
                      height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
@@ -16,10 +19,10 @@
         </div>
     </div>
     <div class="row rounded justify-content-center" >
-        <div class="col-md-8 col-sm-6 rounded" style=" box-shadow: 2px 2px 20px rgb(179, 177, 177)">
-            <div class="m-2 fs-6 text-black-50">Patient Name</div>
-            <div><span class="text-info fs-5 m-2">Patient</span><span class="fs-6 text-black-50">(MMMM)</span></div>
-            <div><span class="fs-6 text-black-50 m-2">Check here for any files that you or the doctors or your subsequesnt requestors have attached for you to review.</span></div>
+        <div class="col-md-8 col-10 rounded" style=" box-shadow: 2px 2px 20px rgb(179, 177, 177)">
+            <small class="mx-2 mt-3 mb-2">Patient Name</small>
+            <div><span class="text-info fs-5 m-2">@ViewBag.PatientName</span><small>@ViewBag.ConfNum</small></div>
+            <div><small class="m-2">Check here for any files that you or the doctors or your subsequesnt requestors have attached for you to review.</small></div>
             <div class="d-flex my-3 mx-2">
                 <label for="fileUpload" class="col d-flex rounded">
                     <div class="col bg-white p-1 ps-3 text-muted border"><span id="infoArea">Select File</span></div>
@@ -32,7 +35,7 @@
                     <input type="file"  class="form-control-file" id="fileUpload" hidden>
                 </label>
             </div>
-                <div class="d-flex row justify-content-between">
+                <div class="d-flex justify-content-between">
                     <div class="">
                         <h5 class="h5 mt-3">Documents</h5>
                     </div>
@@ -42,6 +45,44 @@
                         </button>
                     </div>
                 </div>
+                <table class="m-2 table table-responsive">
+                <colgroup>
+                    <col span="1" style="width: 8%;">
+                    <col span="1" style="width: 23%;">
+                    <col span="1" style="width: 23%;">
+                    <col span="1" style="width: 23%;">
+                    <col span="1" style="width: 23%;">
+
+                </colgroup>
+                    <tbody>
+                        <tr class="bg-light">
+                            <th scope="col">
+                                <input type="checkbox" />
+                            </th>
+                            <th scope="col">    </th>
+                            <th scope="col">Uploader</th>
+                            <th scope="col">Uploaded date</th>
+                            <th scope="col">Actions</th> 
+                        </tr>
+                          @foreach (var item in Model)
+                        {
+                            <tr>
+                            <td><input type="checkbox" /></td>
+                            <td>@item.Filename</td>
+                            <td>@item.UploaderName</td>
+                            <td>@item.CreatedDate</td>
+                            <td>
+                                <button class ="btn btn-outline-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#10bce9" class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
+                                        <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293z" />
+                                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+                                    </svg>
+                                </button>
+                            </td>
+                            </tr>
+                        }
+                </tbody>
+                </table>
            
         </div>
     </div>
