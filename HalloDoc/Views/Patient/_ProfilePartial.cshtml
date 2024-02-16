@@ -1,120 +1,153 @@
-﻿
+﻿@model PatientRequestViewModel 
+@section Scripts{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script >
+        $(document).ready(function () {
+            var email = @Model.Email;
+            $.ajax({
+                url: '/Requests/CheckEmail',
+                type: 'POST',
+                data: { email: email },
+                success: function (data) {
+                    console.log(data);
+                    if (data) {
+                        $('#fname').val(data.firstname).prop('disabled', true);
+                        $('#lname').val(data.lastname).prop('disabled', true);
+                        $('#phone').val(data.mobile).prop('disabled', true);
+                        $('#patientEmail').val(email).prop('disabled', true);
+                        $('#street').val(data.street).prop('disabled', true);
+                        $('#city').val(data.city).prop('disabled', true);
+                        $('#state').val(data.state).prop('disabled', true);
+                        $('#zip').val(data.zipcode).prop('disabled', true);
+                    }
+                }
+            });
+        });
+    </script>
+}
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <div class="col-10">
             <div class="d-flex m-auto justify-content-between documents" style=" ">
-                <h2 class=" ">User Profile</h2>
-            <button class="btn btn-outline-info my-3 ms-auto" onclick="">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                     height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                          d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
-                </svg>Back
-            </button>
+                <h3 class="my-3">User Profile</h3>
+                <button class="btn btn-outline-info my-3 ms-auto" onclick="">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                         height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                    </svg>Back
+                </button>
             </div>
-            <div class="shadow-lg" style="">
-                <h5>
-                    General Information
-                </h5>
-                <div>
-                    <div class="row">
-                        <div class="col-11 mt-4 col-md-6 form-floating ">
-                            <input type="text"  class="t  form-control" id="fname" disabled>
-                            <label for="fname" class="ms-2">First Name</label>
-                        </div>
-                        <div class="col-11 mt-4 col-md-6 form-floating ">
-                            <input type="text" class="t  form-control" id="lname" disabled>
-                            <label for="lname" class="ms-2">Last Name</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-11 mt-4 col-md-6 form-floating ">
-                            <input type="date" class="t  form-control" id="Dates" disabled>
-                            <label for="Dates" class="ms-2">Last Name</label>
-                        </div>
-                    </div>
-                </div>
-                <h5 class="mt-4">
-                    Contact Information
-                </h5>
-                <div class="row">
-                    <div class="col-11 mt-4 col-md-2 form-floating ">
-                        <div class="form-floating">
-                            <select class="form-select" id="floatingSelect" aria-label="Floating label select example" disabled>
-                                <option selected>Select</option>
-                                <option value="1">Email</option>
-                                <option value="2">Mobile</option>
-
-                            </select>
-                            <label for="floatingSelect">Works with selects</label>
-                        </div>
-                    </div>
-                    <div class="col-11 mt-4 col-md-4 form-floating ">
-                        <input type="text" class="t  form-control" id="lname" disabled>
-                        <label for="lname" class="ms-2">Last Name</label>
-                    </div>
-                    <div class="col-11 mt-4 col-md-6 form-floating ">
-                        <input type="date" class="t  form-control" id="Dates" disabled>
-                        <label for="Dates" class="ms-2">Last Name</label>
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <h5>Patient Location</h5>
-                </div>
-                <div class="row ">
-                    <div class="col-11 col-md-6 mt-4">
-                        <div class="form-floating">
-                            <input type="text"  class="t form-control" id="floatingEmail" disabled>
-                            <label for="floatingEmail">Street</label>
-                        </div>
-
-                    </div>
-                    <div class="col-11 col-md-6 mt-4">
-                        <div class="form-floating">
-                            <input type="text" class="t  form-control" id="floatingCity" disabled>
-                            <label for="floatingCity">City</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row ">
-                    <div class="col-11 col-md-6 mt-4">
-                        <div class="form-floating">
-                            <input type="text"  class="t  form-control" id="floatingState" disabled>
-                            <label for="floatingState">State</label>
-                        </div>
-                    </div>
-                    <div class="col-11 col-md-4 mt-4">
-                        <div class="form-floating">
-                            <input type="number" class="t  form-control" id="floatingZip" disabled>
-                            <label for="floatingZip">Zip Code</label>
-                        </div>
-                    </div>
-                    <div class="col-2 mt-4 mr-auto">
-                        <button class="btn btn-outline-info " onclick='@Url.Action("https://maps.app.goo.gl/ESACrXuWD9ojL2CL9")'>
-                            Map
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-
+        </div>
+    </div>
    
 
+    <div class="row justify-content-center">
+        <div class="col-10 rounded text-start" style=" box-shadow: 2px 2px 20px rgb(179, 177, 177)">
+            
+            <div class="row">
+                <h5 class="mt-4">General Information</h5>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="fname" asp-for="Firstname"
+                               placeholder="Firstname" >
+                        <label class="text-muted floating-label" for="fname">First Name</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="lname" asp-for="Lastname"
+                               placeholder="Lastname" >
+                        <label class="text-muted floating-label" for="lname">Last Name</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="date" class="form-control" id="dob" >
+                        <label class="text-muted floating-label" for="dob">Date of Birth</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h5 class="mt-4">Contact Information</h5>
+            </div>
+            <div class="row">
+                <div class="col-md-2 col-4">
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example" >
+                           
+                            <option value="1">Email</option>
+                            <option value="2" selected>Mobile</option>
 
-        <script>
-            // bind file-input-form click action to text-input-span
-            $('#text_input_span_id').click(function () {
-                $("#file_input_id").trigger('click');
-            })
-            // bind file-input-form click action to text-input-form
-            $('#text_input_id').click(function () {
-                $("#file_input_id").trigger('click');
-            })
-            // display file name in text-input-form
-            $("#file_input_id").change(function () {
-                $('#text_input_id').val(this.value.replace(/C:\\fakepath\\/i, ''))
-            })
-        </script>
-
-
-
-
+                        </select>
+                        <label for="floatingSelect">Type</label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-8">
+                    <input type="tel" id="phone" class="input w-100 h-100 phone" asp-for="Phone" >
+                    
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="patientEmail" asp-for="Email"
+                               placeholder="name@example.com"  required> 
+                        <label class="text-muted floating-label" for="patientEmail">Email address</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h5 class="mt-4">Location Information</h5>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="street" asp-for="Street"
+                               placeholder="Street" >
+                        <label class="text-muted floating-label" for="street">Street</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="city" asp-for="City"
+                               placeholder="City" >
+                        <label class="text-muted floating-label" for="city">City</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="state" asp-for="State"
+                               placeholder="State" >
+                        <label class="text-muted floating-label" for="state">State</label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="zip" asp-for="Zip"
+                               placeholder="Zip Code" >
+                        <label class="text-muted floating-label" for="zip">Zip Code</label>
+                    </div>
+                </div>
+                <div class="col-md-1 col-3">
+                    <button class="btn btn-outline-info" onclick='@Url.Action("https://maps.app.goo.gl/ESACrXuWD9ojL2CL9")' style="height:75%; width:100%">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                            <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
+                            <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                        </svg>Map
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="d-grid gap-2 my-4 d-md-flex justify-content-md-end">
+                    <button class="btn btn-info me-md-2 text-white fw-medium my-2" type="">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 

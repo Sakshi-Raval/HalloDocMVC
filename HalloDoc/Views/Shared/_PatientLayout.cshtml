@@ -15,10 +15,27 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <script>
-        var username = @ViewData["UserName"];
-      console.log(username);
-      // var listItem = document.getElementById("username");
-      // listItem.textContent = "Welcome "+ username;
+      
+ var downloadAll = document.getElementById("downloadAll");
+        console.log("sf");
+     
+          console.log("sfdsf");
+
+          downloadAll.addEventListener('click', function () {
+              var checkboxes = document.querySelectorAll('input[name="file"]:checked');
+              if (checkboxes.length != 0) {
+                  console.log(checkboxes.length);
+                  checkboxes.forEach(function (checkbox) {
+                      var filename = checkbox.value;
+                      var downloadURL = '/uploads/' + filename;
+                      console.log(downloadURL);
+                      var link = document.getElementById('downloadLink');
+                      link.setAttribute('href', downloadURL);
+                      link.click();
+                  });
+              }
+          });
+      
   </script>
 </head>
 <body >
