@@ -60,6 +60,31 @@
 
     </script>    
 }
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title bg-info" id="exampleModalCenterTitle">Create New Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Here, I want tp create request for
+                <button class="btn btn-info">Me</button>
+                <button class="btn btn-outline-info">Someone Else</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <div class="formdiv">
     <ul class="nav nav-tabs border-0" id="myTab" role="tablist" style="box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3)">
@@ -76,7 +101,7 @@
             <div class="container-fluid rounded  mt-4 " >
                 <h3 class="h3 mb-3">Medical History</h3>
                 <div class="rounded" style="width:auto; box-shadow: 2px 2px 20px rgb(179, 177, 177)">
-                    <div class=" d-flex justify-content-end"><button class="btn btn-outline-info my-3 ">Create New Request</button></div>
+                        <div class=" d-flex justify-content-end"><button class="btn btn-outline-info my-3" data-toggle="modal" data-target="#exampleModalCenter" id="btnTrigger">Create New Request</button></div>
                     <div style="">
                             <table class="table table-responsive">
                             <tbody>
