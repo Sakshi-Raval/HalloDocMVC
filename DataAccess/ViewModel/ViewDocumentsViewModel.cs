@@ -11,5 +11,6 @@ namespace DataAccess.ViewModel
         public string Filename { get; set; }
         public string UploaderName { get; set; }
         public string CreatedDate { get; set; }
+        public int requestedId{ get; set;}
     }
 }

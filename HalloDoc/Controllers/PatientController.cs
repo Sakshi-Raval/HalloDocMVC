@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using BusinessLogic.IRepository;
 using Microsoft.AspNetCore.Hosting;
+using System.Web.Helpers;
+
 namespace HalloDoc.Controllers
 {
     public class PatientController : Controller
@@ -28,16 +30,20 @@ namespace HalloDoc.Controllers
         {
             var email = HttpContext.Session.GetString("Email");
             var medicalHistoryViewModels = _patient.GetRequestRecords(email);
+            var userModel = _context.Users.Where(u=>u.Email == email).FirstOrDefault();
+            ViewBag.userModel = userModel;
             return View(medicalHistoryViewModels);
         }
         public IActionResult _ViewDocumentsPartial()
         {
             var requestid = Request.Query["f"];
             var ReqId = int.Parse(requestid);
+            ViewBag.requestid = ReqId;
             var email = HttpContext.Session.GetString("Email");
             Request patName = _context.Requests.Where(x => x.Requestid == ReqId).FirstOrDefault();
             ViewBag.PatientName = string.Concat(patName.Firstname,' ',patName.Lastname);
             ViewBag.ConfNum = patName.Confirmationnumber;
+
             var viewDocumentsViewModel = _patient.GetDocuments(ReqId);
             return View(viewDocumentsViewModel);
         }
@@ -61,7 +67,100 @@ namespace HalloDoc.Controllers
                 return NotFound();
             }
         }
-        //public IActionResult 
+        [HttpGet]
+        public IActionResult _ProfilePartial(UserProfileViewModel model)
+        {
+            var email = HttpContext.Session.GetString("Email");
+            if (ModelState.IsValid)
+            {
+                var userModel = _patient.UpdateUser(model, email);
+                ViewBag.userModel = userModel;
+                TempData["UpdateMsg"] = "Updated successfully";
+                return View();
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult CreateRequestMe()
+            {
+            var email = HttpContext.Session.GetString("Email");
+            var userModel = _context.Users.Where(u => u.Email == email).FirstOrDefault();
+            ViewBag.userModel = userModel;
+
+            return View();
+        }    
+        [HttpPost]
+        public IActionResult CreateRequestMe(PatientRequestViewModel model)
+            {
+            var email = HttpContext.Session.GetString("Email");
+            var userModel = _context.Users.Where(u => u.Email == email).FirstOrDefault();
+            ViewBag.userModel = userModel;
+            if (ModelState.IsValid)
+            {
+                _patient.SubmitReqMe(model, ViewBag.userModel.Userid);
+                return View();
+            }
+            return View();
+        }
+        [HttpGet]
+        public IActionResult CreateRequestElse()
+        {
+
+            var email = HttpContext.Session.GetString("Email");
+            var userModel = _context.Users.Where(u => u.Email == email).FirstOrDefault();
+            ViewBag.userModel = userModel;
+            return View();
+        }
+        [HttpPost]
+        public IActionResult CreateRequestElse(OtherRequestViewModel model)
+        {
+
+            var email = HttpContext.Session.GetString("Email");
+            var userModel = _context.Users.Where(u => u.Email == email).FirstOrDefault();
+            ViewBag.userModel = userModel;
+            if (ModelState.IsValid)
+            {
+                _patient.SubmitReqElse(model, userModel);
+                return View();
+            }
+            return View();
+        }
+        public IActionResult Login()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Home");
+        }
+
+        [HttpPost]
+        public IActionResult UploadFiles(int requestId)
+        {
+            var file = Request.Form.Files["files"];
+           
+
+                if (file.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+                    var filePath = Path.Combine(uploadsFolder, file.FileName);
+                Requestwisefile requestwisefile = new();
+                    requestwisefile.Requestid = requestId;
+                    requestwisefile.Filename = file.FileName;
+                    requestwisefile.Createddate = DateTime.Now;
+                _context.Add(requestwisefile);
+                _context.SaveChanges();
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        file.CopyTo(stream);
+                    }
+                return RedirectToAction("_ViewDocumentsPartial", "Patient",requestId);
+                }
+            
+            return RedirectToAction("PatientDashboard","Patient");
+        }
 
     }
 }

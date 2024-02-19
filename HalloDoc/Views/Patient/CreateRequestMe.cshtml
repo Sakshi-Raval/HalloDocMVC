@@ -1,26 +1,49 @@
-﻿<div class="row justify-content-center">
-    <div class="col-10 col-md-8 col-lg-6 justify-content-end">
-        <a asp-action="SubmitReq" asp-controller="Home"
-           class="float-end my-4 btn btn-outline-info backBtn">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="16" height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1"
-                 viewBox="0 0 16 16">
-                <path fill-rule="evenodd"
-                      d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
-            </svg>Back
-        </a>
+﻿@model PatientRequestViewModel
+@{
+    Layout = "_PatientLayout";
+    var userModel = ViewBag.userModel as User;
+}
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            // var bdate = @userModel.Intyear.ToString() + "-" + @userModel.Strmonth + "-" + @userModel.Intdate.ToString();
+            $('#fname').val('@userModel.Firstname');
+            $('#lname').val('@userModel.Lastname');
+            $('#phone').val('@userModel.Mobile');
+            //$('dob').val(bdate).prop('disabled', true);
+            $('#patientEmail').val('@userModel.Email');
+            $('#street').val('@userModel.Street');
+            $('#city').val('@userModel.City');
+            $('#state').val('@userModel.State');
+            $('#zip').val('@userModel.Zipcode');
+        });
+    </script>
+}
+<div class="row justify-content-center">
+    <div class="col-10 col-md-8 col-lg-6  d-inline-flex justify-content-between">
+        <div class="d-flex">
+            <h4 class="h4 mt-5 mb-3">Submit Information</h4>
+        </div>
+        <div class="d-flex">
+            <a class="btn btn-outline-info mt-5 mb-3 ms-auto" asp-action="PatientDashboard" asp-controller="Patient">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                     height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                </svg>Back
+            </a>
+        </div>
     </div>
-</div>
 <div class="row justify-content-center">
     <div class="col-10 col-md-8 col-lg-6 rounded mb-3" style="box-shadow: 2px 2px 20px rgb(179, 177, 177);">
-        <form asp-action="PatientRequest" enctype="multipart/form-data">
+        <form asp-action="CreateRequestMe" enctype="multipart/form-data">
             <div class="container-fluid mt-3 p-0">
                 <div class="row">
                     <h6 class="h6 py-3">Patient Information</h6>
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" asp-for="" placeholder="Symptoms" id="symptoms"
+                        <textarea class="form-control"  placeholder="Symptoms" id="symptoms" asp-for="Symptoms"
                                   style="height: 15vh;"></textarea>
-                        <label asp-for="" class="text-muted floating-label ms-2">
+                        <label  class="text-muted floating-label ms-2">
                             Enter Brief Details of Symptoms
                             (Optional)
                         </label>
@@ -29,21 +52,25 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" asp-for="" class="form-control" id="fname" placeholder="First Name">
-                            <label asp-for="" class="text-muted floating-label">First Name</label>
-                            <span asp-validation-for="" class="text-danger"></span>
+                                <input type="text" class="form-control" id="fname" placeholder="First Name" asp-for="Firstname">
+                            <label class="text-muted floating-label">First Name</label>
+                            <span asp-validation-for="Firstname" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" asp-for="" class="form-control" id="lname" placeholder="Last Name">
-                            <label asp-for="" class="text-muted floating-label">Last Name</label>
+                                <input type="text" class="form-control" id="lname" placeholder="Last Name" asp-for="Lastname">
+                            <label  class="text-muted floating-label">Last Name</label>
+                                <span asp-validation-for="Lastname" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="date" asp-for="DOB" class="form-control" id="dob" placeholder="Date of Birth">
-                            <label asp-for="DOB" class="text-muted floating-label">Date of Birth</label>
+                                <input type="date" class="form-control" id="dob" placeholder="Date of Birth" asp-for="DOB">
+                            <label class="text-muted floating-label">Date of Birth</label>
+                                <span asp-validation-for="DOB" class="text-danger"></span>
+
                         </div>
                         <h6 class="h6 py-3">Patient Contact Information</h6>
                     </div>
@@ -51,41 +78,17 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="email" asp-for="Email" class="form-control" id="patientEmail"
-                                   placeholder="name@example.com" required>
-                            <label asp-for="Email" class="text-muted floating-label">Email address</label>
-                            <span asp-validation-for="Email" class="text-danger"></span>
+                            <input type="email" class="form-control" id="patientEmail"
+                                   placeholder="name@example.com" required asp-for="Email">
+                            <label  class="text-muted floating-label">Email address</label>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-md-6 col-12">
-                        <input type="tel" asp-for="Phone" id="phone" class="input w-100 h-100 phone">
-                        <span asp-validation-for="Phone" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="row" id="passwordMainDiv" style="display:none">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-12">
-                                <h6 class="h6 py-3">Password Details</h6>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6" id="passwordDiv">
+                            <input type="tel" id="phone" class="input w-100 h-100 phone" asp-for="Phone">
+                            <span asp-validation-for="Phone" class="text-danger"></span>
 
-                                <div class="form-floating mb-3 ">
-                                    <input type="password" asp-for="Password" class="form-control" id="password">
-                                    <label asp-for="Password" class="text-muted floating-label">Password</label>
-                                    <span asp-validation-for="Password" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6" id="confirmPasswordDiv">
-                                <div class="form-floating mb-3">
-                                    <input type="text" asp-for="ConfirmPassword" class="form-control" id="confirmpassword">
-                                    <label asp-for="ConfirmPassword" class="text-muted floating-label">Confirm Password</label>
-                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -96,36 +99,36 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" asp-for="Street" class="form-control" id="street" placeholder="Street">
-                            <label asp-for="Street" class="text-muted floating-label">Street</label>
+                                <input type="text" class="form-control" id="street" placeholder="Street" asp-for="Street">
+                            <label class="text-muted floating-label">Street</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" asp-for="City" class="form-control" id="city" placeholder="City">
-                            <label asp-for="City" class="text-muted floating-label">City</label>
+                                <input type="text" class="form-control" id="city" placeholder="City" asp-for="City">
+                            <label class="text-muted floating-label">City</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" asp-for="State" class="form-control" id="state" placeholder="State">
-                            <label asp-for="State" class="text-muted floating-label">State</label>
+                                <input type="text" class="form-control" id="state" placeholder="State" asp-for="State">
+                            <label class="text-muted floating-label">State</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" asp-for="Zip" class="form-control" id="zip" placeholder="Zip Code">
-                            <label asp-for="Zip" class="text-muted floating-label">Zip Code</label>
+                            <input type="text" class="form-control" id="zip" placeholder="Zip Code" asp-for="Zip">
+                            <label class="text-muted floating-label">Zip Code</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="number" asp-for="RoomNum" class="form-control" id="roomNum"
+                                <input type="number" class="form-control" id="roomNum" asp-for="RoomNum"
                                    placeholder="Room #/ Suite (Optional)">
-                            <label asp-for="RoomNum" class="text-muted floating-label">Room #/ Suite (Optional)</label>
+                            <label class="text-muted floating-label">Room #/ Suite (Optional)</label>
                         </div>
                     </div>
-                    <div class="col-md-1 col-3">
+                    <div class="col-md-2 col-4">
                         <button class="btn btn-outline-info" onclick='@Url.Action("https://maps.app.goo.gl/ESACrXuWD9ojL2CL9")' style="height:75%; width:100%">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
                                 <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
@@ -147,8 +150,10 @@
                                 <span style="color:white;" asp-for="File" class="ps-1">Upload</span>
 
                             </div>
-                            <input type="file" asp-for="File" class="form-control-file" id="fileUpload" multiple="multiple" hidden>
+                            <input type="file" class="form-control-file" id="fileUpload" multiple="multiple" hidden asp-for="File">
                         </label>
+                            
+
                     </div>
                 </div>
                 <div class="row">

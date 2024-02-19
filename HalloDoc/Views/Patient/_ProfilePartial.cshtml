@@ -1,36 +1,64 @@
-﻿@model PatientRequestViewModel 
-@section Scripts{
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script >
-        $(document).ready(function () {
-            var email = @Model.Email;
-            $.ajax({
-                url: '/Requests/CheckEmail',
-                type: 'POST',
-                data: { email: email },
-                success: function (data) {
-                    console.log(data);
-                    if (data) {
-                        $('#fname').val(data.firstname).prop('disabled', true);
-                        $('#lname').val(data.lastname).prop('disabled', true);
-                        $('#phone').val(data.mobile).prop('disabled', true);
-                        $('#patientEmail').val(email).prop('disabled', true);
-                        $('#street').val(data.street).prop('disabled', true);
-                        $('#city').val(data.city).prop('disabled', true);
-                        $('#state').val(data.state).prop('disabled', true);
-                        $('#zip').val(data.zipcode).prop('disabled', true);
-                    }
-                }
-            });
-        });
-    </script>
+﻿@model UserProfileViewModel
+@{
+    
+    var userModel = ViewBag.userModel as User;
 }
-<div class="container-fluid mt-4">
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#btnSubmitRow').hide();
+        // var bdate = new Date(@userModel.Intyear , parseInt(@userModel.Strmonth), @userModel.Intdate);
+        $('#fname').val('@userModel.Firstname').prop('disabled', true);
+        $('#lname').val('@userModel.Lastname').prop('disabled', true);
+        $('#phone').val('@userModel.Mobile').prop('disabled', true);
+        //$('#dob').val(bdate).prop('disabled', true);
+        $('#patientEmail').val('@userModel.Email').prop('disabled', true);
+        $('#street').val('@userModel.Street').prop('disabled', true);
+        $('#city').val('@userModel.City').prop('disabled', true);
+        $('#state').val('@userModel.State').prop('disabled', true);
+        $('#zip').val('@userModel.Zipcode').prop('disabled', true);
+
+        $('#btnEdit').on('click', function () {
+            $(this).closest('#btnEditRow').hide();
+            $('#btnSubmitRow').show();
+            $('#fname').prop('disabled', false);
+            $('#lname').prop('disabled', false);
+            $('#phone').prop('disabled', false);
+            $('#dob').prop('disabled', false);
+            $('#patientEmail').prop('disabled', false);
+            $('#street').prop('disabled', false);
+            $('#city').prop('disabled', false);
+            $('#state').prop('disabled', false);
+            $('#zip').prop('disabled', false);
+
+        });
+  
+        $('#cancelBtn').on('click', function () {
+            $('#btnSubmitRow').hide();
+            $('#btnEditRow').show();
+            //var bdate = @userModel.Intyear.ToString() + "-" + @userModel.Strmonth + "-" + @userModel.Intdate.ToString();
+            $('#fname').val('@userModel.Firstname').prop('disabled', true);
+            $('#lname').val('@userModel.Lastname').prop('disabled', true);
+            $('#phone').val('@userModel.Mobile').prop('disabled', true);
+            //$('dob').val(bdate).prop('disabled', true);
+            $('#patientEmail').val('@userModel.Email').prop('disabled', true);
+            $('#street').val('@userModel.Street').prop('disabled', true);
+            $('#city').val('@userModel.City').prop('disabled', true);
+            $('#state').val('@userModel.State').prop('disabled', true);
+            $('#zip').val('@userModel.Zipcode').prop('disabled', true);
+        });
+    });
+
+</script>
+
+
+<div class="container-fluid mt-3">
     <div class="row justify-content-center">
         <div class="col-10">
             <div class="d-flex m-auto justify-content-between documents" style=" ">
                 <h3 class="my-3">User Profile</h3>
-                <button class="btn btn-outline-info my-3 ms-auto" onclick="">
+                <button class="btn btn-outline-info my-3 ms-auto" onclick="history.back(-1)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16"
                          height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
                         <path fill-rule="evenodd"
@@ -44,7 +72,7 @@
 
     <div class="row justify-content-center">
         <div class="col-10 rounded text-start" style=" box-shadow: 2px 2px 20px rgb(179, 177, 177)">
-            
+        <form asp-action="_ProfilePartial" asp-controller="Patient">
             <div class="row">
                 <h5 class="mt-4">General Information</h5>
             </div>
@@ -67,7 +95,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <input type="date" class="form-control" id="dob" >
+                        <input type="date" class="form-control" id="dob" asp-for="DOB">
                         <label class="text-muted floating-label" for="dob">Date of Birth</label>
                     </div>
                 </div>
@@ -142,11 +170,18 @@
                     </button>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" id="btnEditRow">
                 <div class="d-grid gap-2 my-4 d-md-flex justify-content-md-end">
-                    <button class="btn btn-info me-md-2 text-white fw-medium my-2" type="">Edit</button>
+                    <button class="btn btn-info me-md-2 text-white fw-medium my-2" type="button" id="btnEdit">Edit</button>
                 </div>
             </div>
+            <div class="row" id="btnSubmitRow">
+                <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
+                    <button class="btn btn-info me-md-2 text-white fw-medium" type="submit">Submit</button>
+                        <button class="btn btn-outline-info fw-medium link-info" type="button" id="cancelBtn">Cancel</button>
+                </div>
+            </div>
+            </form>
         </div>
     </div>
 </div>

@@ -64,7 +64,7 @@ document.getElementById("dob").value = today;
 
 //File upload
 var input = document.getElementById("fileUpload");
-var infoArea = document.getElementById("infoArea");
+
 if (input) {
     input.addEventListener('change', showFileName);
 }
@@ -72,6 +72,7 @@ function showFileName() {
     //var file_input = event.srcElement;
     //var fileName = file_input.files[0].name;
     //infoArea.textContent = fileName;
+    var infoArea = document.getElementById("infoArea");
     var fileNames = '';
     var files = event.target.files;
     for (var i = 0; i < files.length; i++) {
