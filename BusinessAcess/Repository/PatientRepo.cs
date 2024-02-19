@@ -52,7 +52,6 @@ namespace BusinessLogic.Repository
                          Filename = reqFile.Filename,
                          UploaderName = string.Concat(req.Firstname, ' ', req.Lastname),
                          CreatedDate = reqFile.Createddate.Date.ToString("MMM dd, yyyy"),
-                         requestedId = requestId
                     }).ToList());
         }
 

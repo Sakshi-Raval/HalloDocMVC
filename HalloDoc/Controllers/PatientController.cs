@@ -155,11 +155,12 @@ namespace HalloDoc.Controllers
                     using (var stream = System.IO.File.Create(filePath))
                     {
                         file.CopyTo(stream);
-                    }
-                return RedirectToAction("_ViewDocumentsPartial", "Patient",requestId);
                 }
-            
-            return RedirectToAction("PatientDashboard","Patient");
+
+                return RedirectToAction("PatientDashboard", "Patient");
+                }
+            return View();
+
         }
 
     }

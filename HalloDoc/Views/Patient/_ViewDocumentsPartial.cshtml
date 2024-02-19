@@ -1,6 +1,7 @@
 ﻿@model List<ViewDocumentsViewModel>
 @{
     Layout = null;
+    var requestid = ViewBag.requestid;
 }
 
 <div class="container-fluid rounded mx-3 mt-4">
@@ -24,7 +25,7 @@
             <small class="mx-2 mt-3 mb-2">Patient Name</small>
             <div><span class="text-info fs-5 m-2">@ViewBag.PatientName</span><small>@ViewBag.ConfNum</small></div>
             <div><small class="m-2">Check here for any files that you or the doctors or your subsequesnt requestors have attached for you to review.</small></div>
-            <form enctype="multipart/form-data" method="post" asp-action="UploadFiles" asp-controller="Patient" asp-route-requestId="@Model.First().requestedId">
+            <form enctype="multipart/form-data" method="post" asp-action="UploadFiles" asp-controller="Patient" asp-route-requestId="@requestid">
             <div class="d-flex my-3 mx-2">
                 <label for="fileUpload" class="col d-flex rounded">
                     <span id="infoArea" class="col bg-white p-1 ps-3 text-muted border">Select File</span>
