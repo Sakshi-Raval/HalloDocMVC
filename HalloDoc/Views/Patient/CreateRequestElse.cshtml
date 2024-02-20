@@ -1,15 +1,10 @@
-﻿@model OtherRequestViewModel
+﻿@model PatientRequestViewModel
 @{
     var userModel = ViewBag.userModel as User;
+    ViewData["Title"] = "Submit Request for Someone else";
     Layout = "_PatientLayout";
 }
-@section Scripts{
-    <script>
-        $(document).ready(function () {
-          
-        });
-    </script>
-}
+
 <div class="row justify-content-center">
     <div class="col-10 col-md-8 col-lg-6  d-inline-flex justify-content-between">
         <div class="d-flex">
@@ -27,7 +22,7 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-10 col-md-8 col-lg-6 rounded mb-3" style="box-shadow: 2px 2px 20px rgb(179, 177, 177);">
-            <form asp-action="PatientRequest" enctype="multipart/form-data">
+            <form asp-action="CreateRequestElse" asp-controller="Patient" enctype="multipart/form-data">
                 <div class="container-fluid mt-3 p-0">
                     <div class="row">
                         <h6 class="h6 py-3">Patient Information</h6>
@@ -90,32 +85,42 @@
                                 <input type="text" asp-for="Street" class="form-control" id="street"
                                     placeholder="Street">
                                 <label asp-for="Street" class="text-muted floating-label">Street</label>
+                                <span asp-validation-for="Street" class="text-danger"></span>
+
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
                                 <input type="text" asp-for="City" class="form-control" id="city" placeholder="City">
                                 <label asp-for="City" class="text-muted floating-label">City</label>
+                                <span asp-validation-for="City" class="text-danger"></span>
+
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
                                 <input type="text" asp-for="State" class="form-control" id="state" placeholder="State">
                                 <label asp-for="State" class="text-muted floating-label">State</label>
+                                <span asp-validation-for="State" class="text-danger"></span>
+
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
                                 <input type="text" asp-for="Zip" class="form-control" id="zip" placeholder="Zip Code">
                                 <label asp-for="Zip" class="text-muted floating-label">Zip Code</label>
+                                <span asp-validation-for="Zip" class="text-danger"></span>
+
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="number" asp-for="RoomNum" class="form-control" id="roomNum"
+                                <input type="text" asp-for="RoomNum" class="form-control" id="roomNum"
                                     placeholder="Room #/ Suite (Optional)">
                                 <label asp-for="RoomNum" class="text-muted floating-label">Room #/ Suite
                                     (Optional)</label>
+                                <span asp-validation-for="RoomNum" class="text-danger"></span>
+
                             </div>
                         </div>
                         <div class="col-md-2 col-4">
@@ -142,6 +147,8 @@
                                 <input type="text" class="form-control" id="relation" asp-for="Relation"
                                     placeholder="Relation">
                                 <label  class="text-muted floating-label">Relation with Patient(Optional)</label>
+                                <span asp-validation-for="Relation" class="text-danger"></span>
+
                             </div>
                         </div>
                     </div>
@@ -156,12 +163,14 @@
                                 <div id="btn" class="p-1 btn btn-info">
 
                                     <i class="bi bi-cloud-arrow-up text-white"></i>
-                                    <span style="color:white;" asp-for="File" class="ps-1">Upload</span>
+                                    <span style="color:white;" class="ps-1">Upload</span>
 
                                 </div>
-                                <input type="file" @* asp-for="File" *@ class="form-control-file" id="fileUpload"
+                                <input type="file" class="form-control-file" asp-for="File" id="fileUpload"
                                     multiple="multiple" hidden>
                             </label>
+                            <span asp-validation-for="File" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="row">

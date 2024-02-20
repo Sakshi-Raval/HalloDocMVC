@@ -129,7 +129,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <input type="number" asp-for="RoomNum" class="form-control" id="roomNum"
+                        <input type="text" asp-for="RoomNum" class="form-control" id="roomNum"
                                placeholder="Room #/ Suite (Optional)">
                         <label asp-for="RoomNum" class="text-muted floating-label">Room #/ Suite (Optional)</label>
                     </div>
@@ -182,13 +182,6 @@
                         }
                         else {
                             $('#passwordMainDiv').hide();
-                            $('#fname').val(data.firstname).prop('disabled',true);
-                            $('#lname').val(data.lastname).prop('readonly', true);
-                            $('#phone').val(data.mobile).prop('readonly', true);
-                            $('#street').val(data.street).prop('readonly', true);
-                            $('#city').val(data.city).prop('readonly', true);
-                            $('#state').val(data.state).prop('readonly', true);
-                            $('#zip').val(data.zipcode).prop('readonly', true);
                             
                         }
                     }

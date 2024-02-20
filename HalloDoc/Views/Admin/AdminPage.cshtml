@@ -1,0 +1,49 @@
+﻿@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Admin  ";
+}
+
+<div class="formdiv" >
+    <ul class="nav nav-tabs border-0 shadow" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link tabs active" style="color:black" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Dashboard</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link tabs" style="color:black" id="profile-tab" data-bs-toggle="tab" data-bs-target="#providerLocation" type="button" role="tab" aria-controls="providerLocation" aria-selected="false" tabindex="-1">Provider Location</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link tabs" style="color:black" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">My Profile</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link tabs" style="color:black" id="profile-tab" data-bs-toggle="tab" data-bs-target="#providers" type="button" role="tab" aria-controls="providers" aria-selected="false" tabindex="-1">Providers</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link tabs" style="color:black" id="profile-tab" data-bs-toggle="tab" data-bs-target="#partners" type="button" role="tab" aria-controls="partners" aria-selected="false" tabindex="-1">Partners</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link tabs" style="color:black" id="profile-tab" data-bs-toggle="tab" data-bs-target="#access" type="button" role="tab" aria-controls="access" aria-selected="false" tabindex="-1">Access</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link tabs" style="color:black" id="profile-tab" data-bs-toggle="tab" data-bs-target="#records" type="button" role="tab" aria-controls="records" aria-selected="false" tabindex="-1">Records</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade pt-2 active show" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <partial name="_AdminDashboardPartial" />
+        </div>
+        <div class="tab-pane fade pt-2" id="providerLocation" role="tabpanel" aria-labelledby="profile-tab">
+          
+        </div>
+        <div class="tab-pane fade pt-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        </div>
+        <div class="tab-pane fade pt-2" id="providers" role="tabpanel" aria-labelledby="profile-tab">
+        </div>
+        <div class="tab-pane fade pt-2" id="partners" role="tabpanel" aria-labelledby="profile-tab">
+        </div>
+        <div class="tab-pane fade pt-2" id="access" role="tabpanel" aria-labelledby="profile-tab">
+        </div>
+        <div class="tab-pane fade pt-2" id="records" role="tabpanel" aria-labelledby="profile-tab">
+        </div>
+    </div>
+</div>
+

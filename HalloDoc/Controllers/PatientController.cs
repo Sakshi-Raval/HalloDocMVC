@@ -28,9 +28,28 @@ namespace HalloDoc.Controllers
 
         public IActionResult PatientDashboard()
         {
+           
             var email = HttpContext.Session.GetString("Email");
             var medicalHistoryViewModels = _patient.GetRequestRecords(email);
             var userModel = _context.Users.Where(u=>u.Email == email).FirstOrDefault();
+            if (userModel != null)
+            {
+                if (userModel.Lastname != null)
+                {
+                    var username = string.Concat(userModel.Firstname, ' ', userModel.Lastname);
+                    //HttpContext.Session.SetString("Username", username);
+                    HttpContext.Session.SetString("username", username);
+                }
+                else
+                {
+                    var username = userModel.Firstname;
+                    //HttpContext.Session.SetString("Username", username);
+                    HttpContext.Session.SetString("username", username);
+
+                }
+
+            }
+            TempData["username"]=HttpContext.Session.GetString("username");
             ViewBag.userModel = userModel;
             return View(medicalHistoryViewModels);
         }
@@ -67,7 +86,6 @@ namespace HalloDoc.Controllers
                 return NotFound();
             }
         }
-        [HttpGet]
         public IActionResult _ProfilePartial(UserProfileViewModel model)
         {
             var email = HttpContext.Session.GetString("Email");
@@ -99,7 +117,7 @@ namespace HalloDoc.Controllers
             if (ModelState.IsValid)
             {
                 _patient.SubmitReqMe(model, ViewBag.userModel.Userid);
-                return View();
+                return RedirectToAction("CreateRequestMe","Patient");
             }
             return View();
         }
@@ -113,7 +131,7 @@ namespace HalloDoc.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult CreateRequestElse(OtherRequestViewModel model)
+        public IActionResult CreateRequestElse(PatientRequestViewModel model)
         {
 
             var email = HttpContext.Session.GetString("Email");
@@ -121,12 +139,13 @@ namespace HalloDoc.Controllers
             ViewBag.userModel = userModel;
             if (ModelState.IsValid)
             {
+                Console.WriteLine("eutryuiwsdjf");
                 _patient.SubmitReqElse(model, userModel);
-                return View();
+                return RedirectToAction("CreateRequestElse", "Patient");
             }
             return View();
         }
-        public IActionResult Login()
+        public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Login", "Home");
@@ -136,32 +155,9 @@ namespace HalloDoc.Controllers
         public IActionResult UploadFiles(int requestId)
         {
             var file = Request.Form.Files["files"];
-           
 
-                if (file.Length > 0)
-                {
-                    var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-                    var filePath = Path.Combine(uploadsFolder, file.FileName);
-                Requestwisefile requestwisefile = new();
-                    requestwisefile.Requestid = requestId;
-                    requestwisefile.Filename = file.FileName;
-                    requestwisefile.Createddate = DateTime.Now;
-                _context.Add(requestwisefile);
-                _context.SaveChanges();
-                    using (var stream = System.IO.File.Create(filePath))
-                    {
-                        file.CopyTo(stream);
-                }
-
-                return RedirectToAction("PatientDashboard", "Patient");
-                }
-            return View();
-
+            _patient.FileUpload(file, requestId);
+            return RedirectToAction("PatientDashboard", "Patient");
         }
-
     }
 }

@@ -35,6 +35,7 @@ namespace DataAccess.ViewModel
         public string? Zip { get; set; }
         public string? RoomNum { get; set; }
         
-        public List<IFormFile?> File {  get; set; }
+        public List<IFormFile>? File {  get; set; }
+        public string? Relation {  get; set; }
     }
 }

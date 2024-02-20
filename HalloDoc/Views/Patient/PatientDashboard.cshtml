@@ -19,7 +19,7 @@
     <script>
             function ViewDocument(requestid) {
                 var xhr = new XMLHttpRequest();
-            xhr.open('GET', '@Url.Action("_ViewDocumentsPartial", "Patient")'+'?f=' + requestid.toString(), true);
+                xhr.open('GET', '@Url.Action("_ViewDocumentsPartial", "Patient")'+'?f=' + requestid.toString(), true);
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState == 4 && xhr.status == 200) {
                     document.getElementById('viewDocumentPage').innerHTML = xhr.responseText;
@@ -91,7 +91,7 @@
 
 
 <div class="formdiv">
-    <ul class="nav nav-tabs border-0" id="myTab" role="tablist" style="box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3)">
+    <ul class="nav nav-tabs border-0 shadow" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link tabs active" style="color:black" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Dashboard</button>
         </li>
@@ -148,7 +148,6 @@
         </div>
         <div class="tab-pane fade pt-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @Html.Partial("_ProfilePartial", new UserProfileViewModel())
-            
         </div>
        
     </div>

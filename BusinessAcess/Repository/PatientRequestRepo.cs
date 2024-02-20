@@ -3,8 +3,10 @@ using DataAccess.DataContext;
 using DataAccess.DataModels;
 using DataAccess.ViewModel;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -72,6 +74,9 @@ namespace BusinessLogic.Repository
                 request.Email = model.Email;
                 request.Status = 1;
                 request.Createddate = DateTime.Now;
+                bool[] bitValues = { true };
+                BitArray bits = new BitArray(bitValues);
+                request.Isurgentemailsent = bits;
                 _context.Add(request);
                  _context.SaveChanges();
 
@@ -102,6 +107,9 @@ namespace BusinessLogic.Repository
                 request.Email = status.Email;
                 request.Status = 1;
                 request.Createddate = DateTime.Now;
+                bool[] bitValues = { true };
+                BitArray bits = new BitArray(bitValues);
+                request.Isurgentemailsent = bits;
                 _context.Add(request);
                  _context.SaveChanges();
 
@@ -124,30 +132,33 @@ namespace BusinessLogic.Repository
             {
                 foreach (var file in model.File)
                 {
-                    if (file.Length > 0)
-                    {
-                        var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                        Requestwisefile requestwisefile = new();
-                        requestwisefile.Requestid = request.Requestid;
-                        requestwisefile.Filename = file.FileName;
-                        requestwisefile.Createddate = DateTime.Now;
-                        _context.Add(requestwisefile);
-                        _context.SaveChanges();
-
-                        if (!Directory.Exists(uploadsFolder))
-                        {
-                            Directory.CreateDirectory(uploadsFolder);
-                        }
-                        var filePath = Path.Combine(uploadsFolder, file.FileName);
-                        using (var stream = System.IO.File.Create(filePath))
-                        {
-                            file.CopyTo(stream);
-                        }
-                    }
+                    FileUpload(file, request.Requestid);
                 }
                 
             }
 
+        }
+        public void FileUpload(IFormFile file, int requestId)
+        {
+            if (file.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+                var filePath = Path.Combine(uploadsFolder, file.FileName);
+                Requestwisefile requestwisefile = new();
+                requestwisefile.Requestid = requestId;
+                requestwisefile.Filename = file.FileName;
+                requestwisefile.Createddate = DateTime.Now;
+                _context.Add(requestwisefile);
+                _context.SaveChanges();
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    file.CopyTo(stream);
+                }
+            }
         }
     }
 }

@@ -1,21 +1,22 @@
 ﻿@model PatientRequestViewModel
 @{
     Layout = "_PatientLayout";
+    ViewData["Title"] = "Submit Request for Me";
     var userModel = ViewBag.userModel as User;
 }
 @section Scripts{
     <script>
         $(document).ready(function () {
             // var bdate = @userModel.Intyear.ToString() + "-" + @userModel.Strmonth + "-" + @userModel.Intdate.ToString();
-            $('#fname').val('@userModel.Firstname');
-            $('#lname').val('@userModel.Lastname');
-            $('#phone').val('@userModel.Mobile');
+            $('#fname').val('@userModel.Firstname').prop('readonly',true);
+            $('#lname').val('@userModel.Lastname').prop('readonly', true);
+            $('#phone').val('@userModel.Mobile').prop('readonly', true);
             //$('dob').val(bdate).prop('disabled', true);
-            $('#patientEmail').val('@userModel.Email');
-            $('#street').val('@userModel.Street');
-            $('#city').val('@userModel.City');
-            $('#state').val('@userModel.State');
-            $('#zip').val('@userModel.Zipcode');
+            $('#patientEmail').val('@userModel.Email').prop('readonly', true);
+            $('#street').val('@userModel.Street').prop('readonly', true);
+            $('#city').val('@userModel.City').prop('readonly', true);
+            $('#state').val('@userModel.State').prop('readonly', true);
+            $('#zip').val('@userModel.Zipcode').prop('readonly', true);
         });
     </script>
 }
@@ -123,7 +124,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="roomNum" asp-for="RoomNum"
+                                <input type="text" class="form-control" id="roomNum" asp-for="RoomNum"
                                    placeholder="Room #/ Suite (Optional)">
                             <label class="text-muted floating-label">Room #/ Suite (Optional)</label>
                         </div>

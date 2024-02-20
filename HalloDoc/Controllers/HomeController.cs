@@ -53,23 +53,6 @@ namespace HalloDoc.Controllers
                 }
                 //TempData["UserName"] = string.Concat(user.Firstname, ' ', user.Lastname);
                 //TempData.Keep("UserName");
-                if (user != null)
-                {
-                    if (user.Lastname != null)
-                    {
-                        var username = string.Concat(user.Firstname, ' ', user.Lastname);
-                        //HttpContext.Session.SetString("Username", username);
-                        TempData["username"] = username;
-                    }
-                    else
-                    {
-                        var username = user.Firstname;
-                        //HttpContext.Session.SetString("Username", username);
-                        TempData["username"] = username;
-
-                    }
-
-                }
               
                 TempData["Login"] = "Login Successful";
                 HttpContext.Session.SetString("Aspnetuserid", status.Id);

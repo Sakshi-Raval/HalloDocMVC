@@ -10,7 +10,6 @@ namespace DataAccess.ViewModel
 {
     public class MedicalHistoryViewModel
     {
-        public string Name { get; set; }
         //[DataType(DataType.DateTime)]
         //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "Mmm dd, YYYY")]
         public string CreatedDate { get; set; }

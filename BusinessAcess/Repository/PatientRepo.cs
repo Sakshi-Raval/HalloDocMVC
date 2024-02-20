@@ -3,7 +3,9 @@ using DataAccess.DataContext;
 using DataAccess.DataModels;
 using DataAccess.ViewModel;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,20 +24,40 @@ namespace BusinessLogic.Repository
         }
         public List<MedicalHistoryViewModel> GetRequestRecords(string email)
         {
-           var medicalHistoryViewModel = (from req in _context.Requests
-                   join reqFile in _context.Requestwisefiles
-                   on req.Requestid equals reqFile.Requestid into fileGroup
-                   where req.Email == email
-                   from reqFile in fileGroup.DefaultIfEmpty()
-                          //group fileGroup by new {req.Requestid} into g   
-                   select new MedicalHistoryViewModel
-                   {
-                        CreatedDate = req.Createddate.ToString("MMM dd, yyyy"),
-                        Status = req.Status,
-                        DocumentCount = fileGroup.Count(),
-                        requestid = req.Requestid,
-                        Name = "Sakshi"
-                   });
+            //var medicalHistoryViewModel = (from req in _context.Requests
+            //        join reqFile in _context.Requestwisefiles
+            //        on req.Requestid equals reqFile.Requestid into fileGroup
+            //        where req.Email == email
+            //        from reqFile in fileGroup.DefaultIfEmpty()
+            //        orderby req.Createddate descending
+            //        select new MedicalHistoryViewModel
+            //        {
+            //             CreatedDate = req.Createddate.ToString("MMM dd, yyyy"),
+            //             Status = req.Status,
+            //             DocumentCount = fileGroup.Count(),
+            //        });
+            var medicalHistoryViewModel = (from req in _context.Requests
+                                           join reqFile in _context.Requestwisefiles
+                                           on req.Requestid equals reqFile.Requestid into reqFilesGroup
+                                           from reqFile in reqFilesGroup.DefaultIfEmpty()
+                                           where req.Email == email
+                                           group reqFile by new
+                                           {
+                                               req.Requestid,
+                                               req.Createddate,
+                                               req.Status,
+
+                                           } into reqGroup
+                                           orderby reqGroup.Key.Createddate descending
+                                           select new MedicalHistoryViewModel
+                                           {
+                                               CreatedDate = reqGroup.Key.Createddate.ToString("MMM dd, yyyy"),
+                                               Status = reqGroup.Key.Status,
+                                               DocumentCount = reqGroup.Count(r=>r!=null),
+                                               requestid = reqGroup.Key.Requestid
+                                               
+                                           }
+                                          );
             return (medicalHistoryViewModel.ToList());
 
             
@@ -92,6 +114,9 @@ namespace BusinessLogic.Repository
             request.Email = model.Email;
             request.Status = 1;
             request.Createddate = DateTime.Now;
+            bool[] bitValues = { true };
+            BitArray bits = new BitArray(bitValues);
+            request.Isurgentemailsent = bits;
             _context.Add(request);
             _context.SaveChanges();
 
@@ -112,32 +137,13 @@ namespace BusinessLogic.Repository
             {
                 foreach (var file in model.File)
                 {
-                    if (file.Length > 0)
-                    {
-                        var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                        Requestwisefile requestwisefile = new();
-                        requestwisefile.Requestid = request.Requestid;
-                        requestwisefile.Filename = file.FileName;
-                        requestwisefile.Createddate = DateTime.Now;
-                        _context.Add(requestwisefile);
-                        _context.SaveChanges();
-
-                        if (!Directory.Exists(uploadsFolder))
-                        {
-                            Directory.CreateDirectory(uploadsFolder);
-                        }
-                        var filePath = Path.Combine(uploadsFolder, file.FileName);
-                        using (var stream = System.IO.File.Create(filePath))
-                        {
-                            file.CopyTo(stream);
-                        }
-                    }
+                    FileUpload(file, request.Requestid);
                 }
 
             }
         }
 
-        public void SubmitReqElse(OtherRequestViewModel model, User userModel)
+        public void SubmitReqElse(PatientRequestViewModel model, User userModel)
         {
             Request request = new();
             request.Requesttypeid = 2;
@@ -149,12 +155,15 @@ namespace BusinessLogic.Repository
             request.Status = 1;
             request.Createddate = DateTime.Now;
             request.Relationname = model.Relation;
+            bool[] bitValues = { true };
+            BitArray bits = new BitArray(bitValues);
+            request.Isurgentemailsent = bits;
             _context.Add(request);
             _context.SaveChanges();
 
             Requestclient requestclient = new();
             requestclient.Requestid = request.Requestid;
-            //Console.WriteLine(model.patientRequest);
+            Console.WriteLine("sudbgfvaisud");
             requestclient.Notes = model.Symptoms;
             requestclient.Firstname = model.Firstname;
             requestclient.Lastname = model.Lastname;
@@ -167,26 +176,38 @@ namespace BusinessLogic.Repository
             _context.Add(requestclient);
             _context.SaveChanges();
 
-            if (model.File != null && model.File.Length > 0)
+            if (model.File != null)
             {
-                var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                if (!Directory.Exists(uploadsFolder))
+                foreach (var file in model.File)
                 {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-                var filePath = Path.Combine(uploadsFolder, model.File.FileName);
-                Requestwisefile requestwisefile = new();
-                requestwisefile.Requestid = request.Requestid;
-                requestwisefile.Filename = model.File.FileName;
-                requestwisefile.Createddate = DateTime.Now;
-                using (var stream = File.Create(filePath))
-                {
-                    model.File.CopyTo(stream);
+                    FileUpload(file, request.Requestid);
                 }
 
             }
 
         }
 
+        public void FileUpload(IFormFile file, int requestId)
+        {
+            if (file.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+                var filePath = Path.Combine(uploadsFolder, file.FileName);
+                Requestwisefile requestwisefile = new();
+                requestwisefile.Requestid = requestId;
+                requestwisefile.Filename = file.FileName;
+                requestwisefile.Createddate = DateTime.Now;
+                _context.Add(requestwisefile);
+                _context.SaveChanges();
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    file.CopyTo(stream);
+                }
+            }
+        }
     }
 }

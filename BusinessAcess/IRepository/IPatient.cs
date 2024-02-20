@@ -1,6 +1,7 @@
 ﻿using DataAccess.DataContext;
 using DataAccess.DataModels;
 using DataAccess.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ namespace BusinessLogic.IRepository
         public List<ViewDocumentsViewModel> GetDocuments(int requestId);
         public User UpdateUser(UserProfileViewModel model, string email);
         public void SubmitReqMe(PatientRequestViewModel model, int userid);
-        public void SubmitReqElse(OtherRequestViewModel model, User userModel);
+        public void SubmitReqElse(PatientRequestViewModel model, User userModel);
+        public void FileUpload(IFormFile file, int requestId);
 
 
     }
