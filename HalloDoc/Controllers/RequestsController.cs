@@ -67,7 +67,7 @@ namespace HalloDoc.Controllers
         {
            if(ModelState.IsValid)
             {
-                _iOtherRequest.CreateOtherRequest(model);
+                _iOtherRequest.CreateOtherRequest(model,2);
                 TempData["message"] = "Request created successfully";
 
                 return RedirectToAction("FamilyRequest", "Requests");
@@ -83,7 +83,7 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                _iOtherRequest.CreateOtherRequest(model);
+                _iOtherRequest.CreateOtherRequest(model, 3);
                 TempData["message"] = "Request created successfully";
 
                 return RedirectToAction("ConciergeRequest", "Requests");
@@ -99,7 +99,7 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                _iOtherRequest.CreateOtherRequest(model);
+                _iOtherRequest.CreateOtherRequest(model,4);
                 TempData["message"] = "Request created successfully";
 
                 return RedirectToAction("BusinessRequest", "Requests");

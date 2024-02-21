@@ -44,8 +44,8 @@
                         </div>
                     </div>
                     <div class="col-md-6 col-12">
-                        <input type="tel" asp-for="OtherPhone" id="business_phone" class="input w-100 h-100 phone">
-                        <span asp-validation-for="OtherPhone" class="text-danger"></span>
+                            <input type="tel" asp-for="OtherPhone" id="business_phone" class="input w-100 h-100 phone" data-error-msg-id="errorMsg1">
+                        <span asp-validation-for="OtherPhone" class="text-danger" id="errorMsg1"></span>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
@@ -116,8 +116,8 @@
                         </div>
                     </div>
                     <div class="col-md-6 col-12">
-                        <input type="tel" asp-for="Phone" id="patient_phone" class="input w-100 h-100 phone">
-                        <span asp-validation-for="Phone" class="text-danger"></span>
+                            <input type="tel" asp-for="Phone" id="patient_phone" class="input w-100 h-100 phone" data-error-msg-id="errorMsg2">
+                        <span asp-validation-for="Phone" class="text-danger" id="errorMsg2"></span>
 
                     </div>
                 </div>
@@ -150,14 +150,14 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="number" asp-for="Zip" class="form-control" id="zip" placeholder="Zip Code">
+                            <input type="text" asp-for="Zip" class="form-control" id="zip" placeholder="Zip Code">
                             <label for="zip" asp-for="Zip" class="text-muted floating-label">Zip Code</label>
                             <span asp-validation-for="Zip" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="number" asp-for="CaseNum" class="form-control" id="caseNum"
+                            <input type="text" asp-for="CaseNum" class="form-control" id="caseNum"
                                    placeholder="Room #/ Suite (Optional)">
                             <label for="roomNum" asp-for="CaseNum" class="text-muted floating-label">Room #/ Suite (Optional)</label>
                             <span asp-validation-for="CaseNum" class="text-danger"></span>

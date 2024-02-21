@@ -83,7 +83,7 @@ namespace BusinessLogic.Repository
                 User user = _context.Users.Where(x => x.Email == email).FirstOrDefault();
                 user.Firstname = model.Firstname;
                 user.Lastname = model.Lastname;
-                user.Email = model.Email;
+          
                 user.Mobile = model.Phone;
                 user.Street = model.Street;
                 user.City = model.City;
@@ -96,8 +96,16 @@ namespace BusinessLogic.Repository
                 user.Modifiedby = user.Aspnetuserid;
                 _context.Update(user);
                 _context.SaveChanges();
-                return user;
-          
+
+                Aspnetuser aspnetuser = _context.Aspnetusers.Where(x=>x.Email==email).FirstOrDefault();
+                aspnetuser.Email = email;
+                aspnetuser.Modifieddate = DateTime.Now;
+                aspnetuser.Phonenumber = model.Phone;
+                _context.Update(aspnetuser);
+                _context.SaveChanges();
+
+             
+            return user;         
            
         }
 

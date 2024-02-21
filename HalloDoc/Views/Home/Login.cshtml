@@ -15,7 +15,8 @@
             toastr.error('@TempData["UnsuccessfulLogin"]');
         </script>
     }
-}
+    }
+
 
     <div class="container-fluid" style="min-width: 100%;">
 
@@ -65,7 +66,7 @@
                                         <input type="text" asp-for="Username" class="form-control" id="username" placeholder="Username">
                                         <label asp-for="Username" class="text-info">Username</label>
                                         <span asp-validation-for="Username" class="text-danger"></span>
-                                        <button class="btn input-image bg-white text-muted">
+                                        <button class="btn input-image text-muted" disabled>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                  fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16"
                                                  style="border-left: none; ">
@@ -79,11 +80,11 @@
                                 </div>
                                 <div class="input-group mb-4">
                                     <div class="form-floating w-100">
-                                    <input type="password" asp-for="Passwordhash" class="form-control" id="password" placeholder="Password">
+                                    <input type="password" asp-for="Passwordhash" class="form-control" id="passwordLogin" placeholder="Password">
                                     <label asp-for="Passwordhash" class="text-info">Password</label>
                                     <span asp-validation-for="Passwordhash" class="text-danger" ></span>
                                     </div>
-                                    <button class="btn input-image bg-white text-muted">
+                                <button class="btn input-image text-muted" type="button" onclick="showpass()">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                              fill="currentColor" class="bi bi-eye " viewBox="0 0 16 16"
                                              style="border-left: none; ">

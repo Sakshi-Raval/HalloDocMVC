@@ -33,6 +33,7 @@ namespace DataAccess.ViewModel
         public string Firstname { get; set; }
         public string? Lastname { get; set; }
         [DataType(DataType.Date)]
+        [DateNotInFutureAttribute(ErrorMessage = "Birthdate cannot be in future")]
         public DateOnly? DOB { get; set; }
         [Required]
         [DataType(DataType.EmailAddress, ErrorMessage = "Enter email in correct format (example@email.com)")]
@@ -49,4 +50,5 @@ namespace DataAccess.ViewModel
 
 
     }
+
 }

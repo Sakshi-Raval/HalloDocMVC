@@ -70,8 +70,8 @@
                             </div>
                         </div>
                         <div class="col-md-6 col-12">
-                            <input type="tel" asp-for="Phone" id="phone" class="input w-100 h-100 phone">
-                            <span asp-validation-for="Phone" class="text-danger"></span>
+                            <input type="tel" asp-for="Phone" id="phone" class="input w-100 h-100 phone" data-error-msg-id="errorMsg1">
+                            <span asp-validation-for="Phone" class="text-danger" id="errorMsg1"></span>
                         </div>
                     </div>
                     <div class="row">

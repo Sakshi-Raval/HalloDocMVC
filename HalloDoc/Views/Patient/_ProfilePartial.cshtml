@@ -1,6 +1,6 @@
 ﻿@model UserProfileViewModel
 @{
-    Layout = "_PatientLayout";
+    Layout = null;
     var userModel = ViewBag.userModel as User;
 }
 
@@ -8,29 +8,29 @@
 <script>
     $(document).ready(function () {
         $('#btnSubmitRow').hide();
-        // var bdate = new Date(@userModel.Intyear , parseInt(@userModel.Strmonth), @userModel.Intdate);
-        $('#fname').val('@userModel.Firstname').prop('disabled', true);
-        $('#lname').val('@userModel.Lastname').prop('disabled', true);
-        $('#phone').val('@userModel.Mobile').prop('disabled', true);
+        
+        $('#fname').val('@userModel.Firstname').prop('readonly', true);
+        $('#lname').val('@userModel.Lastname').prop('readonly', true);
+        $('#phone').val('@userModel.Mobile').prop('readonly', true);
         //$('#dob').val(bdate).prop('disabled', true);
-        $('#patientEmail').val('@userModel.Email').prop('disabled', true);
-        $('#street').val('@userModel.Street').prop('disabled', true);
-        $('#city').val('@userModel.City').prop('disabled', true);
-        $('#state').val('@userModel.State').prop('disabled', true);
-        $('#zip').val('@userModel.Zipcode').prop('disabled', true);
+        $('#patientEmail').val('@userModel.Email').prop('readonly', true);
+        $('#street').val('@userModel.Street').prop('readonly', true);
+        $('#city').val('@userModel.City').prop('readonly', true);
+        $('#state').val('@userModel.State').prop('readonly', true);
+        $('#zip').val('@userModel.Zipcode').prop('readonly', true);
 
         $('#btnEdit').on('click', function () {
             $(this).closest('#btnEditRow').hide();
             $('#btnSubmitRow').show();
-            $('#fname').prop('disabled', false);
-            $('#lname').prop('disabled', false);
-            $('#phone').prop('disabled', false);
-            $('#dob').prop('disabled', false);
-            $('#patientEmail').prop('disabled', false);
-            $('#street').prop('disabled', false);
-            $('#city').prop('disabled', false);
-            $('#state').prop('disabled', false);
-            $('#zip').prop('disabled', false);
+            $('#fname').prop('readonly', false);
+            $('#lname').prop('readonly', false);
+            $('#phone').prop('readonly', false);
+            $('#dob').prop('readonly', false);
+           
+            $('#street').prop('readonly', false);
+            $('#city').prop('readonly', false);
+            $('#state').prop('readonly', false);
+            $('#zip').prop('readonly', false);
 
         });
   
@@ -38,15 +38,15 @@
             $('#btnSubmitRow').hide();
             $('#btnEditRow').show();
             //var bdate = @userModel.Intyear.ToString() + "-" + @userModel.Strmonth + "-" + @userModel.Intdate.ToString();
-            $('#fname').val('@userModel.Firstname').prop('disabled', true);
-            $('#lname').val('@userModel.Lastname').prop('disabled', true);
-            $('#phone').val('@userModel.Mobile').prop('disabled', true);
+            $('#fname').val('@userModel.Firstname').prop('readonly', true);
+            $('#lname').val('@userModel.Lastname').prop('readonly', true);
+            $('#phone').val('@userModel.Mobile').prop('readonly', true);
             //$('dob').val(bdate).prop('disabled', true);
-            $('#patientEmail').val('@userModel.Email').prop('disabled', true);
-            $('#street').val('@userModel.Street').prop('disabled', true);
-            $('#city').val('@userModel.City').prop('disabled', true);
-            $('#state').val('@userModel.State').prop('disabled', true);
-            $('#zip').val('@userModel.Zipcode').prop('disabled', true);
+            $('#patientEmail').val('@userModel.Email').prop('readonly', true);
+            $('#street').val('@userModel.Street').prop('readonly', true);
+            $('#city').val('@userModel.City').prop('readonly', true);
+            $('#state').val('@userModel.State').prop('readonly', true);
+            $('#zip').val('@userModel.Zipcode').prop('readonly', true);
         });
     });
 
@@ -116,7 +116,8 @@
                     </div>
                 </div>
                 <div class="col-md-4 col-8">
-                    <input type="tel" id="phone" class="input w-100 h-100 phone" asp-for="Phone" >
+                        <input type="tel" id="phone" class="input w-100 h-100 phone" asp-for="Phone" data-error-msg-id="errorMsg1">
+                        <span asp-validation-for="Phone" class="text-danger" id="errorMsg1"></span>
                     
                 </div>
                 <div class="col-md-6">
@@ -162,7 +163,7 @@
                     </div>
                 </div>
                 <div class="col-md-1 col-3">
-                    <button class="btn btn-outline-info" onclick='@Url.Action("https://maps.app.goo.gl/ESACrXuWD9ojL2CL9")' style="height:75%; width:100%">
+                    <button class="btn btn-outline-info" onclick='@Url.Action("https://maps.app.goo.gl/ESACrXuWD9ojL2CL9")' style="height:75%">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
                             <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
                             <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />

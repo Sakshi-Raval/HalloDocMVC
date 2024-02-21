@@ -23,12 +23,12 @@ namespace BusinessLogic.Repository
             _context = context;
             _hostingEnvironment = hostingEnvironment;
         }
-        public void CreateOtherRequest(OtherRequestViewModel model)
+        public void CreateOtherRequest(OtherRequestViewModel model, int requestTypeId)
         {
             //Aspnetuser aspnetuser = new();
             //User user = new User();
             Request request = new();
-            request.Requesttypeid = 2;
+            request.Requesttypeid = requestTypeId;
             //request.Userid = user.Userid;
             request.Firstname = model.OtherFirstname;
             request.Lastname = model.OtherLastname;

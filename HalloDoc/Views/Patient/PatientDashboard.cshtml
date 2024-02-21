@@ -109,7 +109,7 @@
                     <div style="">
                             <table class="table table-responsive">
                             <tbody>
-                                <tr class="bg-secondary-subtle">
+                                <tr class="">
                                     <th scope="col">Created Date</th>
                                     <th scope="col">Current Status</th>
                                     <th scope="col">Documents</th>
@@ -124,7 +124,7 @@
                                         @if (item.DocumentCount > 0){
                                        
                                              <td>
-                                                    <button class="btn btn-outline-info me-2" id="documentBtn" onclick="ViewDocument('@item.requestid')" style="width:30%;height: 30%">
+                                                    <button class="btn btn-outline-info me-2" id="documentBtn" onclick="ViewDocument('@item.requestid')" >
                                                    (@item.DocumentCount)Documents
                                                    </button>
                                              </td>

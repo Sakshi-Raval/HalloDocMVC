@@ -86,6 +86,13 @@ namespace HalloDoc.Controllers
                 return NotFound();
             }
         }
+        [HttpGet]
+        public IActionResult _ProfilePartial()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public IActionResult _ProfilePartial(UserProfileViewModel model)
         {
             var email = HttpContext.Session.GetString("Email");
@@ -94,7 +101,7 @@ namespace HalloDoc.Controllers
                 var userModel = _patient.UpdateUser(model, email);
                 ViewBag.userModel = userModel;
                 TempData["UpdateMsg"] = "Updated successfully";
-                return View();
+                return RedirectToAction("PatientDashboard","Patient");
             }
             return View();
         }

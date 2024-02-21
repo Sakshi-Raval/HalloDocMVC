@@ -10,6 +10,7 @@ builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped<IPatientRequest, PatientRequestRepo>();
 builder.Services.AddScoped<IOtherRequest, OtherRequestRepo>();
 builder.Services.AddScoped<IPatient, PatientRepo>();
+builder.Services.AddScoped<IAdmin, AdminRepo>();
 builder.Services.AddSession();
 var app = builder.Build();
 

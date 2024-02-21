@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.IRepository
 {
-    public interface IOtherRequest
+    public interface IAdmin
     {
-        public void CreateOtherRequest(OtherRequestViewModel model, int requestTypeId);
+        public List<NewPatientsViewModel> GetNewPatients();
     }
 }

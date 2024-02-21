@@ -2,9 +2,22 @@
     font-family: poppins;
 }
 .dark-theme {
-    background-color: #4a4948;
-    color: white;
+    background-color: #212529;
+    color: #ffffff !important;
 }
+    .dark-theme table{
+        background-color: #212529;
+        color: #ffffff !important;
+    }
+    .dark-theme .nav-tabs .nav-item.show .nav-link, .dark-theme .nav-tabs .nav-link.active, .dark-theme .nav-tabs .nav-link {
+        background-color: #212529 !important;
+        color: #ffffff !important;
+    }
+    .dark-theme .filter-options {
+
+        color: #ffffff !important;
+    }
+
 
 .backLink {
     display: none;
@@ -159,6 +172,7 @@ input:focus {
 
     .intl-tel-input .country-list {
         z-index: 5;
+        color: black !important;
     }
 
 .input-group .intl-tel-input .form-control {

@@ -23,6 +23,7 @@ namespace DataAccess.ViewModel
         [Required]
         public string? Lastname { get; set; }
         [DataType(DataType.Date)]
+        [DateNotInFutureAttribute(ErrorMessage ="Birthdate cannot be in future")]
         public DateOnly DOB {  get; set; }
         [Required]
         [DataType(DataType.EmailAddress, ErrorMessage = "Enter email in correct format (example@email.com)")]
@@ -37,5 +38,17 @@ namespace DataAccess.ViewModel
         
         public List<IFormFile>? File {  get; set; }
         public string? Relation {  get; set; }
+    }
+    public class DateNotInFutureAttribute : ValidationAttribute
+    {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            var date = (DateOnly)value;
+            if (date > DateOnly.FromDateTime(DateTime.Now))
+            {
+                return new ValidationResult(ErrorMessage);
+            }
+            return ValidationResult.Success;
+        }
     }
 }

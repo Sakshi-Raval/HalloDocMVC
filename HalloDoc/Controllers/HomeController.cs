@@ -45,7 +45,7 @@ namespace HalloDoc.Controllers
                     return Problem("Entity set 'ApplicationDbContext.Aspnetusers'  is null.");
                 }
                 var status = _context.Aspnetusers.Where(m => m.Username == aspnetuserDTO.Username && m.Passwordhash == aspnetuserDTO.Passwordhash).FirstOrDefault();
-                User user = _context.Users.Where(m => m.Aspnetuserid == status.Id && m.Email ==status.Email).FirstOrDefault();
+                
                 if (status == null)
                 {
                     TempData["UnsuccessfulLogin"] = "Login Unsuccessful";
@@ -53,7 +53,7 @@ namespace HalloDoc.Controllers
                 }
                 //TempData["UserName"] = string.Concat(user.Firstname, ' ', user.Lastname);
                 //TempData.Keep("UserName");
-              
+                var user = _context.Users.Where(m => m.Aspnetuserid == status.Id && m.Email == status.Email).FirstOrDefault();
                 TempData["Login"] = "Login Successful";
                 HttpContext.Session.SetString("Aspnetuserid", status.Id);
                 HttpContext.Session.SetString("Email", status.Email);

@@ -14,7 +14,30 @@ input.forEach(function (inp) {
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
     });
     window.iti = iti;
+    var errorMsgId = inp.getAttribute("data-error-msg-id");
+    var errorMsg = document.getElementById(errorMsgId);
+    var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+    const reset = () => {
+        inp.classList.remove("error");
+        errorMsg.innerHTML = "";
+        errorMsg.classList.add("hide");
+    }
+
+    inp.addEventListener('blur', () => {
+        reset();
+        if (inp.value.trim()) {
+            if (!iti.isValidNumber()) {
+                inp.classList.add("error");
+                const errorCode = iti.getValidationError();
+                errorMsg.innerHTML = errorMap[errorCode] || "Invalid number";
+                errorMsg.classList.remove("hide");
+            }
+        }
+    });
+    inp.addEventListener('change', reset);
+    inp.addEventListener('keyup', reset);
 });
+
 
 //Dark Mode
 
@@ -25,11 +48,21 @@ let darkMode = localStorage.getItem("dark-mode");
 const enableDarkMode = () => {
     element.classList.add("dark-theme");
     localStorage.setItem("dark-mode", "enabled");
+    //var tables = document.getElementsByClassName('.table');
+    //forEach(table in tables)
+    //{
+    //    table.classList.add("table-dark");
+    //}
 };
 
 const disableDarkMode = () => {
     element.classList.remove("dark-theme");
     localStorage.setItem("dark-mode", "disabled");
+    //var tables = document.getElementsByClassName('.table');
+    //forEach(table in tables)
+    //{
+    //    table.classList.remove("table-dark");
+    //}
 };
 
 if (darkMode == "enabled") {
@@ -80,4 +113,15 @@ function showFileName() {
     }
     fileNames = fileNames.slice(0, -2);
     infoArea.textContent = fileNames;
+}
+
+function showpass() {
+    var password = document.getElementById('passwordLogin');
+    if (password.getAttribute("type") == "password") {
+        password.setAttribute("type", "text");
+    }
+    else {
+        password.setAttribute("type", "password");
+    }
+    
 }
