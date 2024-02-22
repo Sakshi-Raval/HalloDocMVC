@@ -8,47 +8,48 @@
 <script>
     $(document).ready(function () {
         $('#btnSubmitRow').hide();
-        
-        $('#fname').val('@userModel.Firstname').prop('readonly', true);
-        $('#lname').val('@userModel.Lastname').prop('readonly', true);
-        $('#phone').val('@userModel.Mobile').prop('readonly', true);
+
+        $('#fname').val('@userModel.Firstname').prop('disabled', true);
+        $('#lname').val('@userModel.Lastname').prop('disabled', true);
+        $('#phone').val('@userModel.Mobile').prop('disabled', true);
         //$('#dob').val(bdate).prop('disabled', true);
-        $('#patientEmail').val('@userModel.Email').prop('readonly', true);
-        $('#street').val('@userModel.Street').prop('readonly', true);
-        $('#city').val('@userModel.City').prop('readonly', true);
-        $('#state').val('@userModel.State').prop('readonly', true);
-        $('#zip').val('@userModel.Zipcode').prop('readonly', true);
+        $('#patientEmail').val('@userModel.Email').prop('disabled', true);
+        $('#street').val('@userModel.Street').prop('disabled', true);
+        $('#city').val('@userModel.City').prop('disabled', true);
+        $('#state').val('@userModel.State').prop('disabled', true);
+        $('#zip').val('@userModel.Zipcode').prop('disabled', true);
 
         $('#btnEdit').on('click', function () {
             $(this).closest('#btnEditRow').hide();
             $('#btnSubmitRow').show();
-            $('#fname').prop('readonly', false);
-            $('#lname').prop('readonly', false);
-            $('#phone').prop('readonly', false);
-            $('#dob').prop('readonly', false);
-           
-            $('#street').prop('readonly', false);
-            $('#city').prop('readonly', false);
-            $('#state').prop('readonly', false);
-            $('#zip').prop('readonly', false);
+            $('#fname').prop('disabled', false);
+            $('#lname').prop('disabled', false);
+            $('#phone').prop('disabled', false);
+            $('#dob').prop('disabled', false);
+            $('#patientEmail').prop('disabled', false);
+            $('#street').prop('disabled', false);
+            $('#city').prop('disabled', false);
+            $('#state').prop('disabled', false);
+            $('#zip').prop('disabled', false);
 
         });
-  
+
         $('#cancelBtn').on('click', function () {
             $('#btnSubmitRow').hide();
             $('#btnEditRow').show();
             //var bdate = @userModel.Intyear.ToString() + "-" + @userModel.Strmonth + "-" + @userModel.Intdate.ToString();
-            $('#fname').val('@userModel.Firstname').prop('readonly', true);
-            $('#lname').val('@userModel.Lastname').prop('readonly', true);
-            $('#phone').val('@userModel.Mobile').prop('readonly', true);
+            $('#fname').val('@userModel.Firstname').prop('disabled', true);
+            $('#lname').val('@userModel.Lastname').prop('disabled', true);
+            $('#phone').val('@userModel.Mobile').prop('disabled', true);
             //$('dob').val(bdate).prop('disabled', true);
-            $('#patientEmail').val('@userModel.Email').prop('readonly', true);
-            $('#street').val('@userModel.Street').prop('readonly', true);
-            $('#city').val('@userModel.City').prop('readonly', true);
-            $('#state').val('@userModel.State').prop('readonly', true);
-            $('#zip').val('@userModel.Zipcode').prop('readonly', true);
+            $('#patientEmail').val('@userModel.Email').prop('disabled', true);
+            $('#street').val('@userModel.Street').prop('disabled', true);
+            $('#city').val('@userModel.City').prop('disabled', true);
+            $('#state').val('@userModel.State').prop('disabled', true);
+            $('#zip').val('@userModel.Zipcode').prop('disabled', true);
         });
     });
+
 
 </script>
 
@@ -86,7 +87,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="lname" asp-for="Lastname"
+                            <input type="text" class="form-control" id="lname" asp-for="Lastname"
                                placeholder="Lastname" >
                         <label class="text-muted floating-label" for="lname">Last Name</label>
                     </div>
@@ -95,8 +96,9 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <input type="date" class="form-control" id="dob" asp-for="DOB">
+                            <input type="date" class="form-control" id="dob" asp-for="DOB">
                         <label class="text-muted floating-label" for="dob">Date of Birth</label>
+                            <span asp-validation-for="DOB" class="text-danger" id="dobSpan"></span>
                     </div>
                 </div>
             </div>
@@ -112,7 +114,7 @@
                             <option value="2" selected>Mobile</option>
 
                         </select>
-                        <label for="floatingSelect">Type</label>
+                        <label for="floatingSelect" class="text-muted">Type</label>
                     </div>
                 </div>
                 <div class="col-md-4 col-8">
@@ -122,7 +124,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="patientEmail" asp-for="Email"
+                            <input type="email" class="form-control" id="patientEmail" asp-for="Email"
                                placeholder="name@example.com"  required> 
                         <label class="text-muted floating-label" for="patientEmail">Email address</label>
                     </div>
@@ -134,14 +136,14 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="street" asp-for="Street"
+                            <input type="text" class="form-control" id="street" asp-for="Street"
                                placeholder="Street" >
                         <label class="text-muted floating-label" for="street">Street</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="city" asp-for="City"
+                            <input type="text" class="form-control" id="city" asp-for="City"
                                placeholder="City" >
                         <label class="text-muted floating-label" for="city">City</label>
                     </div>
@@ -150,14 +152,13 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="state" asp-for="State"
-                               placeholder="State" >
-                        <label class="text-muted floating-label" for="state">State</label>
+                            <input type="text" class="form-control" id="state" asp-for="State" placeholder="State" >
+                            <label class="text-muted floating-label" for="state">State</label>
                     </div>
                 </div>
                 <div class="col-md-4 col-6">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="zip" asp-for="Zip"
+                            <input type="text" class="form-control" id="zip" asp-for="Zip"
                                placeholder="Zip Code" >
                         <label class="text-muted floating-label" for="zip">Zip Code</label>
                     </div>

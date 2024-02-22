@@ -19,7 +19,7 @@ input.forEach(function (inp) {
     var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
     const reset = () => {
         inp.classList.remove("error");
-        errorMsg.innerHTML = "";
+        errorMsg.textContent = "";
         errorMsg.classList.add("hide");
     }
 
@@ -29,7 +29,7 @@ input.forEach(function (inp) {
             if (!iti.isValidNumber()) {
                 inp.classList.add("error");
                 const errorCode = iti.getValidationError();
-                errorMsg.innerHTML = errorMap[errorCode] || "Invalid number";
+                errorMsg.textContent = errorMap[errorCode] || "Invalid number";
                 errorMsg.classList.remove("hide");
             }
         }
@@ -125,3 +125,18 @@ function showpass() {
     }
     
 }
+
+//birthday validation
+var birthdateInput = document.getElementById('dob');
+var birthdateError = document.getElementById('dobSpan');
+birthdateInput.addEventListener('change', function () {
+    var selectedDate = new Date(birthdateInput.value);
+    var currentDate = new Date();
+    if (selectedDate > currentDate) {
+        birthdateError.textContent = "Birthdate cannot be in future";
+    }
+    else {
+        birthdateError.textContent = "";
+
+    }
+});

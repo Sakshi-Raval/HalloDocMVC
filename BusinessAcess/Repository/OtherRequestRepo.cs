@@ -51,6 +51,9 @@ namespace BusinessLogic.Repository
             requestclient.Notes = model.Symptoms;
             requestclient.Firstname = model.Firstname;
             requestclient.Lastname = model.Lastname;
+            requestclient.Intyear = model.DOB.Year;
+            requestclient.Intdate = model.DOB.Day;
+            requestclient.Strmonth = model.DOB.Month.ToString();
             requestclient.Phonenumber = model.Phone;
             requestclient.Email = model.Email;
             requestclient.Street = model.Street;

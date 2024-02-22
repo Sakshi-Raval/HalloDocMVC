@@ -18,11 +18,13 @@ namespace HalloDoc.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IPatientRequest _iPatientRequest;
         private readonly IOtherRequest _iOtherRequest;
-        public RequestsController(ApplicationDbContext context, IPatientRequest iPatientRequest, IOtherRequest iOtherRequest)
+        private readonly IEmailService _emailService;
+        public RequestsController(ApplicationDbContext context, IPatientRequest iPatientRequest, IOtherRequest iOtherRequest, IEmailService emailService)
         {
-            _context=context;
-            _iPatientRequest=iPatientRequest;
+            _context = context;
+            _iPatientRequest = iPatientRequest;
             _iOtherRequest = iOtherRequest;
+            _emailService = emailService;
         }
         public IActionResult Index()
         {
@@ -30,7 +32,7 @@ namespace HalloDoc.Controllers
         }
 
         [HttpPost]
-        public JsonResult CheckEmail(string email)
+        public  JsonResult CheckEmail(string email)
         {
             var emailExists = _context.Users.Where(u=> u.Email == email).FirstOrDefault();
             Console.WriteLine(emailExists);
@@ -105,6 +107,23 @@ namespace HalloDoc.Controllers
                 return RedirectToAction("BusinessRequest", "Requests");
             }
             return View();
+        }
+        [HttpPost]
+        public async Task SendEmailAsync(string email)
+        {
+            var user = _context.Users.Where(u => u.Email == email).FirstOrDefault();
+            if(user==null)
+            {
+                string token = Guid.NewGuid().ToString();
+                DateTime expiryTime = DateTime.UtcNow.AddHours(24);
+
+                string link = Url.Action("Login", "Home", new { token = token }, Request.Scheme);
+
+                link += $"?expiryTime={expiryTime}";
+                string subject = "Create Account";
+                await _emailService.SendEmailAsync(email, subject, $"Here is the link to create account. Link expires in 24 hours. {link}");
+            }
+
         }
     }
 }

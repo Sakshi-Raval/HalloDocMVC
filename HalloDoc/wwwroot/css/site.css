@@ -5,7 +5,7 @@
     background-color: #212529;
     color: #ffffff !important;
 }
-    .dark-theme table{
+    .dark-theme table, .dark-theme .dropdownRegion , .dark-theme .input-group{
         background-color: #212529;
         color: #ffffff !important;
     }
@@ -16,6 +16,76 @@
     .dark-theme .filter-options {
 
         color: #ffffff !important;
+    }
+    .dark-theme .phone{
+        background-color: #ffffff !important;
+    }
+
+/*admin dashboard states*/
+#newState {
+    background-color: #E9EAEF;
+    border: 1px solid #203f9a;
+    color: #203f9a;
+}
+#newState:hover {
+    background-color: #203f9a;
+    border: 1px solid #203f9a;
+    color:white;
+}
+
+#pendingState {
+    background-color: #e5f2f8;
+    color: #31D2F2;
+    border: 1px solid #31D2F2;
+}
+    #pendingState:hover {
+        background-color: #31D2F2;
+        border: 1px solid #31D2F2;
+        color: white;
+    }
+
+#activeState {
+    background-color: #e9f0e8;
+    border: 1px solid #669D5D;
+    color: #669D5D;
+}
+    #activeState:hover {
+        background-color: #669D5D;
+        border: 1px solid #669D5D;
+        color: white;
+    }
+
+#concludeState {
+    background-color: #f7e6ee;
+    color: #cf30a4;
+    border: 1px solid #cf30a4;
+}
+    #concludeState:hover {
+        background-color: #cf30a4;
+        color: white;
+        border: 1px solid #cf30a4;
+    }
+
+#toCloseState {
+    color: #2C6498;
+    background-color: #E5EEF5;
+    border: 1px solid #2C6498;
+}
+    #toCloseState:hover {
+        color: white;
+        background-color: #2C6498;
+        border: 1px solid #2C6498;
+    }
+
+#unpaidState {
+    background-color: #EFEEF4;
+    color: #8970A9;
+    border: 1px solid #8970A9;
+}
+    #unpaidState:hover {
+        background-color: #8970A9;
+        color:white;
+        border: 1px solid #8970A9;
     }
 
 
@@ -187,6 +257,8 @@ input:focus {
     height: 75%;
 }
 
+
+
 @media (max-width: 767.98px) {
     .backImgContainer {
         position: relative;
@@ -229,6 +301,8 @@ input:focus {
         
     }
 }
+
+
 
 @media(max-width: 576px) {
     body {

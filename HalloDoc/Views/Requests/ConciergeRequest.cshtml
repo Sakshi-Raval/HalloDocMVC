@@ -5,6 +5,29 @@
 <partial name="_Notification" />
 <partial name="_ValidationScriptsPartial" />
 
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-confirm modal-dialog-centered">
+        <div class="modal-content px-3" style="width: auto;">
+            <div class="modal-header pt-5" style="border-bottom: none;">
+                <div class="icon-box text-warning text-center" style="width: 100%; height: 100%;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
+                    </svg>
+                </div>
+            </div>
+            <div class="modal-body my-3 text-center">
+                <h4 class="h4 text-muted fw-medium">Information</h4>
+                <p class="text-muted">
+                    When submitting a request, you must provide the correct contact information
+                    for the patient or the responsibly party. Failure to provide the correct email and phone number
+                    will delay the service or be declined.
+                </p>
+                <button class="btn btn-info text-white close my-3" data-dismiss="modal" onclick="hideAlertBox()">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid" style="min-height: 100vh;">
     <div class="row justify-content-center">
         <div class="col-10 col-md-8 col-lg-6 justify-content-end">
@@ -92,7 +115,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                                <input type="number" asp-for="Zip" class="form-control" id="conczip" placeholder="Zip Code" >
+                                <input type="text" asp-for="Zip" class="form-control" id="conczip" placeholder="Zip Code" >
                                 <label for="conczip" asp-for="Zip" class="text-muted floating-label">Zip Code</label>
                                 <span asp-validation-for="Zip" class="text-danger"></span>
                         </div>
@@ -129,7 +152,7 @@
                         <div class="form-floating mb-3">
                                 <input type="date" asp-for="DOB" class="form-control" id="dob" placeholder="Date of Birth" >
                                 <label for="dob" asp-for="DOB" class="text-muted floating-label">Date of Birth</label>
-                                <span asp-validation-for="DOB" class="text-danger"></span>
+                                <span asp-validation-for="DOB" class="text-danger" id="dobSpan"></span>
                         </div>
                         <h6 class="h6 py-3">Patient Contact Information</h6>
                     </div>
@@ -157,7 +180,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                                <input type="number" asp-for="RoomNum" class="form-control" id="roomNum"
+                                <input type="text" asp-for="RoomNum" class="form-control" id="roomNum"
                                    placeholder="Room #/ Suite (Optional)">
                                 <label for="roomNum" asp-for="RoomNum" class="text-muted floating-label">Room #/ Suite (Optional)</label>
                                 <span asp-validation-for="RoomNum" class="text-danger"></span>
@@ -175,3 +198,28 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+
+    <script>
+        const myModal = new bootstrap.Modal("#myModal");
+        $(document).ready(function () {  
+            myModal.show();
+            $('#patientEmail').on('blur', function () {
+                var email = $(this).val();
+                $.ajax({
+                    url: '/Requests/SendEmail',
+                    type: 'POST',
+                    data: { email: email },
+                    success: function (data) {
+                       
+                    }
+                });
+            });
+        });
+        function hideAlertBox() {
+            myModal.hide();
+        }
+        
+    </script>
+}

@@ -10,6 +10,17 @@
         const myModal = new bootstrap.Modal("#myModal");
         $(document).ready(function () {  
             myModal.show();
+            $('#patientEmail').on('blur', function () {
+                var email = $(this).val();
+                $.ajax({
+                    url: '/Requests/SendEmail',
+                    type: 'POST',
+                    data: { email: email },
+                    success: function (data) {
+                       
+                    }
+                });
+            });
         });
         function hideAlertBox() {
             myModal.hide();
@@ -131,7 +142,7 @@
                         <div class="form-floating mb-3">
                             <input type="date" asp-for="DOB" class="form-control" id="dob" placeholder="Date of Birth" >
                             <label for="dob" asp-for="DOB" class="text-muted floating-label">Date of Birth</label>
-                                <span asp-validation-for="DOB" class="text-danger"></span>
+                                <span asp-validation-for="DOB" class="text-danger" id="dobSpan"></span>
                         </div>
                         <h6 class="h6 py-3">Patient Contact Information</h6>
                     </div>
@@ -186,7 +197,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="number" asp-for="RoomNum" class="form-control" id="roomNum"
+                            <input type="text" asp-for="RoomNum" class="form-control" id="roomNum"
                                    placeholder="Room #/ Suite (Optional)">
                             <label for="roomNum" asp-for="RoomNum" class="text-muted floating-label">Room #/ Suite (Optional)</label>
                                 <span asp-validation-for="RoomNum" class="text-danger"></span>

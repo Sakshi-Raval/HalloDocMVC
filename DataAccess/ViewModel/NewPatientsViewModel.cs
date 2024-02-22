@@ -13,15 +13,16 @@ namespace DataAccess.ViewModel
 
         [DataType(DataType.Date)]
         [DateNotInFutureAttribute(ErrorMessage = "Birthdate cannot be in future")]
-        public string DOB { get; set; }
-        public string Requestor { get; set; }
+        public string? DOB { get; set; }
+        public string? Requestor { get; set; }
 
         public string RequestedDate { get; set; }
         [DataType(DataType.PhoneNumber, ErrorMessage = "Enter phone number in correct format")]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
         public string? Address { get; set; }
         public string? Notes { get; set; }
         public int RequestTypeId { get; set; }
-        public string OtherPhoneNumber { get; set; }
+        public string? OtherPhoneNumber { get; set; }
+        public string? OtherName { get; set; }
     }
 }

@@ -11,6 +11,7 @@ builder.Services.AddScoped<IPatientRequest, PatientRequestRepo>();
 builder.Services.AddScoped<IOtherRequest, OtherRequestRepo>();
 builder.Services.AddScoped<IPatient, PatientRepo>();
 builder.Services.AddScoped<IAdmin, AdminRepo>();
+builder.Services.AddTransient<IEmailService, EmailServiceRepo>();
 builder.Services.AddSession();
 var app = builder.Build();
 

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Net.Http.Headers;
 using DataAccess.DataModels;
+using BusinessLogic.IRepository;
+using System.Web.Helpers;
 
 namespace HalloDoc.Controllers
 {
@@ -12,11 +14,13 @@ namespace HalloDoc.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly IEmailService _emailService;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IEmailService emailService)
         {
             _logger = logger;
             _context = context; 
+            _emailService = emailService;
         }
 
         public IActionResult Index()
@@ -68,8 +72,27 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
+        [HttpGet]
         public IActionResult ForgotPassword()
         {
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPasswordAsync(ForgotPwdViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                string token = Guid.NewGuid().ToString();
+                DateTime expiryTime = DateTime.UtcNow.AddHours(24);
+
+                string link = Url.Action("Login", "Home", new { token = token }, Request.Scheme);
+
+                link += $"?expiryTime={expiryTime}";
+                string subject = "Reset Password";
+                await _emailService.SendEmailAsync(model.email, subject, $"Here is the link to reset password. Link expires in 1 hour. {link}");
+            }
             return View();
         }
 
