@@ -23,46 +23,19 @@ namespace HalloDoc.Controllers
         {
             return PartialView("_AdminDashboardPartial");
         }
-        public IActionResult NewStatePartial(int state)
+        public IActionResult NewStatePartial(string SearchValue, string districtSelect, string selectedFilter)
         {
-            //new
-            if (state == 1)
-            {
-                var newPatientsViewModel = _admin.GetPatients(1);
+                var newPatientsViewModel = _admin.GetPatients(SearchValue,districtSelect,selectedFilter);
+                newPatientsViewModel = newPatientsViewModel.Where(x => x.Status == 1).ToList();
+                
                 return PartialView("_NewStatePartial", newPatientsViewModel);
-            }
-            //pending
-            else if (state == 2)
-            {
-                var newPatientsViewModel = _admin.GetPatients(2);
-                return PartialView("_NewStatePartial", newPatientsViewModel);
-            }
-            //active
-            else if (state == 3)
-            {
-                var newPatientsViewModel = _admin.GetPatients(2);
-                return PartialView("_NewStatePartial", newPatientsViewModel);
-            }
-            //conclude
-            else if (state == 4)
-            {
-                var newPatientsViewModel = _admin.GetPatients(2);
-                return PartialView("_NewStatePartial", newPatientsViewModel);
-            }
-            //to close
-            else if (state == 5)
-            {
-                var newPatientsViewModel = _admin.GetPatients(2);
-                return PartialView("_NewStatePartial", newPatientsViewModel);
-            }
-            //unpaid
-            else
-            {
-                var newPatientsViewModel = _admin.GetPatients(2);
-                return PartialView("_NewStatePartial", newPatientsViewModel);
-            }
+        }
+        public IActionResult PendingStatePartial(string SearchValue, string districtSelect , string selectedFilter)
+        {
+            var newPatientsViewModel = _admin.GetPatients(SearchValue,districtSelect, selectedFilter);
+            newPatientsViewModel = newPatientsViewModel.Where(x => x.Status == 2).ToList();
 
-
+            return PartialView("_PendingStatePartial", newPatientsViewModel);
         }
     }
 }

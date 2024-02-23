@@ -54,6 +54,26 @@ namespace BusinessLogic.Repository
                 user.Street = model.Street;
                 user.City = model.City;
                 user.State = model.State;
+                if (model.State != null)
+                {
+                    if (model.State.ToLower() == "district of columbia")
+                    {
+                        user.Regionid = 1;
+                    }
+                    else if (model.State.ToLower() == "new york")
+                    {
+                        user.Regionid = 2;
+                    }
+                    else if (model.State.ToLower() == "virginia")
+                    {
+                        user.Regionid = 3;
+                    }
+                    else if (model.State.ToLower() == "maryland")
+                    {
+                        user.Regionid = 4;
+                    }
+                }
+                
                 user.Zipcode = model.Zip;
                 user.Intdate = model.DOB.Day;
                 user.Strmonth = model.DOB.Month.ToString();
@@ -91,6 +111,7 @@ namespace BusinessLogic.Repository
                 requestclient.Email = model.Email;
                 requestclient.Street = model.Street;
                 requestclient.State = model.State;
+                requestclient.Regionid = user.Regionid;
                 requestclient.City = model.City;
                 requestclient.Zipcode = model.Zip;
                 _context.Add(requestclient);
@@ -127,6 +148,7 @@ namespace BusinessLogic.Repository
                 requestclient.Email = status.Email;
                 requestclient.Street = status.Street;
                 requestclient.State = status.State;
+                requestclient.Regionid = status.Regionid;
                 requestclient.City = status.City;
                 requestclient.Zipcode = status.Zipcode;
                 _context.Add(requestclient);

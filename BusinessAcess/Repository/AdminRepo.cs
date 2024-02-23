@@ -18,12 +18,12 @@ namespace BusinessLogic.Repository
             _context = context;
         }
 
-        public List<NewPatientsViewModel> GetPatients(int status)
+        public List<NewPatientsViewModel> GetPatients(string SearchValue, string districtSelect, string selectedFilter)
         {
             var newPatientsViewModel = (from req in _context.Requests
                                         join reqClient in _context.Requestclients
                                         on req.Requestid equals reqClient.Requestid
-                                        where req.Status == status
+                                        orderby req.Createddate descending
                                         select new NewPatientsViewModel
                                         {
                                             Name = (reqClient.Firstname ?? "") + ", " + (reqClient.Lastname ?? ""),
@@ -37,14 +37,21 @@ namespace BusinessLogic.Repository
                                             Address = (reqClient.Street ?? "") + " " + (reqClient.City ?? "") + " " + (reqClient.State ?? "") + " " + (reqClient.Zipcode ?? ""),
                                             Notes = reqClient.Notes ?? "---",
                                             RequestTypeId = req.Requesttypeid,
+                                            Status = req.Status,
+                                            RegionId = reqClient.Regionid.ToString() ?? " ",
                                         }
-                                        );
+                                        ).Where(item => (string.IsNullOrEmpty(SearchValue) || item.Name.ToLower().Contains(SearchValue.ToLower()))
+                                        && (string.IsNullOrEmpty(districtSelect) || item.RegionId == districtSelect) 
+                                        && (string.IsNullOrEmpty(selectedFilter) || item.RequestTypeId == int.Parse(selectedFilter))).ToList();
+            var count = newPatientsViewModel.Count();
+            
           
-            return newPatientsViewModel.ToList();
+            return newPatientsViewModel;
 
             
            
         }
 
+      
     }
 }

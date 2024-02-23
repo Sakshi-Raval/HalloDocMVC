@@ -80,7 +80,7 @@ namespace HalloDoc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ForgotPasswordAsync(ForgotPwdViewModel model)
+        public IActionResult ForgotPasswordAsync(ForgotPwdViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace HalloDoc.Controllers
 
                 link += $"?expiryTime={expiryTime}";
                 string subject = "Reset Password";
-                await _emailService.SendEmailAsync(model.email, subject, $"Here is the link to reset password. Link expires in 1 hour. {link}");
+                 _emailService.SendEmailAsync(model.email, subject, $"Here is the link to reset password. Link expires in 1 hour. {link}");
             }
             return View();
         }

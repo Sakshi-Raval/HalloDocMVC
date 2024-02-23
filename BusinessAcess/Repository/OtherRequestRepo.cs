@@ -58,6 +58,25 @@ namespace BusinessLogic.Repository
             requestclient.Email = model.Email;
             requestclient.Street = model.Street;
             requestclient.State = model.State;
+            if (model.State != null)
+            {
+                if (model.State.ToLower() == "district of columbia")
+                {
+                    requestclient.Regionid = 1;
+                }
+                else if (model.State.ToLower() == "new york")
+                {
+                    requestclient.Regionid = 2;
+                }
+                else if (model.State.ToLower() == "virginia")
+                {
+                    requestclient.Regionid = 3;
+                }
+                else if (model.State.ToLower() == "maryland")
+                {
+                    requestclient.Regionid = 4;
+                }
+            }
             requestclient.City = model.City;
             requestclient.Zipcode = model.Zip;
             _context.Add(requestclient);

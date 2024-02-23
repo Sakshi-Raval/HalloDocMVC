@@ -140,3 +140,61 @@ birthdateInput.addEventListener('change', function () {
 
     }
 });
+
+
+//admin dashboard
+function LoadPartialView(partialName) {
+    var SearchText = $('#searchInput').val();
+    var districtSelect = $('#districtSelect').find(':selected').data('value');
+    var selectedFilter = $('.active-filter').data('value');
+    var dataToSend = {
+        SearchValue: SearchText,
+        districtSelect: districtSelect,
+        selectedFilter: selectedFilter,
+    }
+    $.ajax({
+        url: '/Admin/' + partialName,
+        type: 'GET',
+        data: dataToSend,
+        success: function (response) {
+            $('#partialContainer').html(response);
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+        }
+    });
+}
+
+function NewStateLoad() {
+    $('#stateSpan').textContent = "(New)";
+    $('#newState').addClass('active');
+    $('#pendingState').removeClass('active');
+    LoadPartialView("NewStatePartial");
+    $('#searchInput').on('input', function () {
+        LoadPartialView("NewStatePartial");
+    });
+    $('#districtSelect').on('change', function () {
+        LoadPartialView("NewStatePartial");
+    });
+    $('.filter-options').on('click', function () {
+        $('.filter-options').removeClass('active-filter');
+        $(this).addClass('active-filter');
+        LoadPartialView("NewStatePartial");
+    });
+}
+
+function PendingStateLoad() {
+    $('#stateSpan').textContent = "(Pending)";
+    $('#pendingState').addClass('active');
+    $('#newState').removeClass('active');
+    LoadPartialView("PendingStatePartial");
+    $('#searchInput').on('input', function () {
+        LoadPartialView("PendingStatePartial");
+    });
+    $('#districtSelect').on('change', function () {
+        LoadPartialView("PendingStatePartial");
+    });
+    $('.filter-options').on('click', function () {
+        LoadPartialView("PendingStatePartial");
+    });
+}

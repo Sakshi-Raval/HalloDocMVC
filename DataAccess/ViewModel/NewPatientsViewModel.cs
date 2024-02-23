@@ -24,5 +24,8 @@ namespace DataAccess.ViewModel
         public int RequestTypeId { get; set; }
         public string? OtherPhoneNumber { get; set; }
         public string? OtherName { get; set; }
+        public int Status { get; set; }
+        public string RegionId { get; set; }
+        public int Count { get; set; }
     }
 }

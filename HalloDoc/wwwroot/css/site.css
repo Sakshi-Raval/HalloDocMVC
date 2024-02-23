@@ -27,40 +27,43 @@
     border: 1px solid #203f9a;
     color: #203f9a;
 }
-#newState:hover {
+#newState:hover , #newState.active{
     background-color: #203f9a;
     border: 1px solid #203f9a;
     color:white;
 }
+
 
 #pendingState {
     background-color: #e5f2f8;
     color: #31D2F2;
     border: 1px solid #31D2F2;
 }
-    #pendingState:hover {
+    #pendingState:hover , #pendingState.active{
         background-color: #31D2F2;
         border: 1px solid #31D2F2;
         color: white;
     }
+
 
 #activeState {
     background-color: #e9f0e8;
     border: 1px solid #669D5D;
     color: #669D5D;
 }
-    #activeState:hover {
+    #activeState:hover , #activeState.active{
         background-color: #669D5D;
         border: 1px solid #669D5D;
         color: white;
     }
+
 
 #concludeState {
     background-color: #f7e6ee;
     color: #cf30a4;
     border: 1px solid #cf30a4;
 }
-    #concludeState:hover {
+    #concludeState:hover , #concludeState.active{
         background-color: #cf30a4;
         color: white;
         border: 1px solid #cf30a4;
@@ -71,7 +74,7 @@
     background-color: #E5EEF5;
     border: 1px solid #2C6498;
 }
-    #toCloseState:hover {
+    #toCloseState:hover , #toCloseState.active{
         color: white;
         background-color: #2C6498;
         border: 1px solid #2C6498;
@@ -82,7 +85,7 @@
     color: #8970A9;
     border: 1px solid #8970A9;
 }
-    #unpaidState:hover {
+    #unpaidState:hover , #unpaidState.active{
         background-color: #8970A9;
         color:white;
         border: 1px solid #8970A9;

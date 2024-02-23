@@ -10,7 +10,7 @@ namespace BusinessLogic.IRepository
 {
     public interface IEmailService
         {
-        public Task SendEmailAsync(string email, string subject, string message);
+        public void SendEmailAsync(string email, string subject, string message);
     }
 }
 

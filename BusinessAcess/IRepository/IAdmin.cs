@@ -9,6 +9,6 @@ namespace BusinessLogic.IRepository
 {
     public interface IAdmin
     {
-        public List<NewPatientsViewModel> GetPatients(int status);
+        public List<NewPatientsViewModel> GetPatients(string SearchValue, string districtSelect, string selectedFilter);
     }
 }

@@ -109,7 +109,7 @@ namespace HalloDoc.Controllers
             return View();
         }
         [HttpPost]
-        public async Task SendEmailAsync(string email)
+        public void SendEmailAsync(string email)
         {
             var user = _context.Users.Where(u => u.Email == email).FirstOrDefault();
             if(user==null)
@@ -121,7 +121,8 @@ namespace HalloDoc.Controllers
 
                 link += $"?expiryTime={expiryTime}";
                 string subject = "Create Account";
-                await _emailService.SendEmailAsync(email, subject, $"Here is the link to create account. Link expires in 24 hours. {link}");
+                string body = "Here is the link to create account. Link expires in 24 hours." + link;
+                 _emailService.SendEmailAsync(email, subject, body );
             }
 
         }
