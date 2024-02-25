@@ -20,6 +20,10 @@
     .dark-theme .phone{
         background-color: #ffffff !important;
     }
+.dotted-rule {
+    border: none; /* Remove default border */
+    border-top: 1px dotted #000; /* Add dotted border on top */
+}
 
 /*admin dashboard states*/
 #newState {
