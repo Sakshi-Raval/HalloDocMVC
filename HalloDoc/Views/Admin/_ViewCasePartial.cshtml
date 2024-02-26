@@ -1,7 +1,11 @@
-﻿<div class="row justify-content-center">
+﻿@model CaseViewModel
+<script>
+   
+</script>
+<div class="row justify-content-center">
     <div class="col-10 col-md-8 col-lg-6  d-inline-flex justify-content-between">
         <div class="d-flex">
-            <h4 class="h4 mt-5 mb-3">Submit Information</h4>
+            <h4 class="h4 mt-5 mb-3">New Request</h4>
         </div>
         <div class="d-flex">
             <a class="btn btn-outline-info mt-5 mb-3 ms-auto" asp-action="AdminPage" asp-controller="Admin">
@@ -21,13 +25,13 @@
                 <div class="row">
                     <h6 class="h6 py-3">Patient Information</h6>
                     <div>
-                        <label class="text-muted">Confrimation Numberx</label>
-                        <p class="h5 text-info"></p>
-                        
+                        <label class="text-muted">Confirmation Number</label><br />
+                        <input type="text" class="h5 text-info border-0" asp-for="ConfirmNum" value="@Model.ConfirmNum"><br />
+                         
                     </div>
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" placeholder="Patient Notes" id="patientNotes" asp-for=""
-                                  style="height: 15vh;"></textarea>
+                        <textarea class="form-control" placeholder="Patient Notes" id="patientNotes" asp-for="PatientNotes" value="@Model.PatientNotes"
+                                  style="height: 15vh;" readonly></textarea>
                         <label class="text-muted floating-label ms-2">
                             Patient Notes
                         </label>
@@ -38,48 +42,45 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="fname" placeholder="First Name" asp-for="Firstname">
+                            <input type="text" class="form-control" id="fname" placeholder="First Name" asp-for="Firstname" value="@Model.Firstname" readonly>
                             <label class="text-muted floating-label">First Name</label>
-                            <span asp-validation-for="Firstname" class="text-danger"></span>
+                            @* <span asp-validation-for="Firstname" class="text-danger"></span> *@
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="lname" placeholder="Last Name" asp-for="Lastname">
+                            <input type="text" class="form-control" id="lname" placeholder="Last Name" asp-for="Lastname" value="@Model.Lastname" readonly>
                             <label class="text-muted floating-label">Last Name</label>
-                            <span asp-validation-for="Lastname" class="text-danger"></span>
+                            @* <span asp-validation-for="Lastname" class="text-danger"></span> *@
 
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="date" class="form-control" id="dob" placeholder="Date of Birth" asp-for="DOB">
+                            <input type="date" class="form-control" id="dob" placeholder="Date of Birth" asp-for="DOB" value="@Model.DOB.ToString("yyyy-MM-dd")" readonly>
                             <label class="text-muted floating-label">Date of Birth</label>
-                            <span asp-validation-for="DOB" class="text-danger" id="dobSpan"></span>
+                            @* <span asp-validation-for="DOB" class="text-danger" id="dobSpan"></span> *@
 
                         </div>
-                        <h6 class="h6 py-3">Patient Contact Information</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-5 col-2">
-                        <input type="tel" id="phone" class="input w-100 h-100 phone" asp-for="Phone" data-error-msg-id="errorMsg1">
-                        <span asp-validation-for="Phone" class="text-danger" id="errorMsg1"></span>
+                    <div class="col-md-5 col-10">
+                        <input type="tel" id="phone" class="input w-100 h-100 phone mb-2" data-error-msg-id="errorMsg1" asp-for="Phonenumber" value="@Model.Phonenumber" readonly>
+                        @* <span asp-validation-for="Phone" class="text-danger" id="errorMsg1"></span> *@
 
                     </div>
                     <div class="col-md-1 col-2">
-                        <button class="btn btn-outline-info">
+                        <a class="btn btn-outline-info" style="height:75%;width:75%">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
                                 <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.68.68 0 0 0-.58-.122l-2.19.547a1.75 1.75 0 0 1-1.657-.459L5.482 8.062a1.75 1.75 0 0 1-.46-1.657l.548-2.19a.68.68 0 0 0-.122-.58zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
                             </svg>
-                        </button>
+                        </a>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="patientEmail"
-                                   placeholder="name@example.com" required asp-for="Email">
+                            <input type="email" class="form-control" id="patientEmail" asp-for="Email" value="@Model.Email"
+                                   placeholder="name@example.com" required readonly>
                             <label class="text-muted floating-label">Email address</label>
-                            <span asp-validation-for="Email" class="text-danger"></span>
+                            @* <span asp-validation-for="Email" class="text-danger"></span> *@
                         </div>
                     </div>
                 </div>
@@ -91,28 +92,28 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="region" placeholder="Region" asp-for="">
+                            <input type="text" class="form-control" id="region" placeholder="Region" asp-for="Region" value="@Model.Region" readonly>
                             <label class="text-muted floating-label">Region</label>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-5 col-10">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="address" placeholder="Business Name/Address" asp-for="">
+                            <input type="text" class="form-control" id="address" placeholder="Business Name/Address" asp-for="Address" value="@Model.Address" readonly>
                             <label class="text-muted floating-label">Business Name/Address</label>
                         </div>
                     </div>
                     <div class="col-md-1 col-2">
-                        <button class="btn btn-outline-info">
+                        <a class="btn btn-outline-info" style="height:75%;width:75%">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
                                 <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
                                 <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
                             </svg>
-                        </button>
+                        </a>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="roomNum" asp-for="RoomNum"
-                                   placeholder="Room #/ Suite (Optional)">
+                            <input type="text" class="form-control" id="roomNum" asp-for="RoomNum" value="@Model.RoomNum"
+                                   placeholder="Room #/ Suite (Optional)" readonly>
                             <label class="text-muted floating-label">Room #/ Suite (Optional)</label>
                         </div>
                     </div>
@@ -120,12 +121,19 @@
                
                 <div class="row">
                     <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
-                        <button class="btn btn-info me-md-2 text-white fw-medium" type="submit">Assign</button>
+                        @if (Model.Status == 1)
+                        {
+                            <button class="btn btn-info me-md-2 text-white fw-medium" type="submit">Assign</button>
+
+                        }
                         <button class="btn btn-info me-md-2 text-white fw-medium" type="submit">View Notes</button>
-                        <button class="btn btn-danger fw-medium link-info" type="reset">Cancel</button>
+                        <button class="btn btn-danger fw-medium " type="reset">Cancel</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+
+   

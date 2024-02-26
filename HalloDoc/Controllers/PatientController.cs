@@ -137,13 +137,17 @@ namespace HalloDoc.Controllers
 
             var email = HttpContext.Session.GetString("Email");
             var userModel = _context.Users.Where(u => u.Email == email).FirstOrDefault();
-            ViewBag.userModel = userModel;
-            if (ModelState.IsValid)
+            if (userModel != null)
             {
-                Console.WriteLine("eutryuiwsdjf");
-                _patient.SubmitReqElse(model, userModel);
-                return RedirectToAction("CreateRequestElse", "Patient");
+                ViewBag.userModel = userModel;
+                if (ModelState.IsValid)
+                {
+                    Console.WriteLine("eutryuiwsdjf");
+                    _patient.SubmitReqElse(model, userModel);
+                    return RedirectToAction("CreateRequestElse", "Patient");
+                }
             }
+            ViewBag.userModel = null;
             return View();
         }
         public IActionResult Logout()

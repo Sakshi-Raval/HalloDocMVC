@@ -27,5 +27,6 @@ namespace DataAccess.ViewModel
         public int Status { get; set; }
         public string RegionId { get; set; }
         public int Count { get; set; }
+        public int RequestId { get; set; }
     }
 }

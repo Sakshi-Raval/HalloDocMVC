@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.IRepository;
 using DataAccess.DataContext;
+using DataAccess.DataModels;
 using DataAccess.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -39,6 +40,7 @@ namespace BusinessLogic.Repository
                                             RequestTypeId = req.Requesttypeid,
                                             Status = req.Status,
                                             RegionId = reqClient.Regionid.ToString() ?? " ",
+                                            RequestId = req.Requestid,
                                         }
                                         ).Where(item => (string.IsNullOrEmpty(SearchValue) || item.Name.ToLower().Contains(SearchValue.ToLower()))
                                         && (string.IsNullOrEmpty(districtSelect) || item.RegionId == districtSelect) 
@@ -51,6 +53,35 @@ namespace BusinessLogic.Repository
             
            
         }
+        public CaseViewModel ViewCase(int requestid)
+        {
+            var caseViewModel = (from reqClient in _context.Requestclients
+                                 join req in _context.Requests
+                                 on reqClient.Requestid equals req.Requestid
+                                 join region in _context.Regions
+                                 on reqClient.Regionid equals region.Regionid
+                                 where req.Requestid == requestid
+                                 select new CaseViewModel
+                                 {
+                                     ConfirmNum = req.Confirmationnumber ?? "",
+                                     PatientNotes = reqClient.Notes ?? "",
+                                     Firstname = reqClient.Firstname,
+                                     Lastname = reqClient.Lastname ?? "",
+                                     DOB = reqClient.Intyear != null && reqClient.Strmonth != null && reqClient.Intdate != null ?
+                                                    new DateOnly((int)reqClient.Intyear, int.Parse(reqClient.Strmonth), (int)reqClient.Intdate) : new DateOnly(),
+                                     Phonenumber = reqClient.Phonenumber ?? "",
+                                     Email = reqClient.Email ?? "",
+                                     Region = region.Name,
+                                     Address = (reqClient.Street ?? "") + " " + (reqClient.City ?? "") + " " + (reqClient.State ?? "") + " " + (reqClient.Zipcode ?? ""),
+                                     Status = req.Status,
+
+
+                                 }
+                                 ).FirstOrDefault();
+            return caseViewModel;
+
+        }
+        
 
       
     }

@@ -9,15 +9,17 @@
     $(document).ready(function () {
         $('#btnSubmitRow').hide();
 
-        $('#fname').val('@userModel.Firstname').prop('disabled', true);
-        $('#lname').val('@userModel.Lastname').prop('disabled', true);
-        $('#phone').val('@userModel.Mobile').prop('disabled', true);
-        //$('#dob').val(bdate).prop('disabled', true);
-        $('#patientEmail').val('@userModel.Email').prop('disabled', true);
-        $('#street').val('@userModel.Street').prop('disabled', true);
-        $('#city').val('@userModel.City').prop('disabled', true);
-        $('#state').val('@userModel.State').prop('disabled', true);
-        $('#zip').val('@userModel.Zipcode').prop('disabled', true);
+            $('#fname').val('@userModel.Firstname').prop('disabled', true);
+            $('#lname').val('@userModel.Lastname').prop('disabled', true);
+            $('#phone').val('@userModel.Mobile').prop('disabled', true);
+            //$('#dob').val(bdate).prop('disabled', true);
+            $('#patientEmail').val('@userModel.Email').prop('disabled', true);
+            $('#street').val('@userModel.Street').prop('disabled', true);
+            $('#city').val('@userModel.City').prop('disabled', true);
+            $('#state').val('@userModel.State').prop('disabled', true);
+            $('#zip').val('@userModel.Zipcode').prop('disabled', true);
+        
+       
 
         $('#btnEdit').on('click', function () {
             $(this).closest('#btnEditRow').hide();

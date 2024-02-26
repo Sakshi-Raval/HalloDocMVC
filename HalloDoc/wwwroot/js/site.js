@@ -166,9 +166,9 @@ function LoadPartialView(partialName) {
 }
 
 function NewStateLoad() {
-    $('#stateSpan').textContent = "(New)";
+    $('#stateSpan').text(" (New)");
+    $('.states').removeClass('active');
     $('#newState').addClass('active');
-    $('#pendingState').removeClass('active');
     LoadPartialView("NewStatePartial");
     $('#searchInput').on('input', function () {
         LoadPartialView("NewStatePartial");
@@ -184,9 +184,10 @@ function NewStateLoad() {
 }
 
 function PendingStateLoad() {
-    $('#stateSpan').textContent = "(Pending)";
+
+    $('#stateSpan').text(" (Pending)");
+    $('.states').removeClass('active');
     $('#pendingState').addClass('active');
-    $('#newState').removeClass('active');
     LoadPartialView("PendingStatePartial");
     $('#searchInput').on('input', function () {
         LoadPartialView("PendingStatePartial");
@@ -196,5 +197,19 @@ function PendingStateLoad() {
     });
     $('.filter-options').on('click', function () {
         LoadPartialView("PendingStatePartial");
+    });
+}
+
+function PartialTab(partialView,requestid) {
+    $.ajax({
+        url: '/Admin/' + partialView,
+        type: 'GET',
+        data: { requestid: requestid },
+        success: function (response) {
+            $('#home').html(response);
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+        }
     });
 }

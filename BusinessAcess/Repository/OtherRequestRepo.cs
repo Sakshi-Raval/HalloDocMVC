@@ -43,7 +43,8 @@ namespace BusinessLogic.Repository
             BitArray bits = new BitArray(bitValues);
             request.Isurgentemailsent = bits;
             _context.Add(request);
-             _context.SaveChanges();
+            _context.SaveChanges();
+
 
             Requestclient requestclient = new();
             requestclient.Requestid = request.Requestid;
@@ -79,6 +80,9 @@ namespace BusinessLogic.Repository
             }
             requestclient.City = model.City;
             requestclient.Zipcode = model.Zip;
+
+
+
             _context.Add(requestclient);
             _context.SaveChanges();
 

@@ -16,7 +16,12 @@ namespace HalloDoc.Controllers
         }
         public IActionResult AdminPage()
         {
-
+            ViewBag.NewCount = _context.Requests.Where(x => x.Status == 1).Count();
+            ViewBag.PendingCount = _context.Requests.Where(x => x.Status == 2).Count();
+            ViewBag.ActiveCount = _context.Requests.Where(x => x.Status == 4 || x.Status == 5).Count();
+            ViewBag.ConcludeCount = _context.Requests.Where(x => x.Status == 6).Count();
+            ViewBag.ToCloseCount = _context.Requests.Where(x => x.Status == 3 || x.Status == 7 || x.Status == 8).Count();
+            ViewBag.UnpaidCount = _context.Requests.Where(x => x.Status == 9).Count();
             return View();
         }
         public IActionResult AdminDashboardPartial()
@@ -36,6 +41,15 @@ namespace HalloDoc.Controllers
             newPatientsViewModel = newPatientsViewModel.Where(x => x.Status == 2).ToList();
 
             return PartialView("_PendingStatePartial", newPatientsViewModel);
+        }
+        public IActionResult ViewCasePartial(int requestid)
+        {
+            var caseViewModel = _admin.ViewCase(requestid);
+            return PartialView("_ViewCasePartial",caseViewModel);
+        }
+        public IActionResult ViewNotesPartial()
+        {
+            return PartialView("_ViewNotesPartial");
         }
     }
 }

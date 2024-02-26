@@ -147,6 +147,7 @@ namespace BusinessLogic.Repository
             _context.Add(request);
             _context.SaveChanges();
 
+
             requestclient.Requestid = request.Requestid;
             requestclient.Notes = model.Symptoms;
             requestclient.Firstname = model.Firstname;
@@ -162,6 +163,7 @@ namespace BusinessLogic.Repository
             }
             requestclient.City = model.City;
             requestclient.Zipcode = model.Zip;
+
             _context.Add(requestclient);
             _context.SaveChanges();
 
@@ -190,8 +192,7 @@ namespace BusinessLogic.Repository
             bool[] bitValues = { true };
             BitArray bits = new BitArray(bitValues);
             request.Isurgentemailsent = bits;
-            _context.Add(request);
-            _context.SaveChanges();
+
 
             Requestclient requestclient = new();
             requestclient.Requestid = request.Requestid;
@@ -206,6 +207,15 @@ namespace BusinessLogic.Repository
             requestclient.Regionid = userModel.Regionid;
             requestclient.City = model.City;
             requestclient.Zipcode = model.Zip;
+
+            int count = _context.Requests.Where(x => x.Createddate.Date == request.Createddate.Date).Count();
+            Region region = _context.Regions.Where(x => x.Regionid == requestclient.Regionid).FirstOrDefault();
+            request.Confirmationnumber = region.Abbreviation.ToUpper() + requestclient.Intdate.ToString() + requestclient.Strmonth + requestclient.Intyear + requestclient.Lastname.Substring(0, 2).ToUpper()
+                + requestclient.Firstname.Substring(0, 2).ToUpper() + count.ToString();
+
+            _context.Add(request);
+            _context.SaveChanges();
+
             _context.Add(requestclient);
             _context.SaveChanges();
 

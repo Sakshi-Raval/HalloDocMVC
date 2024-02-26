@@ -97,8 +97,6 @@ namespace BusinessLogic.Repository
                 bool[] bitValues = { true };
                 BitArray bits = new BitArray(bitValues);
                 request.Isurgentemailsent = bits;
-                _context.Add(request);
-                 _context.SaveChanges();
 
                 requestclient.Requestid = request.Requestid;
                 requestclient.Notes = model.Symptoms;
@@ -114,6 +112,28 @@ namespace BusinessLogic.Repository
                 requestclient.Regionid = user.Regionid;
                 requestclient.City = model.City;
                 requestclient.Zipcode = model.Zip;
+
+
+                int count = _context.Requests.Where(x => x.Createddate.Date == request.Createddate.Date).Count();
+                var region = _context.Regions.Where(x => x.Regionid == requestclient.Regionid).FirstOrDefault();
+
+
+                if (region != null)
+                {
+                    var confirmNum = string.Concat(region.Abbreviation.ToUpper(), request.Createddate.ToString("ddMMyy"), requestclient.Lastname.Substring(0, 2).ToUpper() ?? "",
+                   requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
+                    request.Confirmationnumber = confirmNum;
+                }
+                else
+                {
+                    var confirmNum = string.Concat("MD", request.Createddate.ToString("ddMMyy"), requestclient.Lastname.Substring(0, 2).ToUpper() ?? "",
+                  requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
+                    request.Confirmationnumber = confirmNum;
+                }
+
+                _context.Add(request);
+                _context.SaveChanges();
+
                 _context.Add(requestclient);
                  _context.SaveChanges();
                 
@@ -134,8 +154,6 @@ namespace BusinessLogic.Repository
                 bool[] bitValues = { true };
                 BitArray bits = new BitArray(bitValues);
                 request.Isurgentemailsent = bits;
-                _context.Add(request);
-                 _context.SaveChanges();
 
                 requestclient.Requestid = request.Requestid;
                 requestclient.Notes = model.Symptoms;
@@ -151,6 +169,28 @@ namespace BusinessLogic.Repository
                 requestclient.Regionid = status.Regionid;
                 requestclient.City = status.City;
                 requestclient.Zipcode = status.Zipcode;
+
+                int count = _context.Requests.Where(x => x.Createddate.Date == request.Createddate.Date).Count();
+                var region = _context.Regions.Where(x => x.Regionid == requestclient.Regionid).FirstOrDefault();
+
+                if (region != null)
+                {
+                    var confirmNum = string.Concat(region.Abbreviation.ToUpper(), request.Createddate.ToString("ddMMyy"), requestclient.Lastname.Substring(0, 2).ToUpper() ?? "",
+                   requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
+                    request.Confirmationnumber = confirmNum;
+                }
+                else
+                {
+                    var confirmNum = string.Concat("MD", request.Createddate.ToString("ddMMyy"), requestclient.Lastname.Substring(0, 2).ToUpper() ?? "",
+                  requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
+                    request.Confirmationnumber = confirmNum;
+                }
+               
+              
+
+                _context.Add(request);
+                _context.SaveChanges();
+
                 _context.Add(requestclient);
                  _context.SaveChanges();
                 
