@@ -11,5 +11,6 @@ namespace BusinessLogic.IRepository
     {
         public List<NewPatientsViewModel> GetPatients(string SearchValue, string districtSelect, string selectedFilter);
         public CaseViewModel ViewCase(int requestid);
+        public List<NotesViewModel> ViewNotes(int requestid);
     }
 }

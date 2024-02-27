@@ -47,9 +47,10 @@ namespace HalloDoc.Controllers
             var caseViewModel = _admin.ViewCase(requestid);
             return PartialView("_ViewCasePartial",caseViewModel);
         }
-        public IActionResult ViewNotesPartial()
+        public IActionResult ViewNotesPartial(int requestid)
         {
-            return PartialView("_ViewNotesPartial");
+           var notesViewModel = _admin.ViewNotes(requestid);
+            return PartialView("_ViewNotesPartial",notesViewModel);
         }
     }
 }

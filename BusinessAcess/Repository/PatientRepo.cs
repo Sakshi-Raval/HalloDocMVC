@@ -167,6 +167,26 @@ namespace BusinessLogic.Repository
             _context.Add(requestclient);
             _context.SaveChanges();
 
+
+            int count = _context.Requests.Where(x => x.Createddate.Date == request.Createddate.Date).Count();
+            var region = _context.Regions.Where(x => x.Regionid == requestclient.Regionid).FirstOrDefault();
+
+
+            if (region != null)
+            {
+                var confirmNum = string.Concat(region.Abbreviation.ToUpper(), request.Createddate.ToString("ddMMyy"), requestclient.Lastname.Substring(0, 2).ToUpper() ?? "",
+               requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
+                request.Confirmationnumber = confirmNum;
+            }
+            else
+            {
+                var confirmNum = string.Concat("ML", request.Createddate.ToString("ddMMyy"), requestclient.Lastname.Substring(0, 2).ToUpper() ?? "",
+              requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
+                request.Confirmationnumber = confirmNum;
+            }
+            _context.Update(request);
+            _context.SaveChanges();
+
             if (model.File != null)
             {
                 foreach (var file in model.File)
@@ -193,6 +213,8 @@ namespace BusinessLogic.Repository
             BitArray bits = new BitArray(bitValues);
             request.Isurgentemailsent = bits;
 
+            _context.Add(request);
+            _context.SaveChanges();
 
             Requestclient requestclient = new();
             requestclient.Requestid = request.Requestid;
@@ -208,15 +230,27 @@ namespace BusinessLogic.Repository
             requestclient.City = model.City;
             requestclient.Zipcode = model.Zip;
 
-            int count = _context.Requests.Where(x => x.Createddate.Date == request.Createddate.Date).Count();
-            Region region = _context.Regions.Where(x => x.Regionid == requestclient.Regionid).FirstOrDefault();
-            request.Confirmationnumber = region.Abbreviation.ToUpper() + requestclient.Intdate.ToString() + requestclient.Strmonth + requestclient.Intyear + requestclient.Lastname.Substring(0, 2).ToUpper()
-                + requestclient.Firstname.Substring(0, 2).ToUpper() + count.ToString();
-
-            _context.Add(request);
+            _context.Add(requestclient);
             _context.SaveChanges();
 
-            _context.Add(requestclient);
+
+            int count = _context.Requests.Where(x => x.Createddate.Date == request.Createddate.Date).Count();
+            var region = _context.Regions.Where(x => x.Regionid == requestclient.Regionid).FirstOrDefault();
+
+
+            if (region != null)
+            {
+                var confirmNum = string.Concat(region.Abbreviation.ToUpper(), request.Createddate.ToString("ddMMyy"), requestclient.Lastname.Substring(0, 2).ToUpper() ?? "",
+               requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
+                request.Confirmationnumber = confirmNum;
+            }
+            else
+            {
+                var confirmNum = string.Concat("ML", request.Createddate.ToString("ddMMyy"), requestclient.Lastname.Substring(0, 2).ToUpper() ?? "",
+              requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
+                request.Confirmationnumber = confirmNum;
+            }
+            _context.Update(request);
             _context.SaveChanges();
 
             if (model.File != null)

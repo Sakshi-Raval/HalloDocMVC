@@ -82,8 +82,26 @@ namespace BusinessLogic.Repository
             requestclient.Zipcode = model.Zip;
 
 
-
             _context.Add(requestclient);
+            _context.SaveChanges();
+
+            int count = _context.Requests.Where(x => x.Createddate.Date == request.Createddate.Date).Count();
+            var region = _context.Regions.Where(x => x.Regionid == requestclient.Regionid).FirstOrDefault();
+
+
+            if (region != null)
+            {
+                var confirmNum = string.Concat(region.Abbreviation.ToUpper(), request.Createddate.ToString("ddMMyy"), requestclient.Lastname.Substring(0, 2).ToUpper() ?? "",
+               requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
+                request.Confirmationnumber = confirmNum;
+            }
+            else
+            {
+                var confirmNum = string.Concat("ML", request.Createddate.ToString("ddMMyy"), requestclient.Lastname.Substring(0, 2).ToUpper() ?? "",
+              requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
+                request.Confirmationnumber = confirmNum;
+            }
+            _context.Update(request);
             _context.SaveChanges();
 
             if (model.File != null)

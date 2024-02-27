@@ -25,7 +25,10 @@
     border-top: 1px dotted #000; /* Add dotted border on top */
 }
 
+
 /*admin dashboard states*/
+
+
 #newState {
     background-color: #E9EAEF;
     border: 1px solid #203f9a;
@@ -318,11 +321,11 @@ input:focus {
 }
 
 @media (max-width: 471px) {
-    .darkBtn {
+/*    .darkBtn {
         position: absolute;
         top: 25%;
         right: 5%;
-    }
+    }*/
 
     .footerSubmit {
         font-size: smaller;

@@ -24,7 +24,7 @@ namespace BusinessLogic.Repository
             _context=context;
             _hostingEnvironment=hostingEnvironment;
         }
-        public void CreatePatientRequest(PatientRequestViewModel model)
+        public  void CreatePatientRequest(PatientRequestViewModel model)
         {
             User status = _context.Users.Where(x => x.Email == model.Email).FirstOrDefault();
 
@@ -43,7 +43,7 @@ namespace BusinessLogic.Repository
                 aspnetuser.Phonenumber = model.Phone;
                 aspnetuser.Createddate = DateTime.Now;
                 _context.Add(aspnetuser);
-                 _context.SaveChanges();
+                _context.SaveChanges();
 
 
                 user.Aspnetuserid = aspnetuser.Id;
@@ -84,7 +84,7 @@ namespace BusinessLogic.Repository
                 user.Isdeleted = false;
                 user.Isrequestwithemail = true;
                 _context.Add(user);
-                 _context.SaveChanges();
+                _context.SaveChanges();
 
                 request.Requesttypeid = 1;
                 request.Userid = user.Userid;
@@ -97,6 +97,8 @@ namespace BusinessLogic.Repository
                 bool[] bitValues = { true };
                 BitArray bits = new BitArray(bitValues);
                 request.Isurgentemailsent = bits;
+                _context.Add(request);
+                _context.SaveChanges();
 
                 requestclient.Requestid = request.Requestid;
                 requestclient.Notes = model.Symptoms;
@@ -113,6 +115,8 @@ namespace BusinessLogic.Repository
                 requestclient.City = model.City;
                 requestclient.Zipcode = model.Zip;
 
+                _context.Add(requestclient);
+                _context.SaveChanges();
 
                 int count = _context.Requests.Where(x => x.Createddate.Date == request.Createddate.Date).Count();
                 var region = _context.Regions.Where(x => x.Regionid == requestclient.Regionid).FirstOrDefault();
@@ -130,13 +134,9 @@ namespace BusinessLogic.Repository
                   requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
                     request.Confirmationnumber = confirmNum;
                 }
-
-                _context.Add(request);
+                _context.Update(request);
                 _context.SaveChanges();
-
-                _context.Add(requestclient);
-                 _context.SaveChanges();
-                
+  
 
             }
             else
@@ -155,6 +155,9 @@ namespace BusinessLogic.Repository
                 BitArray bits = new BitArray(bitValues);
                 request.Isurgentemailsent = bits;
 
+                _context.Add(request);
+                _context.SaveChanges();
+
                 requestclient.Requestid = request.Requestid;
                 requestclient.Notes = model.Symptoms;
                 requestclient.Firstname = status.Firstname;
@@ -169,6 +172,10 @@ namespace BusinessLogic.Repository
                 requestclient.Regionid = status.Regionid;
                 requestclient.City = status.City;
                 requestclient.Zipcode = status.Zipcode;
+
+
+                _context.Add(requestclient);
+                _context.SaveChanges();
 
                 int count = _context.Requests.Where(x => x.Createddate.Date == request.Createddate.Date).Count();
                 var region = _context.Regions.Where(x => x.Regionid == requestclient.Regionid).FirstOrDefault();
@@ -185,15 +192,8 @@ namespace BusinessLogic.Repository
                   requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
                     request.Confirmationnumber = confirmNum;
                 }
-               
-              
-
-                _context.Add(request);
+                _context.Update(request);
                 _context.SaveChanges();
-
-                _context.Add(requestclient);
-                 _context.SaveChanges();
-                
             }
            
             if(model.File != null )

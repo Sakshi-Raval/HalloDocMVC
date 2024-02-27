@@ -81,6 +81,26 @@ namespace BusinessLogic.Repository
             return caseViewModel;
 
         }
+        public List<NotesViewModel> ViewNotes(int requestid)
+        {
+            var notesViewModel = (from req in _context.Requests
+                                  join reqNotes in _context.Requestnotes
+                                  on req.Requestid equals reqNotes.Requestid into rnJoin
+                                  from reqNotes in rnJoin.DefaultIfEmpty()
+                                  join reqLog in _context.Requeststatuslogs
+                                  on req.Requestid equals reqLog.Requestid into rlJoin
+                                  from reqLog in rlJoin.DefaultIfEmpty()
+                                  where req.Requestid == requestid
+                                  select new NotesViewModel
+                                  {
+                                      AdminNotes = reqNotes.Adminnotes ?? "--",
+                                      PhysicianNotes = reqNotes.Physiciannotes ?? "--",
+                                      TransferNotes = reqLog.Notes ?? "--",  
+
+                                  }
+                                 ).ToList();
+            return notesViewModel;
+        }
         
 
       
