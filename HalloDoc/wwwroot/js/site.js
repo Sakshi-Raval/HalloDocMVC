@@ -147,21 +147,6 @@ birthdateInput.addEventListener('change', function () {
 
 function FilteredPartial(currentPartialName, currentStatus) {
 
-    $('#searchInput').on('input', function () {
-        console.log("dsfhj");
-    });
-    $('#districtSelect').on('change', function () {
-        console.log("dfsuig");
-
-        FilteredPartial(currentPartialName, currentStatus);
-
-    });
-    $('.filter-options').on('click', function () {
-        $('.filter-options').removeClass('active-filter');
-        $(this).addClass('active-filter');
-        FilteredPartial(currentPartialName, currentStatus);
-
-    });
 
 
     var SearchText = $('#searchInput').val();
@@ -196,6 +181,23 @@ function NewStateLoad() {
     currentStatus = [1];
     currentPartialName = "_NewStatePartial"
     FilteredPartial(currentPartialName, currentStatus);
+
+
+    $('#searchInput').on('input', function () {
+        FilteredPartial(currentPartialName, currentStatus);
+    });
+    $('#districtSelect').on('change', function () {
+        console.log("dfsuig");
+
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
+    $('.filter-options').on('click', function () {
+        $('.filter-options').removeClass('active-filter');
+        $(this).addClass('active-filter');
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
    
 }
 
@@ -206,6 +208,23 @@ function PendingStateLoad() {
     currentStatus = [2];
     currentPartialName = "_PendingStatePartial"
     FilteredPartial(currentPartialName, currentStatus);
+
+
+    $('#searchInput').on('input', function () {
+        FilteredPartial(currentPartialName, currentStatus);
+    });
+    $('#districtSelect').on('change', function () {
+
+
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
+    $('.filter-options').on('click', function () {
+        $('.filter-options').removeClass('active-filter');
+        $(this).addClass('active-filter');
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
 }
 
 function PartialTab(partialView,requestid) {

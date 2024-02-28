@@ -50,5 +50,10 @@ namespace HalloDoc.Controllers
            var notesViewModel = _admin.ViewNotes(requestid);
             return PartialView("_ViewNotesPartial",notesViewModel);
         }
+        public IActionResult CancelCase()
+        {
+
+            return View();
+        }
     }
 }

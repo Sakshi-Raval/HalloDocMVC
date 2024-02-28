@@ -9,6 +9,11 @@
             // $('#newState').addClass('active');
             // FilteredPartial(currentPartialName, currentStatus);
             NewStateLoad();
+
+            function cancelCaseModal(requestid){
+                $('#cancelCaseModal').css('display', 'block');
+                $('#requestid').val(requestid);
+            }
         });
         
     </script>
@@ -16,14 +21,14 @@
     <!-- Button trigger modal -->
 
     <!-- Modal -->
-    <div class="modal fade" id="cancelCaseModal" tabindex="-1" aria-labelledby="cancelCaseModalLabel" aria-hidden="true">
+    <div class="modal fade" id="cancelCaseModal" tabindex="-1" aria-labelledby="cancelCaseModalLabel" aria-hidden="true" style="display:none">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-info text-white">
                     <h1 class="modal-title fs-5" id="cancelCaseModalLabel">Confirm Cancellation</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                 <form>
+                 <form asp-action="CancelCase" asp-controller="Admin">
                 <div class="modal-body">
                     <label class="text-muted my-2">Patient Name: <span class="text-info">text text</span></label>
                    
@@ -33,6 +38,7 @@
                             <option data-value="">Administrative Errors</option>
                             <option data-value="">Legal or Regulatory Compliance</option>
                         </select>
+                        <input type="number" id="requestid" hidden />
                         <div class="form-floating ">
                             <textarea class="form-control mt-2 p-0" placeholder="Cancellation Notes" id="cancelNotes"
                                       style="height: 15vh;"></textarea>
