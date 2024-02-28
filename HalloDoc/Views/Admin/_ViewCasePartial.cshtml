@@ -1,7 +1,7 @@
 ﻿@model CaseViewModel
-<script>
-   
-</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <div class="row justify-content-center">
     <div class="col-10 col-md-8 col-lg-6  d-inline-flex justify-content-between">
@@ -27,7 +27,7 @@
                     <h6 class="h6 py-3">Patient Information</h6>
                     <div>
                         <label class="text-muted">Confirmation Number</label><br />
-                        <input type="text" class="h5 text-info border-0" asp-for="ConfirmNum" value="@Model.ConfirmNum"><br />
+                        <p class="h5 text-info" asp-for="ConfirmNum">@Model.ConfirmNum</p><br />
                          
                     </div>
                     <div class="form-floating mb-3">

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.WebPages;
 
 namespace BusinessLogic.Repository
 {
@@ -29,10 +30,11 @@ namespace BusinessLogic.Repository
                                         {
                                             Name = (reqClient.Firstname ?? "") + ", " + (reqClient.Lastname ?? ""),
                                             DOB = reqClient.Intyear != null && reqClient.Strmonth != null && reqClient.Intdate != null ?
-                                                    new DateOnly((int)reqClient.Intyear, int.Parse(reqClient.Strmonth), (int)reqClient.Intdate).ToString("MMM dd,yyyy") :
+                                                    string.Concat(new DateOnly((int)reqClient.Intyear, int.Parse(reqClient.Strmonth), (int)reqClient.Intdate).ToString("MMM dd,yyyy")," (",(DateTime.Now.Year - reqClient.Intyear).ToString(),")")   :
                                                     "---",
                                             Requestor = (req.Firstname) + " " + (req.Lastname ?? ""),
-                                            RequestedDate = req.Createddate.ToString("MMM dd, yyyy") + DateTime.Now.Subtract(req.Createddate).ToString(),
+                                            RequestedDate = req.Createddate.ToString("MMM dd, yyyy")+" "+ (DateTime.Now.Subtract(req.Createddate).Days*24+DateTime.Now.Subtract(req.Createddate).Hours).ToString() + "h "+
+                                            (DateTime.Now.Subtract(req.Createddate).Minutes).ToString()+ "m " + (DateTime.Now.Subtract(req.Createddate).Seconds).ToString() + "s",
                                             PhoneNumber = reqClient.Phonenumber,
                                             OtherPhoneNumber = req.Phonenumber,
                                             Address = (reqClient.Street ?? "") + " " + (reqClient.City ?? "") + " " + (reqClient.State ?? "") + " " + (reqClient.Zipcode ?? ""),
@@ -45,8 +47,6 @@ namespace BusinessLogic.Repository
                                         ).Where(item => (string.IsNullOrEmpty(SearchValue) || item.Name.ToLower().Contains(SearchValue.ToLower()))
                                         && (string.IsNullOrEmpty(districtSelect) || item.RegionId == districtSelect) 
                                         && (string.IsNullOrEmpty(selectedFilter) || item.RequestTypeId == int.Parse(selectedFilter))).ToList();
-            var count = newPatientsViewModel.Count();
-            
           
             return newPatientsViewModel;
 

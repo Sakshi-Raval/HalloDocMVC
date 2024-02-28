@@ -85,7 +85,7 @@ namespace BusinessLogic.Repository
             _context.Add(requestclient);
             _context.SaveChanges();
 
-            int count = _context.Requests.Where(x => x.Createddate.Date == request.Createddate.Date).Count();
+            int count = _context.Requests.Where(x => x.Createddate.Date == request.Createddate.Date).Count() + 1;
             var region = _context.Regions.Where(x => x.Regionid == requestclient.Regionid).FirstOrDefault();
 
 

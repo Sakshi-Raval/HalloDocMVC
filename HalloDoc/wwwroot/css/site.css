@@ -27,7 +27,9 @@
 
 
 /*admin dashboard states*/
-
+.accordianDash {
+    display: none;
+}
 
 #newState {
     background-color: #E9EAEF;
@@ -268,8 +270,7 @@ input:focus {
 }
 
 
-
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
     .backImgContainer {
         position: relative;
         height: 100vh;
@@ -308,17 +309,28 @@ input:focus {
 
     .backToLogin {
         display: none;
-        
     }
-}
 
-
-
-@media(max-width: 576px) {
     body {
         font-size: smaller;
     }
+
+    .tableDash {
+        display: none;
+    }
+
+    .accordianDash {
+        display: block;
+    }
 }
+@media (max-width: 576px){
+    body{
+        font-size:small;
+
+    }
+}
+
+
 
 @media (max-width: 471px) {
 /*    .darkBtn {
@@ -326,6 +338,9 @@ input:focus {
         top: 25%;
         right: 5%;
     }*/
+    body{
+        font-size: smaller;
+    }
 
     .footerSubmit {
         font-size: smaller;
