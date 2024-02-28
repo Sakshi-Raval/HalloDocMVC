@@ -28,20 +28,18 @@ namespace HalloDoc.Controllers
         {
             return PartialView("_AdminDashboardPartial");
         }
-        public IActionResult NewStatePartial(string SearchValue, string districtSelect, string selectedFilter)
+        public IActionResult LoadPartialView(string SearchValue, string districtSelect, string selectedFilter, string currentPartialName, int[] currentStatus)
         {
-                var newPatientsViewModel = _admin.GetPatients(SearchValue,districtSelect,selectedFilter);
-                newPatientsViewModel = newPatientsViewModel.Where(x => x.Status == 1).ToList();
-                
-                return PartialView("_NewStatePartial", newPatientsViewModel);
+            //int[] status = { 1 };
+            var newPatientsViewModel = _admin.GetPatients(SearchValue,districtSelect,selectedFilter,currentStatus);
+            return PartialView(currentPartialName, newPatientsViewModel);
         }
-        public IActionResult PendingStatePartial(string SearchValue, string districtSelect , string selectedFilter)
-        {
-            var newPatientsViewModel = _admin.GetPatients(SearchValue,districtSelect, selectedFilter);
-            newPatientsViewModel = newPatientsViewModel.Where(x => x.Status == 2).ToList();
-
-            return PartialView("_PendingStatePartial", newPatientsViewModel);
-        }
+        //public IActionResult PendingStatePartial(string SearchValue, string districtSelect , string selectedFilter)
+        //{
+        //    int[] status = { 2 };
+        //    var newPatientsViewModel = _admin.GetPatients(SearchValue,districtSelect, selectedFilter, status);
+        //    return PartialView("_PendingStatePartial", newPatientsViewModel);
+        //}
         public IActionResult ViewCasePartial(int requestid)
         {
             var caseViewModel = _admin.ViewCase(requestid);

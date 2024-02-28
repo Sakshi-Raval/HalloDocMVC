@@ -143,18 +143,42 @@ birthdateInput.addEventListener('change', function () {
 
 
 //admin dashboard
-function LoadPartialView(partialName) {
+
+
+function FilteredPartial(currentPartialName, currentStatus) {
+
+    $('#searchInput').on('input', function () {
+        console.log("dsfhj");
+    });
+    $('#districtSelect').on('change', function () {
+        console.log("dfsuig");
+
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
+    $('.filter-options').on('click', function () {
+        $('.filter-options').removeClass('active-filter');
+        $(this).addClass('active-filter');
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
+
+
     var SearchText = $('#searchInput').val();
+    console.log(SearchText);
     var districtSelect = $('#districtSelect').find(':selected').data('value');
     var selectedFilter = $('.active-filter').data('value');
     var dataToSend = {
         SearchValue: SearchText,
         districtSelect: districtSelect,
         selectedFilter: selectedFilter,
+        currentPartialName: currentPartialName,
+        currentStatus: currentStatus,
     }
     $.ajax({
-        url: '/Admin/' + partialName,
+        url: '/Admin/LoadPartialView' ,
         type: 'GET',
+        traditional:true,
         data: dataToSend,
         success: function (response) {
             $('#partialContainer').html(response);
@@ -169,35 +193,19 @@ function NewStateLoad() {
     $('#stateSpan').text(" (New)");
     $('.states').removeClass('active');
     $('#newState').addClass('active');
-    LoadPartialView("NewStatePartial");
-    $('#searchInput').on('input', function () {
-        LoadPartialView("NewStatePartial");
-    });
-    $('#districtSelect').on('change', function () {
-        LoadPartialView("NewStatePartial");
-    });
-    $('.filter-options').on('click', function () {
-        $('.filter-options').removeClass('active-filter');
-        $(this).addClass('active-filter');
-        LoadPartialView("NewStatePartial");
-    });
+    currentStatus = [1];
+    currentPartialName = "_NewStatePartial"
+    FilteredPartial(currentPartialName, currentStatus);
+   
 }
 
 function PendingStateLoad() {
-
     $('#stateSpan').text(" (Pending)");
     $('.states').removeClass('active');
     $('#pendingState').addClass('active');
-    LoadPartialView("PendingStatePartial");
-    $('#searchInput').on('input', function () {
-        LoadPartialView("PendingStatePartial");
-    });
-    $('#districtSelect').on('change', function () {
-        LoadPartialView("PendingStatePartial");
-    });
-    $('.filter-options').on('click', function () {
-        LoadPartialView("PendingStatePartial");
-    });
+    currentStatus = [2];
+    currentPartialName = "_PendingStatePartial"
+    FilteredPartial(currentPartialName, currentStatus);
 }
 
 function PartialTab(partialView,requestid) {

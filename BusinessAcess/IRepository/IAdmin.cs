@@ -9,7 +9,7 @@ namespace BusinessLogic.IRepository
 {
     public interface IAdmin
     {
-        public List<NewPatientsViewModel> GetPatients(string SearchValue, string districtSelect, string selectedFilter);
+        public List<NewPatientsViewModel> GetPatients(string SearchValue, string districtSelect, string selectedFilter, int[] currentStatus);
         public CaseViewModel ViewCase(int requestid);
         public List<NotesViewModel> ViewNotes(int requestid);
     }
