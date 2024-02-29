@@ -30,16 +30,10 @@ namespace HalloDoc.Controllers
         }
         public IActionResult LoadPartialView(string SearchValue, string districtSelect, string selectedFilter, string currentPartialName, int[] currentStatus)
         {
-            //int[] status = { 1 };
             var newPatientsViewModel = _admin.GetPatients(SearchValue,districtSelect,selectedFilter,currentStatus);
             return PartialView(currentPartialName, newPatientsViewModel);
         }
-        //public IActionResult PendingStatePartial(string SearchValue, string districtSelect , string selectedFilter)
-        //{
-        //    int[] status = { 2 };
-        //    var newPatientsViewModel = _admin.GetPatients(SearchValue,districtSelect, selectedFilter, status);
-        //    return PartialView("_PendingStatePartial", newPatientsViewModel);
-        //}
+
         public IActionResult ViewCasePartial(int requestid)
         {
             var caseViewModel = _admin.ViewCase(requestid);
@@ -50,10 +44,21 @@ namespace HalloDoc.Controllers
            var notesViewModel = _admin.ViewNotes(requestid);
             return PartialView("_ViewNotesPartial",notesViewModel);
         }
-        public IActionResult CancelCase()
+        public IActionResult CancelCase(int requestid,string cancelNotes, string reasons)
         {
-
-            return View();
+            _admin.CancelCase(requestid, cancelNotes, reasons);
+            return Ok();
+        }
+        public List<Casetag> CaseTagResults()
+        {
+            List<Casetag> results = _context.Casetags.ToList();
+            return results;
+        }
+        public List<Region> RegionResults()
+        {
+            List<Region> results = _context.Regions.ToList();
+            Console.WriteLine(results);
+            return results;
         }
     }
 }

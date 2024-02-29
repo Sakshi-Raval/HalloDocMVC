@@ -38,6 +38,19 @@ input.forEach(function (inp) {
     inp.addEventListener('keyup', reset);
 });
 
+//back button
+
+var backbtns = document.getElementsByClassName("backBtn");
+for (var btn of backbtns) {
+    console.log("sdhfj");
+    btn.addEventListener('click', function () {
+        history.back();
+        console.log("oiuyo");
+    });
+}
+
+
+
 
 //Dark Mode
 
@@ -146,11 +159,7 @@ birthdateInput.addEventListener('change', function () {
 
 
 function FilteredPartial(currentPartialName, currentStatus) {
-
-
-
     var SearchText = $('#searchInput').val();
-    console.log(SearchText);
     var districtSelect = $('#districtSelect').find(':selected').data('value');
     var selectedFilter = $('.active-filter').data('value');
     var dataToSend = {
@@ -226,6 +235,31 @@ function PendingStateLoad() {
 
     });
 }
+function ToCloseStateLoad() {
+    $('#stateSpan').text(" (To Close)");
+    $('.states').removeClass('active');
+    $('#toCloseState').addClass('active');
+    currentStatus = [3,7,8];
+    currentPartialName = "_ToCloseStatePartial"
+    FilteredPartial(currentPartialName, currentStatus);
+
+
+    $('#searchInput').on('input', function () {
+        FilteredPartial(currentPartialName, currentStatus);
+    });
+    $('#districtSelect').on('change', function () {
+
+
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
+    $('.filter-options').on('click', function () {
+        $('.filter-options').removeClass('active-filter');
+        $(this).addClass('active-filter');
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
+}
 
 function PartialTab(partialView,requestid) {
     $.ajax({
@@ -239,4 +273,70 @@ function PartialTab(partialView,requestid) {
             console.error(xhr.responseText);
         }
     });
+}
+
+function populateCancelDropdown() {
+    $.ajax({
+        url: '/Admin/CaseTagResults',
+        type: 'GET',
+        success: function (data) {
+            var dropdownData = data;
+            console.log(dropdownData);
+            var dropdown = $('#reasons');
+            dropdown.empty();
+            dropdown.append($('<option>').text('--').val(''));
+            dropdownData.forEach(function (item) {
+                dropdown.append($('<option>').text(item.name).val(item.casetagid));
+
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+function populateAssignDropdown() {
+    $.ajax({
+        url: '/Admin/RegionResults',
+        type: 'GET',
+        success: function (data) {
+            var dropdownData = data;
+            console.log(dropdownData);
+            var dropdown = $('#regions');
+            dropdown.empty();
+            dropdown.append($('<option>').text('--').val(''));
+            dropdownData.forEach(function (item) {
+                dropdown.append($('<option>').text(item.name).val(item.regionid));
+
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+function openModal(btn) {
+    console.log("Button clicked");
+    const myModal = document.getElementById("cancelCaseModal");
+    var bsModal = new bootstrap.Modal(myModal);
+    bsModal.show();
+
+    const requestid = btn.getAttribute('data-requestid');
+    document.getElementById('requestid').value = requestid;
+    const name = btn.getAttribute('data-name');
+    document.getElementById('nameModal').textContent = name;
+    populateCancelDropdown(); 
+}
+
+function assignCaseModal(btn) {
+    console.log("Button clicked");
+
+    const myModal = document.getElementById("assignCaseModal");
+    var bsModal = new bootstrap.Modal(myModal);
+    bsModal.show();
+
+    const requestid = btn.getAttribute('data-requestid');
+    document.getElementById('requestid').value = requestid;
+    populateAssignDropdown();
 }

@@ -3,6 +3,7 @@ using DataAccess.DataContext;
 using DataAccess.DataModels;
 using DataAccess.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,16 @@ namespace BusinessLogic.Repository
             _context = context;
         }
 
-        public List<NewPatientsViewModel> GetPatients(string SearchValue, string districtSelect, string selectedFilter, int[] currentStatus)
+        public List<PatientsListViewModel> GetPatients(string SearchValue, string districtSelect, string selectedFilter, int[] currentStatus)
         {
             var newPatientsViewModel = (from req in _context.Requests
                                         join reqClient in _context.Requestclients
                                         on req.Requestid equals reqClient.Requestid
+                                        join reqStatusLog in _context.Requeststatuslogs
+                                        on req.Requestid equals reqStatusLog.Requestid into statusLogs
+                                        from statusLog in statusLogs.DefaultIfEmpty()
                                         orderby req.Createddate descending
-                                        select new NewPatientsViewModel
+                                        select new PatientsListViewModel
                                         {
                                             Name = (reqClient.Firstname ?? "") + ", " + (reqClient.Lastname ?? ""),
                                             DOB = reqClient.Intyear != null && reqClient.Strmonth != null && reqClient.Intdate != null ?
@@ -38,10 +42,11 @@ namespace BusinessLogic.Repository
                                             PhoneNumber = reqClient.Phonenumber,
                                             OtherPhoneNumber = req.Phonenumber,
                                             Address = (reqClient.Street ?? "") + " " + (reqClient.City ?? "") + " " + (reqClient.State ?? "") + " " + (reqClient.Zipcode ?? ""),
-                                            Notes = reqClient.Notes ?? "---",
+                                            Notes = statusLog.Notes ?? "---",
                                             RequestTypeId = req.Requesttypeid,
                                             Status = req.Status,
                                             RegionId = reqClient.Regionid.ToString() ?? " ",
+                                            Region = _context.Regions.Where(x => x.Regionid == reqClient.Regionid).FirstOrDefault().Name ?? "",
                                             RequestId = req.Requestid,
                                         }
                                         ).Where(item => (currentStatus.Any(x=>x==item.Status)) 
@@ -102,8 +107,27 @@ namespace BusinessLogic.Repository
                                  ).ToList();
             return notesViewModel;
         }
-        
 
-      
+        public void CancelCase(int requestid, string cancelNotes, string reasons)
+        {
+            var request = _context.Requests.Where(x => x.Requestid == requestid).FirstOrDefault();
+            if (request != null)
+            {
+                request.Status = 3;
+                request.Casetag = reasons;
+
+               var requestLog = new Requeststatuslog();
+               requestLog.Requestid = requestid;
+               requestLog.Status = 3;
+               requestLog.Notes = cancelNotes ?? "";
+               requestLog.Createddate = DateTime.Now;
+               _context.Add(requestLog);
+               _context.SaveChanges();
+               
+               _context.Update(request);
+               _context.SaveChanges();
+            }
+            
+        }
     }
 }

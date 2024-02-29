@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.ViewModel
 {
-    public class NewPatientsViewModel
+    public class PatientsListViewModel
     {
         public string Name { get; set; }
 
@@ -25,8 +25,9 @@ namespace DataAccess.ViewModel
         public string? OtherPhoneNumber { get; set; }
         public string? OtherName { get; set; }
         public int Status { get; set; }
-        public string RegionId { get; set; }
+        public string? RegionId { get; set; }
         public int Count { get; set; }
         public int RequestId { get; set; }
+        public string? Region {  get; set; }
     }
 }
