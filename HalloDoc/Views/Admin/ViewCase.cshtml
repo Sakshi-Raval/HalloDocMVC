@@ -1,4 +1,9 @@
-﻿@model CaseViewModel
+﻿@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "View Case";
+    TempData.Keep("Requestid");
+}
+@model CaseViewModel
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -124,10 +129,10 @@
                     <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
                         @if (Model.Status == 1)
                         {
-                            <button class="btn btn-info me-md-2 text-white fw-medium" type="submit">Assign</button>
+                            <a class="btn btn-info me-md-2 text-white fw-medium" >Assign</a>
 
                         }
-                        <button class="btn btn-info me-md-2 text-white fw-medium" type="submit">View Notes</button>
+                        <a class="btn btn-info me-md-2 text-white fw-medium" asp-action="ViewNotes" asp-controller="Admin" asp-route-requestid="@TempData["Requestid"]">View Notes</a>
                         <button class="btn btn-danger fw-medium " type="reset">Cancel</button>
                     </div>
                 </div>

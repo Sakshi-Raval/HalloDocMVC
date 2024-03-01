@@ -328,6 +328,8 @@ input:focus {
         font-size:small;
 
     }
+ 
+ 
 }
 
 
@@ -358,6 +360,13 @@ input:focus {
         display: block;
         position: relative;
         bottom: 10%;
+    }
+    .filter-options {
+        font-size: small;
+        padding:0;
+    }
+    .patientHead{
+        font-size:smaller;
     }
 }
 .nav-tabs .active {

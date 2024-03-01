@@ -29,5 +29,6 @@ namespace DataAccess.ViewModel
         public int Count { get; set; }
         public int RequestId { get; set; }
         public string? Region {  get; set; }
+        public string Email { get; set; }
     }
 }

@@ -48,6 +48,7 @@ namespace BusinessLogic.Repository
                                             RegionId = reqClient.Regionid.ToString() ?? " ",
                                             Region = _context.Regions.Where(x => x.Regionid == reqClient.Regionid).FirstOrDefault().Name ?? "",
                                             RequestId = req.Requestid,
+                                            Email = reqClient.Email ?? "",
                                         }
                                         ).Where(item => (currentStatus.Any(x=>x==item.Status)) 
                                         && (string.IsNullOrEmpty(SearchValue) || item.Name.ToLower().Contains(SearchValue.ToLower()))
@@ -129,5 +130,55 @@ namespace BusinessLogic.Repository
             }
             
         }
+        public void AssignCase(int regions,int physician,int requestId, string description)
+        {
+            var request = _context.Requests.Where(x => x.Requestid == requestId).FirstOrDefault();
+            if (request != null)
+            {
+                request.Status = 2;
+                request.Physicianid = physician;
+
+                var requestLog = new Requeststatuslog();
+                requestLog.Requestid = requestId;
+                requestLog.Status = 2;
+                requestLog.Notes = description ?? "";
+                requestLog.Createddate = DateTime.Now;
+                _context.Add(requestLog);
+                _context.SaveChanges();
+
+                _context.Update(request);
+                _context.SaveChanges();
+            }
+
+        }
+        public void BlockCase(int requestID, string blockReason)
+        {
+            var request = _context.Requests.Where(x => x.Requestid == requestID).FirstOrDefault();
+            if (request != null)
+            {
+                request.Status = 11;//block status = 11
+
+                var blockRequest = new Blockrequest();
+                blockRequest.Requestid = requestID.ToString();
+                blockRequest.Reason = blockReason;
+                blockRequest.Createddate = DateTime.Now;
+                blockRequest.Phonenumber = request.Phonenumber;
+                blockRequest.Email = request.Email;
+                _context.Add(blockRequest);
+                _context.SaveChanges();
+
+                var requestLog = new Requeststatuslog();
+                requestLog.Requestid = requestID;
+                requestLog.Status = 11;
+                requestLog.Notes = blockReason ?? "";
+                requestLog.Createddate = DateTime.Now;
+                _context.Add(requestLog);
+                _context.SaveChanges();
+
+                _context.Update(request);
+                _context.SaveChanges();
+            }
+        }
+
     }
 }

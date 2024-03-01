@@ -261,19 +261,19 @@ function ToCloseStateLoad() {
     });
 }
 
-function PartialTab(partialView,requestid) {
-    $.ajax({
-        url: '/Admin/' + partialView,
-        type: 'GET',
-        data: { requestid: requestid },
-        success: function (response) {
-            $('#home').html(response);
-        },
-        error: function (xhr, status, error) {
-            console.error(xhr.responseText);
-        }
-    });
-}
+//function PartialTab(partialView,requestid) {
+//    $.ajax({
+//        url: '/Admin/' + partialView,
+//        type: 'GET',
+//        data: { requestid: requestid },
+//        success: function (response) {
+//            $('#home').html(response);
+//        },
+//        error: function (xhr, status, error) {
+//            console.error(xhr.responseText);
+//        }
+//    });
+//}
 
 function populateCancelDropdown() {
     $.ajax({
@@ -296,7 +296,7 @@ function populateCancelDropdown() {
     });
 }
 
-function populateAssignDropdown() {
+function populateRegionDropdown() {
     $.ajax({
         url: '/Admin/RegionResults',
         type: 'GET',
@@ -316,6 +316,29 @@ function populateAssignDropdown() {
         }
     });
 }
+
+function populatePhysicianDropdown(regionid) {
+    $.ajax({
+        url: '/Admin/PhysicianResults',
+        type: 'GET',
+        data: {regionid : regionid},
+        success: function (data) {
+            var dropdownData = data;
+            console.log(dropdownData);
+            var dropdown = $('#physician');
+            dropdown.empty();
+            dropdown.append($('<option>').text('--').val(''));
+            dropdownData.forEach(function (item) {
+                dropdown.append($('<option>').text(item.firstname+" "+item.lastname).val(item.physicianid));
+
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
 function openModal(btn) {
     console.log("Button clicked");
     const myModal = document.getElementById("cancelCaseModal");
@@ -336,7 +359,19 @@ function assignCaseModal(btn) {
     var bsModal = new bootstrap.Modal(myModal);
     bsModal.show();
 
-    const requestid = btn.getAttribute('data-requestid');
-    document.getElementById('requestid').value = requestid;
-    populateAssignDropdown();
+    const requestId = btn.getAttribute('data-requestId');
+    document.getElementById('requestId').value = requestId;
+    populateRegionDropdown();
+}
+function blockCaseModal(btn) {
+    console.log("Button clicked");
+
+    const myModal = document.getElementById("blockCaseModal");
+    var bsModal = new bootstrap.Modal(myModal);
+    bsModal.show();
+
+    const requestID = btn.getAttribute('data-requestID');
+    document.getElementById('requestID').value = requestID;
+    const name = btn.getAttribute('data-Name');
+    document.getElementById('NameModal').textContent = name;
 }

@@ -34,19 +34,30 @@ namespace HalloDoc.Controllers
             return PartialView(currentPartialName, newPatientsViewModel);
         }
 
-        public IActionResult ViewCasePartial(int requestid)
+        public IActionResult ViewCase(int requestid)
         {
+            TempData["Requestid"] = requestid;
             var caseViewModel = _admin.ViewCase(requestid);
-            return PartialView("_ViewCasePartial",caseViewModel);
+            return View("ViewCase",caseViewModel);
         }
-        public IActionResult ViewNotesPartial(int requestid)
+        public IActionResult ViewNotes(int requestid)
         {
            var notesViewModel = _admin.ViewNotes(requestid);
-            return PartialView("_ViewNotesPartial",notesViewModel);
+           return View("ViewNotes",notesViewModel);
         }
         public IActionResult CancelCase(int requestid,string cancelNotes, string reasons)
         {
             _admin.CancelCase(requestid, cancelNotes, reasons);
+            return Ok();
+        }
+        public IActionResult AssignCase(int regions, int physician, int requestId, string description)
+        {
+            _admin.AssignCase(regions, physician, requestId, description);
+            return Ok();
+        }
+        public IActionResult BlockCase(int requestID, string blockReason)
+        {
+            _admin.BlockCase(requestID,blockReason);
             return Ok();
         }
         public List<Casetag> CaseTagResults()
@@ -58,6 +69,11 @@ namespace HalloDoc.Controllers
         {
             List<Region> results = _context.Regions.ToList();
             Console.WriteLine(results);
+            return results;
+        }
+        public List<Physician> PhysicianResults(int regionid)
+        {
+            List<Physician> results = _context.Physicians.Where(x => x.Regionid == regionid).ToList();
             return results;
         }
     }
