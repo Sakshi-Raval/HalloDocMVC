@@ -25,7 +25,10 @@
     border-top: 1px dotted #000; /* Add dotted border on top */
 }
 
-
+.btn-outline-info:hover {
+    color: white;
+    background-color: #31D2F2;
+}
 /*admin dashboard states*/
 .accordianDash {
     display: none;

@@ -65,10 +65,12 @@ namespace BusinessLogic.Repository
 
         public List<ViewDocumentsViewModel> GetDocuments(int requestId)
         {
+            bool[] bitValues = { false };
+            BitArray bits = new BitArray(bitValues);
             return ((from reqFile in _context.Requestwisefiles
                      join req in _context.Requests
                      on reqFile.Requestid equals req.Requestid
-                     where req.Requestid == requestId
+                     where req.Requestid == requestId && (reqFile.Isdeleted == bits || reqFile.Isdeleted == null)
                     select new ViewDocumentsViewModel
                      {
                          Filename = reqFile.Filename,
@@ -259,7 +261,6 @@ namespace BusinessLogic.Repository
                 {
                     FileUpload(file, request.Requestid);
                 }
-
             }
 
         }
@@ -273,10 +274,11 @@ namespace BusinessLogic.Repository
                 {
                     Directory.CreateDirectory(uploadsFolder);
                 }
-                var filePath = Path.Combine(uploadsFolder, file.FileName);
+                var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 Requestwisefile requestwisefile = new();
                 requestwisefile.Requestid = requestId;
-                requestwisefile.Filename = file.FileName;
+                requestwisefile.Filename = uniqueFileName;
                 requestwisefile.Createddate = DateTime.Now;
                 _context.Add(requestwisefile);
                 _context.SaveChanges();

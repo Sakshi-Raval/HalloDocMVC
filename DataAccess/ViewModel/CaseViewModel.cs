@@ -9,6 +9,7 @@ namespace DataAccess.ViewModel
 {
     public class CaseViewModel
     {
+        public int Requestid { get; set; }
         public string PatientNotes { get; set; }
         public string ConfirmNum { get; set; }
         public string Firstname { get; set; }

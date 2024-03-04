@@ -81,7 +81,7 @@ namespace BusinessLogic.Repository
                                      Region = region.Name,
                                      Address = (reqClient.Street ?? "") + " " + (reqClient.City ?? "") + " " + (reqClient.State ?? "") + " " + (reqClient.Zipcode ?? ""),
                                      Status = req.Status,
-
+                                     Requestid = req.Requestid,
 
                                  }
                                  ).FirstOrDefault();

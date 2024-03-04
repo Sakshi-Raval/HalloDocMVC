@@ -4,9 +4,163 @@
     TempData.Keep("Requestid");
 }
 @model CaseViewModel
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@section Scripts{
+    <script>
+        $(document).ready(function(){
+            $('#modalForm').submit(function (event) {
+                event.preventDefault();
+
+                var formData = $(this).serialize();
+                console.log(formData);
+                $.ajax({
+                    url: '/Admin/CancelCase',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+
+                        $('#cancelCaseModal').modal('hide');
+                        window.location.href = "/Admin/AdminPage";
+                    },
+                    error: function (xhr, status, error) {
+
+                        console.error('Error submitting form:', error);
+                    }
+                });
+            });
+            $('#cancelCaseModal').on('hidden.bs.modal', function () {
+                $(this).find('form')[0].reset();
+            });
+
+            //assign case
+            $('#assignCaseForm').submit(function (event) {
+                event.preventDefault();
+
+                var formData = $(this).serialize();
+                console.log(formData);
+                $.ajax({
+                    url: '/Admin/AssignCase',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+
+                        $('#assignCaseModal').modal('hide');
+                        window.location.href = "/Admin/AdminPage";
+                    },
+                    error: function (xhr, status, error) {
+
+                        console.error('Error submitting form:', error);
+                    }
+                });
+            });
+            $('#assignCaseModal').on('hidden.bs.modal', function () {
+                $(this).find('form')[0].reset();
+            });
+
+
+            $('#regions').on('change', function () {
+                var regionid = $('#regions').val();
+                console.log(regionid);
+                populatePhysicianDropdown(regionid);
+            });
+
+
+        });
+    </script>
+}
+
+<!-- Modal for Cancel Case -->
+<div class="modal fade" id="cancelCaseModal" tabindex="-1" aria-labelledby="cancelCaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h1 class="modal-title fs-5" id="cancelCaseModalLabel">Confirm Cancellation</h1>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="modalForm">
+                <div class="modal-body">
+                    <label class="text-muted my-2">Patient Name: <span class="text-info" id="nameModal"></span></label>
+
+                    <div class="form-floating">
+                        <select class="form-select border text-muted mb-2" name="reasons" id="reasons" aria-label="Default select example" required>
+                            <option selected value="">--</option>
+                            @* <option value="1">No Respone to call or text, left message</option>
+                            <option value="2">Cost Issue</option>
+                            <option value="3">Insurance Issue</option>
+                            <option value="4">Out of Service Area</option>
+                            <option value="5">Not appropriate for service</option>
+                            <option value="6">Referral to Clinic or Hospital</option> *@
+                        </select>
+                        <label for="reasons">Reasons for Cancellation</label>
+                    </div>
+                    <input type="number" id="requestid" name="requestid" hidden />
+                    <div class="form-floating ">
+                        <textarea class="form-control mt-2" name="cancelNotes" placeholder="Cancellation Notes" id="cancelNotes"
+                                  style="height: 15vh;"></textarea>
+                        <label class="text-muted floating-label fs-6">
+                            Provide Additional Notes
+                        </label>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="submit" class="btn btn-info text-white">Confirm</button>
+                    <button type="button" class="btn btn-outline-info" id="" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Modal for Assign Case-->
+<div class="modal fade" id="assignCaseModal" tabindex="-1" aria-labelledby="assignCaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h1 class="modal-title fs-5" id="assignCaseModalLabel">Assign Request</h1>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="assignCaseForm">
+                <div class="modal-body">
+                    <small class="text-muted my-2 ">To assign this request,search and select another Physician</small>
+                    <div class="form-floating">
+                        <select class="form-select border text-muted mb-2" name="regions" id="regions" aria-label="Default select example" required>
+                            <option selected value="">--</option>
+                            @*   <option value="1">District of Columbia</option>
+                            <option value="2">New York</option>
+                            <option value="3">Virginia</option>
+                            <option value="4">Maryland</option> *@
+                        </select>
+                        <label for="regions">Narrow Search By Region</label>
+                    </div>
+                    <div class="form-floating">
+                        <select class="form-select border text-muted mb-2" name="physician" id="physician" aria-label="Default select example" required>
+                            @*                                 <option selected value="">--</option>
+                            <option value="1">one</option>
+                            <option value="2">two</option>
+                            <option value="3">three</option>
+                            <option value="4">four</option> *@
+                        </select>
+                        <label for="reasons">Select Physician</label>
+                    </div>
+                    <input type="number" id="requestId" name="requestId" hidden />
+                    <div class="form-floating ">
+                        <textarea class="form-control mt-2" name="description" placeholder="Description" id="description"
+                                  style="height: 15vh;"></textarea>
+                        <label class="text-muted floating-label fs-6">
+                            Description
+                        </label>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="submit" class="btn btn-info text-white">Submit</button>
+                    <button type="button" class="btn btn-outline-info" id="" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="row justify-content-center">
     <div class="col-10 col-md-8 col-lg-6  d-inline-flex justify-content-between">
@@ -129,11 +283,17 @@
                     <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
                         @if (Model.Status == 1)
                         {
-                            <a class="btn btn-info me-md-2 text-white fw-medium" >Assign</a>
+                            <button class="btn btn-info me-md-2 text-white fw-medium" type="button" onclick="assignCaseModal(this)" data-requestId="@Model.Requestid">Assign</button>
 
                         }
                         <a class="btn btn-info me-md-2 text-white fw-medium" asp-action="ViewNotes" asp-controller="Admin" asp-route-requestid="@TempData["Requestid"]">View Notes</a>
-                        <button class="btn btn-danger fw-medium " type="reset">Cancel</button>
+                        @{
+                            var Name = Model.Firstname + " " + Model.Lastname ?? "";
+                        }
+                        @if (Model.Status == 1)
+                        {
+                            <button class="btn btn-danger fw-medium " type="button" onclick="openModal(this)" data-requestid="@Model.Requestid" data-name="@Name">Cancel</button>
+                        }
                     </div>
                 </div>
             </div>
