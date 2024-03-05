@@ -12,7 +12,12 @@ builder.Services.AddScoped<IOtherRequest, OtherRequestRepo>();
 builder.Services.AddScoped<IPatient, PatientRepo>();
 builder.Services.AddScoped<IAdmin, AdminRepo>();
 builder.Services.AddTransient<IEmailService, EmailServiceRepo>();
-builder.Services.AddSession();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(60);
+    options.Cookie.HttpOnly=true;
+    options.Cookie.IsEssential=true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
