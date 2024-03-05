@@ -1,10 +1,13 @@
 ﻿using BusinessLogic.IRepository;
 using DataAccess.DataContext;
 using DataAccess.DataModels;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using System.Collections;
 using System.Configuration;
+using System.Net.Mail;
+
 
 namespace HalloDoc.Controllers
 {
@@ -14,12 +17,14 @@ namespace HalloDoc.Controllers
         private readonly IAdmin _admin;
         private readonly IPatient _patient;
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
-        public AdminController(ApplicationDbContext context, IAdmin admin, IPatient patient, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
+        private readonly IEmailService _emailService;
+        public AdminController(ApplicationDbContext context, IAdmin admin, IPatient patient, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IEmailService emailService)
         {
             _context = context;
             _admin = admin;
             _patient = patient;
             _hostingEnvironment = hostingEnvironment;
+            _emailService = emailService;
         }
 
         public IActionResult AdminPage()
@@ -58,12 +63,13 @@ namespace HalloDoc.Controllers
 
         public IActionResult ViewUploads(int requestid)
         {
-            var patient = _context.Requests.Where(x => x.Requestid == requestid).FirstOrDefault();
-            if (patient != null)
+            var request = _context.Requests.Where(x => x.Requestid == requestid).FirstOrDefault();
+            if (request != null)
             {
+                var patient = _context.Requestclients.Where(x => x.Requestid == requestid).FirstOrDefault();
                 ViewBag.PatientName = string.Concat(patient.Firstname, ' ', patient.Lastname ?? "");
-                ViewBag.ConfNum = patient.Confirmationnumber;
-                ViewBag.Requestid = patient.Requestid;
+                ViewBag.ConfNum = request.Confirmationnumber;
+                ViewBag.Requestid = request.Requestid;
                 var viewDocumentsViewModel = _patient.GetDocuments(requestid);
                 return View(viewDocumentsViewModel);
             }
@@ -85,7 +91,7 @@ namespace HalloDoc.Controllers
         {
             var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads",filename);
             if (System.IO.File.Exists(filePath)){
-                System.IO.File.Delete(filePath);
+                //System.IO.File.Delete(filePath);
                 Requestwisefile reqFile = _context.Requestwisefiles.Where(x => x.Filename == filename ).FirstOrDefault();
                 if(reqFile != null)
                 {
@@ -102,6 +108,28 @@ namespace HalloDoc.Controllers
                 return Json(new { success = false , message = "File not found" });
 
             }
+        }
+
+        public IActionResult SendDocuments(List<string> files,int requestid)
+        {
+            List<Attachment> attachments = new();
+            //var files =_context.Requestwisefiles.Where(x=>x.Requestid == requestid).ToList();
+            if (files != null)
+            {
+                foreach (var file in files)
+                {
+                    var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads", file);
+                    var attachment = new Attachment(filePath);
+                    attachments.Add(attachment);
+                }
+                var reqClient = _context.Requestclients.Where(x => x.Requestid == requestid).FirstOrDefault();
+                var recepientEmail = reqClient != null ? reqClient.Email : "";
+                var subject = "Uploaded Documents";
+                var body = "PFA uploaded documents";
+                _emailService.SendEmailAsync(recepientEmail, subject, body, attachments);
+            }
+           
+            return Ok();
         }
 
         public IActionResult CancelCase(int requestid,string cancelNotes, string reasons)

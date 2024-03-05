@@ -260,6 +260,81 @@ function ToCloseStateLoad() {
 
     });
 }
+function ActiveStateLoad() {
+    $('#stateSpan').text(" (Active)");
+    $('.states').removeClass('active');
+    $('#activeState').addClass('active');
+    currentStatus = [4, 5];
+    currentPartialName = "_ActiveStatePartial"
+    FilteredPartial(currentPartialName, currentStatus);
+
+
+    $('#searchInput').on('input', function () {
+        FilteredPartial(currentPartialName, currentStatus);
+    });
+    $('#districtSelect').on('change', function () {
+
+
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
+    $('.filter-options').on('click', function () {
+        $('.filter-options').removeClass('active-filter');
+        $(this).addClass('active-filter');
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
+}
+function ConcludeStateLoad() {
+    $('#stateSpan').text(" (Active)");
+    $('.states').removeClass('active');
+    $('#concludeState').addClass('active');
+    currentStatus = [6];
+    currentPartialName = "_ConcludeStatePartial"
+    FilteredPartial(currentPartialName, currentStatus);
+
+
+    $('#searchInput').on('input', function () {
+        FilteredPartial(currentPartialName, currentStatus);
+    });
+    $('#districtSelect').on('change', function () {
+
+
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
+    $('.filter-options').on('click', function () {
+        $('.filter-options').removeClass('active-filter');
+        $(this).addClass('active-filter');
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
+}
+function UnpaidStateLoad() {
+    $('#stateSpan').text(" (Active)");
+    $('.states').removeClass('active');
+    $('#unpaidState').addClass('active');
+    currentStatus = [9];
+    currentPartialName = "_UnpaidStatePartial"
+    FilteredPartial(currentPartialName, currentStatus);
+
+
+    $('#searchInput').on('input', function () {
+        FilteredPartial(currentPartialName, currentStatus);
+    });
+    $('#districtSelect').on('change', function () {
+
+
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
+    $('.filter-options').on('click', function () {
+        $('.filter-options').removeClass('active-filter');
+        $(this).addClass('active-filter');
+        FilteredPartial(currentPartialName, currentStatus);
+
+    });
+}
 
 //function PartialTab(partialView,requestid) {
 //    $.ajax({

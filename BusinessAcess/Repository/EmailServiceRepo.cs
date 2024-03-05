@@ -6,12 +6,13 @@ using System.Net.Mail;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessLogic.Repository
 {
     public class EmailServiceRepo : IEmailService
     {
-        public void SendEmailAsync(string email, string subject, string message)
+        public void SendEmailAsync(string email, string subject, string message, List<Attachment> attachments=null)
         {
 
             //var client = new SmtpClient("smtp.office365.com", 587)
@@ -29,7 +30,7 @@ namespace BusinessLogic.Repository
             //                    ));
 
 
-            SmtpClient smtpClient = new SmtpClient("smtp.office365.com")
+            SmtpClient smtpClient = new("smtp.office365.com")
             {
                 Port = 587,
                 Credentials = new NetworkCredential("tatva.dotnet.sakshiraval@outlook.com", "sakshi25@raval"),
@@ -40,6 +41,7 @@ namespace BusinessLogic.Repository
 
             // Create the MailMessage object
             MailMessage mail = new MailMessage("tatva.dotnet.sakshiraval@outlook.com", email, subject, message);
+            attachments?.ForEach(attachment => mail.Attachments.Add(attachment));
 
             try
             {

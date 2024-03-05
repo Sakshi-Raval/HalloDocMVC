@@ -60,9 +60,10 @@ namespace HalloDoc.Controllers
             var ReqId = int.Parse(requestid);
             ViewBag.requestid = ReqId;
             var email = HttpContext.Session.GetString("Email");
-            Request patName = _context.Requests.Where(x => x.Requestid == ReqId).FirstOrDefault();
-            ViewBag.PatientName = string.Concat(patName.Firstname,' ',patName.Lastname);
-            ViewBag.ConfNum = patName.Confirmationnumber;
+            Request request = _context.Requests.Where(x => x.Requestid == ReqId).FirstOrDefault();
+            Requestclient patient = _context.Requestclients.Where(x => x.Requestid == ReqId).FirstOrDefault();
+            ViewBag.PatientName = string.Concat(patient.Firstname,' ', patient.Lastname);
+            ViewBag.ConfNum = request.Confirmationnumber;
 
             var viewDocumentsViewModel = _patient.GetDocuments(ReqId);
             return View(viewDocumentsViewModel);
