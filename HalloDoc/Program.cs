@@ -12,6 +12,7 @@ builder.Services.AddScoped<IOtherRequest, OtherRequestRepo>();
 builder.Services.AddScoped<IPatient, PatientRepo>();
 builder.Services.AddScoped<IAdmin, AdminRepo>();
 builder.Services.AddTransient<IEmailService, EmailServiceRepo>();
+builder.Services.AddTransient<IJwtService, JwtService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromSeconds(60);
@@ -32,7 +33,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSession();

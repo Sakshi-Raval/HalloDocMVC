@@ -9,9 +9,12 @@ using BusinessLogic.IRepository;
 using Microsoft.AspNetCore.Hosting;
 using System.Web.Helpers;
 using System.Web.Razor.Generator;
+using BusinessLogic.Repository;
 
 namespace HalloDoc.Controllers
 {
+
+    [CustomAuthorize("2")]
     public class PatientController : Controller
     {
         private readonly ILogger<PatientController> _logger;
@@ -151,11 +154,7 @@ namespace HalloDoc.Controllers
             ViewBag.userModel = null;
             return View();
         }
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToAction("Login", "Home");
-        }
+
 
         [HttpPost]
         public IActionResult UploadFiles(int requestId)

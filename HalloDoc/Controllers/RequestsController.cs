@@ -117,7 +117,7 @@ namespace HalloDoc.Controllers
                 string token = Guid.NewGuid().ToString();
                 DateTime expiryTime = DateTime.UtcNow.AddHours(24);
 
-                string link = Url.Action("Login", "Home", new { token = token }, Request.Scheme);
+                string link = Url.Action("Login", "Login", new { token = token }, Request.Scheme);
 
                 link += $"?expiryTime={expiryTime}";
                 string subject = "Create Account";

@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.IRepository;
+using BusinessLogic.Repository;
 using DataAccess.DataContext;
 using DataAccess.DataModels;
 using Microsoft.AspNetCore.Components.Forms;
@@ -8,9 +9,10 @@ using System.Collections;
 using System.Configuration;
 using System.Net.Mail;
 
-
 namespace HalloDoc.Controllers
 {
+
+    [CustomAuthorize("1")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
