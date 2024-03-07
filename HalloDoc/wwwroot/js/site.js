@@ -159,28 +159,37 @@ birthdateInput.addEventListener('change', function () {
 
 
 function FilteredPartial(currentPartialName, currentStatus) {
-    var SearchText = $('#searchInput').val();
-    var districtSelect = $('#districtSelect').find(':selected').data('value');
-    var selectedFilter = $('.active-filter').data('value');
-    var dataToSend = {
-        SearchValue: SearchText,
-        districtSelect: districtSelect,
-        selectedFilter: selectedFilter,
-        currentPartialName: currentPartialName,
-        currentStatus: currentStatus,
-    }
-    $.ajax({
-        url: '/Admin/LoadPartialView' ,
-        type: 'GET',
-        traditional:true,
-        data: dataToSend,
-        success: function (response) {
-            $('#partialContainer').html(response);
-        },
-        error: function (xhr, status, error) {
-            console.error(xhr.responseText);
+
+    $.get("/Admin/CheckSession", function (response) {
+        if (response.sessionExists) {
+            var SearchText = $('#searchInput').val();
+            var districtSelect = $('#districtSelect').find(':selected').data('value');
+            var selectedFilter = $('.active-filter').data('value');
+            var dataToSend = {
+                SearchValue: SearchText,
+                districtSelect: districtSelect,
+                selectedFilter: selectedFilter,
+                currentPartialName: currentPartialName,
+                currentStatus: currentStatus,
+            }
+            $.ajax({
+                url: '/Admin/LoadPartialView',
+                type: 'GET',
+                traditional: true,
+                data: dataToSend,
+                success: function (response) {
+                    $('#partialContainer').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
         }
-    });
+        else {
+            window.location.href = "/Login/Login";
+        }
+    })
+    
 }
 
 function NewStateLoad() {

@@ -54,7 +54,7 @@ namespace BusinessLogic.Repository
             var request = context.HttpContext.Request;
             var token = request.Cookies["jwt"];
 
-            if(token== null || jwtService.ValidateToken(token , out JwtSecurityToken jwtToken)) {
+            if(token== null || !jwtService.ValidateToken(token , out JwtSecurityToken jwtToken)) {
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { Controller = "Login", Action = "Login" }));
                 return;
             }

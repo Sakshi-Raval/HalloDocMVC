@@ -36,24 +36,7 @@ namespace HalloDoc.Controllers
             var email = HttpContext.Session.GetString("Email");
             var medicalHistoryViewModels = _patient.GetRequestRecords(email);
             var userModel = _context.Users.Where(u=>u.Email == email).FirstOrDefault();
-            if (userModel != null)
-            {
-                if (userModel.Lastname != null)
-                {
-                    var username = string.Concat(userModel.Firstname, ' ', userModel.Lastname);
-                    //HttpContext.Session.SetString("Username", username);
-                    HttpContext.Session.SetString("username", username);
-                }
-                else
-                {
-                    var username = userModel.Firstname;
-                    //HttpContext.Session.SetString("Username", username);
-                    HttpContext.Session.SetString("username", username);
-
-                }
-
-            }
-            TempData["username"]=HttpContext.Session.GetString("username");
+           
             ViewBag.userModel = userModel;
             return View(medicalHistoryViewModels);
         }

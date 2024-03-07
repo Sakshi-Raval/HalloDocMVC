@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Admin\SendOrder.cshtml" />
     <Content Remove="wwwroot\css\style.css" />
   </ItemGroup>
 
@@ -32,6 +33,18 @@
   <ItemGroup>
     <ProjectReference Include="..\BusinessAcess\BusinessLogic.csproj" />
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Admin\SendOrder.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Admin\SendOrder.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Admin\SendOrder.cshtml" />
   </ItemGroup>
 
 </Project>

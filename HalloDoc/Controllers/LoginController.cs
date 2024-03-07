@@ -25,7 +25,7 @@ namespace HalloDoc.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Login(string Username, string? Passwordhash, [Bind("Username", "Passwordhash")] AspnetuserViewModel aspnetuserDTO)
+        public async Task<IActionResult> Login( [Bind("Username", "Passwordhash")] AspnetuserViewModel aspnetuserDTO)
         {
             if (ModelState.IsValid)
             {
@@ -42,18 +42,44 @@ namespace HalloDoc.Controllers
                 }
                 //TempData["UserName"] = string.Concat(user.Firstname, ' ', user.Lastname);
                 //TempData.Keep("UserName");
-                var jwtToken = _jwtService.GenerateToken(status);
-                Response.Cookies.Append("jwt", jwtToken);
                 var user = _context.Users.Where(m => m.Aspnetuserid == status.Id && m.Email == status.Email).FirstOrDefault();
                 var userRoles = _context.Aspnetuserroles.Where(m => m.Userid == status.Id).FirstOrDefault();
                 var role = _context.Aspnetroles.Where(m => m.Id == userRoles.Roleid).FirstOrDefault();
-                TempData["Login"] = "Login Successful";
                 HttpContext.Session.SetString("Aspnetuserid", status.Id);
                 HttpContext.Session.SetString("Email", status.Email);
                 HttpContext.Session.SetString("Role", role.Name);
                 ViewBag.Email = status.Email;
+                if (user != null)
+                {
+                    if (user.Lastname != null)
+                    {
+                        var username = string.Concat(user.Firstname, ' ', user.Lastname);
+                        //HttpContext.Session.SetString("Username", username);
+                        HttpContext.Session.SetString("username", username);
+                    }
+                    else
+                    {
+                        var username = user.Firstname;
+                        //HttpContext.Session.SetString("Username", username);
+                        HttpContext.Session.SetString("username", username);
 
-                return RedirectToAction("PatientDashboard", "Patient");
+                    }
+
+                }
+                TempData["username"] = HttpContext.Session.GetString("username");
+                var jwtToken = _jwtService.GenerateToken(status);
+                Response.Cookies.Append("jwt", jwtToken);
+                TempData["Login"] = "Login Successful";
+                if(role.Name=="Patient")
+                {
+                    return RedirectToAction("PatientDashboard", "Patient");
+
+                }
+                else if (role.Name == "Admin")
+                {
+                    return RedirectToAction("AdminPage", "Admin");
+
+                }
             }
             return View();
 

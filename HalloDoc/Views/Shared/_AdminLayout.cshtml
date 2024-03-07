@@ -1,6 +1,7 @@
 ﻿@{
     Layout = null;
     // ViewData["Title"] = "Admin";
+    TempData.Keep("username");
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +38,7 @@
                         <a class="btn btn-outline-info " asp-area="" asp-controller="Login" asp-action="Logout"><i class="bi bi-box-arrow-right"></i></a>
                     </li>
                     <li class="nav-item me-2 ms-auto my-auto d-none d-md-inline" id="username">
-                        Welcome <b></b>
+                        Welcome <b>@TempData["username"]</b>
 
                     </li>
                     <li class="nav-item me-2 d-none d-md-inline">

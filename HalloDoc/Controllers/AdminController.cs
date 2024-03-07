@@ -79,6 +79,11 @@ namespace HalloDoc.Controllers
             return View();
         }
 
+        public IActionResult SendOrder() 
+        { 
+            return View(); 
+        }
+
         public IActionResult UploadFile(int requestid)
         {
             var file = Request.Form.Files["files"];
@@ -169,6 +174,20 @@ namespace HalloDoc.Controllers
         {
             List<Physician> results = _context.Physicians.Where(x => x.Regionid == regionid).ToList();
             return results;
+        }
+        public JsonResult CheckSession()
+        {
+            var request = HttpContext.Request;
+            var token = request.Cookies["jwt"];
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return Json(new { sessionExists = false });
+            }
+            else
+            {
+                return Json(new { sessionExists = true });
+            }
         }
     }
 }
