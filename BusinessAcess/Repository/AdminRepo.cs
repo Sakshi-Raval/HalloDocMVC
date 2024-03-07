@@ -179,6 +179,20 @@ namespace BusinessLogic.Repository
                 _context.SaveChanges();
             }
         }
+        public void SendOrderDetails(SendOrderViewModel model)
+        {
+            Orderdetail orderDetails = new();
+            orderDetails.Vendorid = model.Vendorid;
+            orderDetails.Requestid = model.Requestid;
+            orderDetails.Faxnumber = model.FaxNumber;
+            orderDetails.Email = model.Email;
+            orderDetails.Businesscontact = model.BusinessContact;
+            orderDetails.Prescription = model.Prescription;
+            orderDetails.Noofrefill = model.NoOfRefill;
+            orderDetails.Createddate = DateTime.Now;
+            _context.Add(orderDetails);
+            _context.SaveChanges();
+        }
 
     }
 }

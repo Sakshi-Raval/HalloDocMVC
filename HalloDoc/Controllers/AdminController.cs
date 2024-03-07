@@ -2,12 +2,14 @@
 using BusinessLogic.Repository;
 using DataAccess.DataContext;
 using DataAccess.DataModels;
+using DataAccess.ViewModel;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using System.Collections;
 using System.Configuration;
 using System.Net.Mail;
+using System.Reflection.Metadata.Ecma335;
 
 namespace HalloDoc.Controllers
 {
@@ -46,7 +48,7 @@ namespace HalloDoc.Controllers
 
         public IActionResult LoadPartialView(string SearchValue, string districtSelect, string selectedFilter, string currentPartialName, int[] currentStatus)
         {
-            var newPatientsViewModel = _admin.GetPatients(SearchValue,districtSelect,selectedFilter,currentStatus);
+            var newPatientsViewModel = _admin.GetPatients(SearchValue, districtSelect, selectedFilter, currentStatus);
             return PartialView(currentPartialName, newPatientsViewModel);
         }
 
@@ -54,13 +56,13 @@ namespace HalloDoc.Controllers
         {
             TempData["Requestid"] = requestid;
             var caseViewModel = _admin.ViewCase(requestid);
-            return View("ViewCase",caseViewModel);
+            return View("ViewCase", caseViewModel);
         }
 
         public IActionResult ViewNotes(int requestid)
         {
-           var notesViewModel = _admin.ViewNotes(requestid);
-           return View("ViewNotes",notesViewModel);
+            var notesViewModel = _admin.ViewNotes(requestid);
+            return View("ViewNotes", notesViewModel);
         }
 
         public IActionResult ViewUploads(int requestid)
@@ -75,19 +77,15 @@ namespace HalloDoc.Controllers
                 var viewDocumentsViewModel = _patient.GetDocuments(requestid);
                 return View(viewDocumentsViewModel);
             }
-            
+
             return View();
         }
 
-        public IActionResult SendOrder() 
-        { 
-            return View(); 
-        }
 
         public IActionResult UploadFile(int requestid)
         {
             var file = Request.Form.Files["files"];
-            if(file != null)
+            if (file != null)
             {
                 _patient.FileUpload(file, requestid);
             }
@@ -96,15 +94,16 @@ namespace HalloDoc.Controllers
 
         public IActionResult DeleteFile(string filename)
         {
-            var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads",filename);
-            if (System.IO.File.Exists(filePath)){
+            var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads", filename);
+            if (System.IO.File.Exists(filePath))
+            {
                 //System.IO.File.Delete(filePath);
-                Requestwisefile reqFile = _context.Requestwisefiles.Where(x => x.Filename == filename ).FirstOrDefault();
-                if(reqFile != null)
+                Requestwisefile reqFile = _context.Requestwisefiles.Where(x => x.Filename == filename).FirstOrDefault();
+                if (reqFile != null)
                 {
                     bool[] bitValues = { true };
                     BitArray bits = new BitArray(bitValues);
-                    reqFile.Isdeleted= bits;
+                    reqFile.Isdeleted = bits;
                     _context.Update(reqFile);
                     _context.SaveChanges();
                 }
@@ -112,12 +111,12 @@ namespace HalloDoc.Controllers
             }
             else
             {
-                return Json(new { success = false , message = "File not found" });
+                return Json(new { success = false, message = "File not found" });
 
             }
         }
 
-        public IActionResult SendDocuments(List<string> files,int requestid)
+        public IActionResult SendDocuments(List<string> files, int requestid)
         {
             List<Attachment> attachments = new();
             //var files =_context.Requestwisefiles.Where(x=>x.Requestid == requestid).ToList();
@@ -135,11 +134,11 @@ namespace HalloDoc.Controllers
                 var body = "PFA uploaded documents";
                 _emailService.SendEmailAsync(recepientEmail, subject, body, attachments);
             }
-           
+
             return Ok();
         }
 
-        public IActionResult CancelCase(int requestid,string cancelNotes, string reasons)
+        public IActionResult CancelCase(int requestid, string cancelNotes, string reasons)
         {
             _admin.CancelCase(requestid, cancelNotes, reasons);
             return Ok();
@@ -153,7 +152,7 @@ namespace HalloDoc.Controllers
 
         public IActionResult BlockCase(int requestID, string blockReason)
         {
-            _admin.BlockCase(requestID,blockReason);
+            _admin.BlockCase(requestID, blockReason);
             return Ok();
         }
 
@@ -175,6 +174,17 @@ namespace HalloDoc.Controllers
             List<Physician> results = _context.Physicians.Where(x => x.Regionid == regionid).ToList();
             return results;
         }
+
+        public List<Healthprofessionaltype> ProfessionResults()
+        {
+            return _context.Healthprofessionaltypes.ToList(); ;
+        }
+
+        public List<Healthprofessional> BusinessResults(int professionid)
+        {
+            return _context.Healthprofessionals.Where(x => x.Profession == professionid).ToList(); ;
+        }
+
         public JsonResult CheckSession()
         {
             var request = HttpContext.Request;
@@ -189,5 +199,39 @@ namespace HalloDoc.Controllers
                 return Json(new { sessionExists = true });
             }
         }
+
+        [HttpGet]
+        public IActionResult SendOrder(int requestId)
+        {
+            ViewBag.RequestId = requestId;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SendOrder(SendOrderViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                _admin.SendOrderDetails(model);
+            }
+            return RedirectToAction("SendOrder");
+        }
+        public SendOrderViewModel SendOrderViewModel(int healthProfessionalId)
+        {
+
+            var healthProfessional = _context.Healthprofessionals.Where(x => x.Vendorid == healthProfessionalId).FirstOrDefault();
+            if (healthProfessional != null)
+            {
+                SendOrderViewModel viewModel = new();
+                viewModel.FaxNumber = healthProfessional.Faxnumber;
+                viewModel.Email = healthProfessional.Email;
+                viewModel.BusinessContact = healthProfessional.Businesscontact;
+                return viewModel;
+
+            }
+            return new SendOrderViewModel();
+        }
+
+
     }
 }

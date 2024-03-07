@@ -167,12 +167,12 @@
                                     </a>
                                 </li>
                                 <li>
-                                <button class="dropdown-item" href="#">
+                                <a class="dropdown-item" asp-action="SendOrder" asp-controller="Admin" asp-route-requestId="@item.RequestId">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-list me-3" viewBox="0 0 16 16">
                                         <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
                                         <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
                                     </svg>Orders
-                                </button>
+                                </a>
                                 </li>
                                 <li>
                                 <button class="dropdown-item" href="#">
@@ -351,7 +351,7 @@
                                 <button class="btn btn-success text-white border-1 rounded-pill btn w-100">Encounter</button>
                             </div>
                             <div class="col-6 px-3">
-                                <button class="btn border-1 px-3 rounded-pill btn w-100" style="background-color:#EE9125;color:white">Orders</button>
+                                    <a class="btn border-1 px-3 rounded-pill btn w-100" style="background-color:#EE9125;color:white" asp-action="SendOrder" asp-controller="Admin" asp-route-requestId="@item.RequestId">Orders</a>
                             </div>
                             <div class="col-6 px-3">
                                 <button class="btn btn-info text-white border-1 rounded-pill btn w-100">House Call</button>

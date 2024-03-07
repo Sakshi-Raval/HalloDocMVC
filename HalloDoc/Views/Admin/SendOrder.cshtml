@@ -1,5 +1,173 @@
-﻿@{
-    Layout="_AdminLayout";
+﻿@model SendOrderViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Send Order";
+    var requestId = ViewBag.RequestId;
 }
+@section Scripts{
+    <script>
+        function populateBusinessDropdown(professionid) {
+            console.log("gjckg");
+            $.ajax({
+                url: '/Admin/BusinessResults',
+                type: 'GET',
+                data: { professionid: professionid },
+                success: function (data) {
+                    var dropdownData = data;
+                    console.log(dropdownData);
+                    var dropdown = $('#business');
+                    dropdown.empty();
+                    dropdown.append($('<option>').text('--').val(''));
+                    dropdownData.forEach(function (item) {
+                        dropdown.append($('<option>').text(item.vendorname).val(item.vendorid));
 
-<h1>Send Order</h1>
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+        $(document).ready(function () {
+            console.log("sfo");
+            $.ajax({
+                url: '/Admin/ProfessionResults',
+                type: 'GET',
+                success: function (data) {
+                    var dropdownData = data;
+                    console.log(dropdownData);
+                    var dropdown = $('#profession');
+                    dropdown.empty();
+                    dropdown.append($('<option>').text('--').val(''));
+                    dropdownData.forEach(function (item) {
+                        dropdown.append($('<option>').text(item.professionname).val(item.healthprofessionalid));
+
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+            $('#profession').on('change', function () {
+                var professionid = $('#profession').val();
+                populateBusinessDropdown(professionid);
+            });
+            $('#business').on('change', function () {
+                var healthProfessionalId = $('#business').val();
+                $.ajax({
+                    url: '/Admin/SendOrderViewModel',
+                    type: 'GET',
+                    data: { healthProfessionalId: healthProfessionalId },
+                    success: function (data) {
+                        console.log(data);
+                        $('#businessContact').val(data.businessContact);
+                        $('#businessEmail').val(data.email);
+                        $('#faxNumber').val(data.faxNumber);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+       
+    </script>
+}
+<div class="row justify-content-center">
+    <div class="col-10 col-md-8 col-lg-6  d-inline-flex justify-content-between">
+        <div class="d-flex">
+            <h4 class="h4 mt-5 mb-3">Send Order</h4>
+        </div>
+        <div class="d-flex">
+            <button class="btn btn-outline-info mt-5 mb-3 ms-auto backBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                     height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                </svg>Back
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-10 col-md-8 col-lg-6 rounded mb-3" style="box-shadow: 2px 2px 20px rgb(179, 177, 177);">
+        <form asp-action="SendOrder" enctype="multipart/form-data">
+            <div class="container-fluid mt-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select class="form-select border text-muted mb-2" name="profession" id="profession" aria-label="Default select example" >
+                            </select>
+                            <label for="profession" class="text-muted">Select Profession</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select class="form-select border text-muted mb-2"  id="business" aria-label="Default select example" asp-for="Vendorid">
+                            </select>
+                            <label for="business" class="text-muted">Business</label>
+                            <span asp-validation-for="Vendorid" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="businessContact" placeholder="Business Contact" asp-for="BusinessContact">
+                            <label class="text-muted floating-label">Business Contact</label>
+                            <span asp-validation-for="BusinessContact" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="businessEmail"
+                                   placeholder="name@example.com" asp-for="Email" required >
+                            <label class="text-muted floating-label">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="faxNumber"
+                                   placeholder="Fax Number" asp-for="FaxNumber">
+                            <label class="text-muted floating-label">Fax Number</label>
+                            <span asp-validation-for="FaxNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-floating my-3">
+                            <textarea class="form-control" placeholder="Prescription or Order Details" id="prescription"
+                                      style="height: 15vh;" asp-for="Prescription"></textarea>
+                            <label class="text-muted floating-label ms-2">
+                               Prescription or Order Details
+                            </label>
+                            <span asp-validation-for="Prescription" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select class="form-select border text-muted mb-2"  id="refill" aria-label="Default select example" asp-for="NoOfRefill">
+                                <option selected value="">Not required</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                            <label for="refill" class="text-muted">Number of Refill</label>
+                        </div>
+                        <input type="number" id="RequestId" value="@requestId" asp-for="Requestid" hidden />
+                    </div>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+                    <button class="btn btn-info me-md-2" type="submit">Submit</button>
+                    <button class="btn btn-outline-info" type="button">Cancel</button>
+                </div>
+               
+            </div>
+        </form>
+    </div>
+</div>
+
