@@ -63,12 +63,32 @@
             });
 
 
-            $('#regions').on('change', function () {
-                var regionid = $('#regions').val();
+            $('.regions').on('change', function () {
+                var regionid = $(this).val();
                 console.log(regionid);
                 populatePhysicianDropdown(regionid);
             });
             
+            $('#clearCaseForm').submit(function (event) {
+                event.preventDefault();
+
+                var formData = $(this).serialize();
+                console.log(formData);
+                $.ajax({
+                    url: '/Admin/ClearCase',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+
+                        $('#clearCaseModal').modal('hide');
+                        window.location.href = "/Admin/AdminPage";
+                    },
+                    error: function (xhr, status, error) {
+
+                        console.error('Error submitting form:', error);
+                    }
+                });
+            });
 
         });
         
@@ -129,22 +149,13 @@
                     <div class="modal-body">
                         <small class="text-muted my-2 ">To assign this request,search and select another Physician</small>
                         <div class="form-floating">
-                            <select class="form-select border text-muted mb-2" name="regions" id="regions" aria-label="Default select example" required>
+                            <select class="regions form-select border text-muted mb-2" name="regions" id="" aria-label="Default select example" required>
                                 <option selected value="">--</option>
-                              @*   <option value="1">District of Columbia</option>
-                                <option value="2">New York</option>
-                                <option value="3">Virginia</option>
-                                <option value="4">Maryland</option> *@
                             </select>
                             <label for="reasons">Narrow Search By Region</label>
                         </div>
                         <div class="form-floating">
-                            <select class="form-select border text-muted mb-2" name="physician" id="physician" aria-label="Default select example" required>
-@*                                 <option selected value="">--</option>
-                                <option value="1">one</option>
-                                <option value="2">two</option>
-                                <option value="3">three</option>
-                                <option value="4">four</option> *@
+                            <select class="physician form-select border text-muted mb-2" name="physician" id="" aria-label="Default select example" required>
                             </select>
                             <label for="reasons">Select Physician</label>
                         </div>
@@ -167,7 +178,34 @@
         </div>
     </div>
 
+    @* modal for clear case *@
 
+    <div class="modal fade" id="clearCaseModal" tabindex="-1" aria-labelledby="clearCaseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header pt-5" style="border-bottom: none;">
+                    <div class="icon-box text-warning text-center" style="width: 100%; height: 100%;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
+                        </svg>
+                    </div>
+                </div>
+                <form id="clearCaseForm">
+                    <div class="modal-body m-2">
+                        <h4 class="h4 text-muted fw-medium text-center">Confirmation for Clear Case</h4>
+                        <p class="text-muted text-center">
+                            Are you sure you want to clear this request? Once clearing this request, you will not be able to see this request.
+                        </p>
+                        <input type="number" id="Requestid" name="Requestid" hidden />
+                    </div>
+                    <div class="modal-footer border-top-0 justify-content-center">
+                        <button type="submit" class="btn btn-info text-white">Clear</button>
+                        <button type="button" class="btn btn-outline-info" id="cancelBtn" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="row gx-3 mt-4 mx-2">
         <div class="col-lg-2 col-4 mb-3">

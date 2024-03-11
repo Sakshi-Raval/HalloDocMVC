@@ -156,6 +156,17 @@ namespace HalloDoc.Controllers
             return Ok();
         }
 
+        public IActionResult TransferCase(int regions, int physician, int RequestID, string desc)
+        {
+            _admin.TransferCase(regions, physician, RequestID, desc);
+            return Ok();
+        }
+        public IActionResult ClearCase(int Requestid)
+        {
+            _admin.ClearCase(Requestid);
+            return Ok();
+        }
+
         public List<Casetag> CaseTagResults()
         {
             List<Casetag> results = _context.Casetags.ToList();
@@ -232,6 +243,18 @@ namespace HalloDoc.Controllers
             return new SendOrderViewModel();
         }
 
+        public IActionResult ReviewAgreement(int id)
+        {
+            ViewBag.Id = id;
+            var patient = _context.Requestclients.Where(x => x.Requestid == id).FirstOrDefault();
+            ViewBag.Name = patient.Firstname + " " + patient.Lastname ?? "";
+            return View();
+        }
 
+        public IActionResult Agreed(int id)
+        {
+
+            return Ok();
+        }
     }
 }

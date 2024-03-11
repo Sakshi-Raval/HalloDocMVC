@@ -14,7 +14,9 @@ namespace BusinessLogic.IRepository
         public List<NotesViewModel> ViewNotes(int requestid);
         public void CancelCase(int requestid, string cancelNotes, string reasons);
         public void AssignCase(int regions, int physician, int requestid, string description);
+        public void TransferCase(int regions, int physician, int RequestID, string desc);
         public void BlockCase(int requestID, string blockReason);
+        public void ClearCase(int Requestid);
         public void SendOrderDetails(SendOrderViewModel model);
     }
 }

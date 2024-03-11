@@ -176,7 +176,18 @@
                         </td>
                        
                         <td class="my-auto">@item.Address</td>
-                        <td class="my-auto">@item.Notes</td>
+                    <td class="my-auto">
+                        @{
+                            var count = 1;
+                        }
+                        @foreach (var note in item.Notes)
+                        {
+                            <span>@count) @note</span>
+
+                            <br />
+                            count++;
+                        }
+                    </td>
                         <td class="my-auto">
                             <button class="btn border rounded text-white">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill me-2" viewBox="0 0 16 16">

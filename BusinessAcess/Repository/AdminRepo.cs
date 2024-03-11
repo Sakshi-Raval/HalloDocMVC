@@ -26,9 +26,7 @@ namespace BusinessLogic.Repository
             var newPatientsViewModel = (from req in _context.Requests
                                         join reqClient in _context.Requestclients
                                         on req.Requestid equals reqClient.Requestid
-                                        join reqStatusLog in _context.Requeststatuslogs
-                                        on req.Requestid equals reqStatusLog.Requestid into statusLogs
-                                        from statusLog in statusLogs.DefaultIfEmpty()
+
                                         orderby req.Createddate descending
                                         select new PatientsListViewModel
                                         {
@@ -42,7 +40,7 @@ namespace BusinessLogic.Repository
                                             PhoneNumber = reqClient.Phonenumber,
                                             OtherPhoneNumber = req.Phonenumber,
                                             Address = (reqClient.Street ?? "") + " " + (reqClient.City ?? "") + " " + (reqClient.State ?? "") + " " + (reqClient.Zipcode ?? ""),
-                                            Notes = statusLog.Notes ?? "---",
+                                            Notes = _context.Requeststatuslogs.Where(x=>x.Requestid == req.Requestid).Select(x=>x.Notes).ToList(),
                                             RequestTypeId = req.Requesttypeid,
                                             Status = req.Status,
                                             RegionId = reqClient.Regionid.ToString() ?? " ",
@@ -90,18 +88,15 @@ namespace BusinessLogic.Repository
         }
         public List<NotesViewModel> ViewNotes(int requestid)
         {
-            var notesViewModel = (from req in _context.Requests
-                                  join reqNotes in _context.Requestnotes
-                                  on req.Requestid equals reqNotes.Requestid into rnJoin
-                                  from reqNotes in rnJoin.DefaultIfEmpty()
-                                  join reqLog in _context.Requeststatuslogs
-                                  on req.Requestid equals reqLog.Requestid into rlJoin
-                                  from reqLog in rlJoin.DefaultIfEmpty()
-                                  where req.Requestid == requestid
+            var notesViewModel = (from reqLog in _context.Requeststatuslogs
+                                  join reqNotes in _context.Requestnotes                                  
+                                  on reqLog.Requestid equals reqNotes.Requestid into rlJoin
+                                  from log in rlJoin.DefaultIfEmpty()
+                                  where reqLog.Requestid == requestid
                                   select new NotesViewModel
                                   {
-                                      AdminNotes = reqNotes.Adminnotes ?? "--",
-                                      PhysicianNotes = reqNotes.Physiciannotes ?? "--",
+                                      AdminNotes = log.Adminnotes ?? "--",
+                                      PhysicianNotes = log.Physiciannotes ?? "--",
                                       TransferNotes = reqLog.Notes ?? "--",  
 
                                   }
@@ -143,6 +138,7 @@ namespace BusinessLogic.Repository
                 requestLog.Status = 2;
                 requestLog.Notes = description ?? "";
                 requestLog.Createddate = DateTime.Now;
+                requestLog.Physicianid = physician;
                 _context.Add(requestLog);
                 _context.SaveChanges();
 
@@ -151,6 +147,50 @@ namespace BusinessLogic.Repository
             }
 
         }
+
+        public void TransferCase(int regions, int physician, int RequestID, string desc)
+        {
+            var request = _context.Requests.Where(x => x.Requestid == RequestID).FirstOrDefault();
+            if (request != null)
+            {
+                var requestLog = new Requeststatuslog();
+                requestLog.Requestid = RequestID;
+                requestLog.Status = 2;
+                requestLog.Notes = desc ?? "";
+                requestLog.Createddate = DateTime.Now;
+                requestLog.Physicianid = physician;
+                requestLog.Transtophysicianid = physician;
+                var physicianName = _context.Physicians.Where(x => x.Physicianid == physician).FirstOrDefault();
+                _context.Add(requestLog);
+                _context.SaveChanges();
+
+                request.Status = 2;
+                request.Physicianid = physician;
+                _context.Update(request);
+                _context.SaveChanges();
+            }
+
+        }
+
+        public void ClearCase(int Requestid)
+        {
+            var request = _context.Requests.Where(x => x.Requestid == Requestid).FirstOrDefault();
+            if (request != null)
+            {
+                request.Status = 10;
+
+                var requestLog = new Requeststatuslog();
+                requestLog.Requestid = Requestid;
+                requestLog.Status = 10;
+                requestLog.Createddate = DateTime.Now;
+                _context.Add(requestLog);
+                _context.SaveChanges();
+
+                _context.Update(request);
+                _context.SaveChanges();
+            }
+        }
+
         public void BlockCase(int requestID, string blockReason)
         {
             var request = _context.Requests.Where(x => x.Requestid == requestID).FirstOrDefault();

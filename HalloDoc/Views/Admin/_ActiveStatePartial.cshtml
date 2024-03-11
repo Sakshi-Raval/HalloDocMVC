@@ -121,7 +121,18 @@
                         </td>
                    
                         <td class="my-auto">@item.Address</td>
-                        <td class="my-auto">@item.Notes</td>
+                    <td class="my-auto">
+                        @{
+                            var count = 1;
+                        }
+                        @foreach (var note in item.Notes)
+                        {
+                            <span>@count) @note</span>
+
+                            <br />
+                            count++;
+                        }
+                    </td>
                         <td class="my-auto ">
 
                             <button class="btn border rounded text-white mb-1">

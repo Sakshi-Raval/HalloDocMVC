@@ -20,7 +20,7 @@ namespace DataAccess.ViewModel
         [DataType(DataType.PhoneNumber, ErrorMessage = "Enter phone number in correct format")]
         public string? PhoneNumber { get; set; }
         public string? Address { get; set; }
-        public string? Notes { get; set; }
+        public List<string>? Notes { get; set; }
         public int RequestTypeId { get; set; }
         public string? OtherPhoneNumber { get; set; }
         public string? OtherName { get; set; }

@@ -387,7 +387,7 @@ function populateRegionDropdown() {
         success: function (data) {
             var dropdownData = data;
             console.log(dropdownData);
-            var dropdown = $('#regions');
+            var dropdown = $('.regions');
             dropdown.empty();
             dropdown.append($('<option>').text('--').val(''));
             dropdownData.forEach(function (item) {
@@ -409,7 +409,7 @@ function populatePhysicianDropdown(regionid) {
         success: function (data) {
             var dropdownData = data;
             console.log(dropdownData);
-            var dropdown = $('#physician');
+            var dropdown = $('.physician');
             dropdown.empty();
             dropdown.append($('<option>').text('--').val(''));
             dropdownData.forEach(function (item) {
@@ -458,4 +458,26 @@ function blockCaseModal(btn) {
     document.getElementById('requestID').value = requestID;
     const name = btn.getAttribute('data-Name');
     document.getElementById('NameModal').textContent = name;
+}
+function transferCaseModal(btn) {
+    console.log("Button clicked");
+
+    const myModal = document.getElementById("transferCaseModal");
+    var bsModal = new bootstrap.Modal(myModal);
+    bsModal.show();
+
+    const requestID = btn.getAttribute('data-RequestID');
+    document.getElementById('RequestID').value = requestID;
+    populateRegionDropdown();
+}
+
+function clearCaseModal(btn) {
+    console.log("Button clicked");
+
+    const myModal = document.getElementById("clearCaseModal");
+    var bsModal = new bootstrap.Modal(myModal);
+    bsModal.show();
+
+    const requestID = btn.getAttribute('data-Requestid');
+    document.getElementById('Requestid').value = requestID;
 }

@@ -30,10 +30,19 @@
                         <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5m14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5" />
                     </svg>Transfer Notes
                 </h6>
-                        <p class="ms-4 text-muted">@foreach(var item in Model)
-                            {
-                                @item.TransferNotes
+                        <p class="ms-4 text-muted">
+                        
+                            @{
+                                var count = 1;
                             }
+                            @foreach (var item in Model)
+                            {
+                                <span>@count) @item.TransferNotes</span>
+
+                                <br />
+                                count++;
+                            }
+                            
                         </p>
             </div>
             </div>
@@ -46,9 +55,15 @@
                     </svg>Physician Notes
                 </h6>
                         <p class="ms-4 text-muted">
+                            @{
+                                var i = 1;
+                            }
                             @foreach (var item in Model)
                             {
-                                @item.PhysicianNotes
+                                <span>@i) @item.PhysicianNotes</span>
+
+                                <br />
+                                i++;
                             }
                         </p>
             </div>
@@ -61,9 +76,15 @@
                     </svg>Admin Notes
                 </h6>
                         <p class="ms-4 text-muted">
+                            @{
+                                var j = 1;
+                            }
                             @foreach (var item in Model)
                             {
-                                @item.AdminNotes
+                                <span>@j) @item.AdminNotes</span>
+
+                                <br />
+                                j++;
                             }
                         </p>
             </div>
