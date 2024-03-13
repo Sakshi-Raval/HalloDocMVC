@@ -1,27 +1,61 @@
 ﻿@{
     Layout = "_AdminLayout";
     ViewData["Title"] = "View Notes";
+    var id = ViewBag.requestid;
 }
 @model List<NotesViewModel>
+<script>
+    $(document).ready(function () {
+        $('#additionalNotes').submit(function (event) {
+            event.preventDefault();
+            console.log("pressed submit");
+            var formData = $(this).serialize();
+            console.log(formData);
+            var formDataArray = formData.split('&');
+            var id;
+            formDataArray.forEach(function (pair) {
+                var keyValue = pair.split('=');
+                if (keyValue[0] === 'requestid') {
+                    id = keyValue[1];
+                }
+            });
+            $.ajax({
+                url: '/Admin/AdditionalNotes',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    window.location.href = "/Admin/ViewNotes?requestid="+id;
+                    $('#additionalNotes').reset();
+                },
+                error: function (xhr, status, error) {
+
+                    console.error('Error submitting form:', error);
+                }
+            });
+        });
+    });
+       
+
+</script>
 <div class="row justify-content-center">
     <div class="col-10 col-md-8 col-lg-6  d-inline-flex justify-content-between">
         <div class="d-flex">
             <h4 class="h4 mt-5 mb-3">Notes</h4>
         </div>
         <div class="d-flex">
-            <a class="btn btn-outline-info mt-5 mb-3 ms-auto backBtn">
+            <button type="button" class="btn btn-outline-info mt-5 mb-3 ms-auto backBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16"
                      height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                           d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
                 </svg>Back
-            </a>
+            </button>
         </div>
     </div>
 </div>
 <div class="row justify-content-center">
     <div class="col-10 col-md-8 col-lg-6">
-            <form>
+          
         <div class="row justify-content-between">
             <div class="col-md-6 my-2">
             <div class=" rounded shadow p-2">
@@ -31,18 +65,22 @@
                     </svg>Transfer Notes
                 </h6>
                         <p class="ms-4 text-muted">
-                        
-                            @{
-                                var count = 1;
-                            }
+                            <ol>
+                            @*   @{
+                            var p = 1;
+                            } *@
                             @foreach (var item in Model)
                             {
-                                <span>@count) @item.TransferNotes</span>
+                                if (item.TransferNotes != null)
+                                {
+                                    <li>@item.TransferNotes</li>
+                                }
+                                @* <span>@p) @item.PatientCancelNotes</span> *@
 
-                                <br />
-                                count++;
+                                @* <br /> *@
+                                @*  p++; *@
                             }
-                            
+                                </ol>
                         </p>
             </div>
             </div>
@@ -55,16 +93,22 @@
                     </svg>Physician Notes
                 </h6>
                         <p class="ms-4 text-muted">
-                            @{
-                                var i = 1;
-                            }
+                            <ol>
+                            @*   @{
+                            var p = 1;
+                            } *@
                             @foreach (var item in Model)
                             {
-                                <span>@i) @item.PhysicianNotes</span>
+                                if (item.PhysicianNotes != null)
+                                {
+                                    <li>@item.PhysicianNotes</li>
+                                }
+                                @* <span>@p) @item.PatientCancelNotes</span> *@
 
-                                <br />
-                                i++;
+                                @* <br /> *@
+                                @*  p++; *@
                             }
+                            </ol>
                         </p>
             </div>
             </div>
@@ -76,36 +120,96 @@
                     </svg>Admin Notes
                 </h6>
                         <p class="ms-4 text-muted">
-                            @{
-                                var j = 1;
-                            }
+                            <ol>
+                            @*   @{
+                            var p = 1;
+                            } *@
                             @foreach (var item in Model)
                             {
-                                <span>@j) @item.AdminNotes</span>
+                                if (item.AdminNotes != null)
+                                {
+                                    <li>@item.AdminNotes</li>
+                                }
+                                @* <span>@p) @item.PatientCancelNotes</span> *@
 
-                                <br />
-                                j++;
+                                @* <br /> *@
+                                @*  p++; *@
                             }
+                            </ol>
                         </p>
             </div>
             </div>
+            
+                <div class="col-md-6 my-2">
+                    <div class=" rounded shadow p-2">
+                        <h6 class="h6 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
+                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
+                            </svg>Admin Cancellation Notes
+                        </h6>
+                        <p class="ms-4 text-muted">
+                            <ol>
+                                @*   @{
+                                var p = 1;
+                                } *@
+                                @foreach (var item in Model)
+                                {
+                                    if (item.AdminCancelNotes != null)
+                                    {
+                                        <li>@item.AdminCancelNotes</li>
+                                    }
+                                    @* <span>@p) @item.PatientCancelNotes</span> *@
+
+                                    @* <br /> *@
+                                    @*  p++; *@
+                                }
+                            </ol>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 my-2">
+                    <div class=" rounded shadow p-2">
+                        <h6 class="h6 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
+                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
+                            </svg>Patient Cancellation Notes
+                        </h6>
+                        <p class="ms-4 text-muted">
+                            <ol> 
+
+                                    @foreach (var item in Model)
+                                    {
+                                        if (item.PatientCancelNotes != null)
+                                        {
+                                            <li>@item.PatientCancelNotes</li>
+                                        }
+                                    }
+                            </ol>
+  
+                        </p>
+                    </div>
+                </div>
+
         </div>
     <div class="row">
             <div class="col-12 shadow my-3">
-         
+                <form id="additionalNotes">
                 <div class="form-floating my-3">
-                    <textarea class="form-control" placeholder="Patient Notes" id="patientNotes"
+                            <textarea class="form-control" placeholder="Patient Notes" id="additionalNotes" name="additionalNotes"
                               style="height: 15vh;"></textarea>
                     <label class="text-muted floating-label ms-2">
                         Additional Notes
                     </label>
                 </div>
+                <input type="number" value="@id" name="requestid" hidden />
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button class="btn btn-info text-white me-md-2 my-2" type="submit">Save Changes</button>
                     </div>
-        </div>
+                </form>
+            </div>
     </div>
-    </form>
+  
    </div>
 </div>
 

@@ -481,3 +481,20 @@ function clearCaseModal(btn) {
     const requestID = btn.getAttribute('data-Requestid');
     document.getElementById('Requestid').value = requestID;
 }
+
+function sendAgreementModal(btn) {
+    console.log("Button clicked");
+
+    const myModal = document.getElementById("sendAgreementModal");
+    var bsModal = new bootstrap.Modal(myModal);
+    bsModal.show();
+
+    const requestID = btn.getAttribute('data-RequestId');
+    document.getElementById('RequestId').value = requestID;
+
+    const phone = btn.getAttribute('data-phone');
+    document.getElementById('phone').value = phone;
+
+    const email = btn.getAttribute('data-email');
+    document.getElementById('email').value = email;
+}

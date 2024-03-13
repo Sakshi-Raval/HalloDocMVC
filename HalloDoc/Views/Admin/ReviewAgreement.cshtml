@@ -1,5 +1,5 @@
 ﻿@{
-
+    Layout = null;
     var id = ViewBag.Id;
     var name = ViewBag.Name;
 }
@@ -9,31 +9,42 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/StyleSheet.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
    <script>
 
-      
-            // $('#confirmCancelModal').submit(function (event) {
-            //     event.preventDefault();
-            //     var formData = $(this).serialize();
-            //     console.log(formData);
-            //     $.ajax({
-            //         url: '/Admin/BlockCase',
-            //         type: 'POST',
-            //         data: formData,
-            //         success: function (response) {
-            //         $('#confirmCancelModal').modal('hide');
-            //             window.location.href = "/Admin/AdminPage";
-            //         },
-            //         error: function (xhr, status, error) {
-            //             console.error('Error submitting form:', error);
-            //         }
-            //     });
-            // });
-            // $('#blockCaseModal').on('hidden.bs.modal', function () {
-            //     $(this).find('form')[0].reset();
-            // });
-     
+       $(document).ready(function () {
+            $('#confirmCancelForm').submit(function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                console.log(formData);
+                $.ajax({
+                    url: '/Admin/CancelCaseByPatient',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        $('#confirmCancelModal').modal('hide');
+                        window.location.href = "/Admin/ReviewAgreement";
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error submitting form:', error);
+                    }
+                });
+            });
+            $('#confirmCancelModal').on('hidden.bs.modal', function () {
+                $(this).find('form')[0].reset();
+            });
+
+        });
+       
         function confirmCancelModal() {
             console.log("Button clicked");
 
@@ -49,15 +60,15 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-info text-white">
-                    <h1 class="modal-title fs-5" id="confirmCancelModalLabel">Transfer Request</h1>
+                    <h1 class="modal-title fs-5" id="confirmCancelModalLabel">Cancel Confirmation</h1>
                     <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="confirmCancelForm">
                     <div class="modal-body">
-                        <span>@name</span><br />
-                        <input type="number" value="@id" hidden />
+                        <span>@name,</span><br />
+                        <input type="number" value="@id" name="requestid" hidden />
                         <div class="form-floating rounded-2">
-                            <textarea class="form-control rounded-2 mt-2" name="desc" placeholder="Description" id="desc"
+                            <textarea class="form-control rounded-2 mt-2" name="cancelNotes" placeholder="Description" id="desc"
                                       style="height: 15vh;" required></textarea>
                             <label class="text-muted floating-label fs-6">
                                 Please provide a brief explanation for your Cancellation
@@ -66,7 +77,7 @@
 
                     </div>
                     <div class="modal-footer border-top-0">
-                        <button type="submit" class="btn btn-info text-white">Submit</button>
+                        <button type="submit" class="btn btn-info text-white">Confirm</button>
                         <button type="button" class="btn btn-outline-info" id="cancelBtn" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>
@@ -82,9 +93,9 @@
                 To provide best medical service, we cannot determine the cost right away. If you agree to our service, so we will provide care and follow-up until all care is completed.So with this points, if you like us to provide care to you click on "Agree" and we'll get started immediately, if you do not agree simply click "Cancel".
             </p>
             <div class="d-flex justify-content-between buttons">
-                <button class="btn btn-success p-2" style="margin-left:10%">
+                <a class="btn btn-success p-2" style="margin-left:10%" asp-action="Agreed" asp-controller="Admin" asp-route-id="@id"> 
                     <span class="text-light">I Agree</span>
-                </button>
+                </a>
                 <button class="btn btn-danger p-2" onclick="confirmCancelModal()" style="margin-right:10%">
                     <span class="text-light">Cancel</span>
                 </button>

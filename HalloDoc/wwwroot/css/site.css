@@ -371,12 +371,20 @@ input:focus {
     .patientHead{
         font-size:smaller;
     }
+    .svgs {
+        height: 10px !important;
+        width: 10px !important;
+    }
+    .filters{
+        padding:0;
+    }
 }
 .nav-tabs .active {
     border: none;
     color: #10bce9 !important;
     border-bottom: 3px solid #10bce9 !important;
 }
+
 /*
 .nav-link {
     color: black;

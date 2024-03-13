@@ -5,6 +5,7 @@ using DataAccess.DataModels;
 using DataAccess.ViewModel;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using System.Collections;
 using System.Configuration;
@@ -62,7 +63,20 @@ namespace HalloDoc.Controllers
         public IActionResult ViewNotes(int requestid)
         {
             var notesViewModel = _admin.ViewNotes(requestid);
+            ViewBag.requestid = requestid;
             return View("ViewNotes", notesViewModel);
+        }
+
+        public IActionResult AdditionalNotes(int requestid, string additionalNotes)
+        {
+            Requestnote requestnote = new Requestnote();
+            requestnote.Requestid = requestid;
+            requestnote.Adminnotes = additionalNotes;
+            requestnote.Createdby = "admin"; //change into admin name
+            requestnote.Createddate = DateTime.Now;
+            _context.Add(requestnote);
+            _context.SaveChanges();
+            return Ok();
         }
 
         public IActionResult ViewUploads(int requestid)
@@ -253,8 +267,30 @@ namespace HalloDoc.Controllers
 
         public IActionResult Agreed(int id)
         {
-
+            _admin.Agreed(id);
+            //return RedirectToAction("ReviewAgreement","Admin", new {id = id});
             return Ok();
+
+        }
+
+        public IActionResult SendAgreementEmail(int RequestId, string phone, string email) 
+        {
+            var subject = "Review Agreement";
+            var url = Url.Action("ReviewAgreement", "Admin", new { id = RequestId },Request.Scheme);
+            var body = $"Click on the link below to review agreement. {url}";
+            _emailService.SendEmailAsync(email,subject,body);
+            return Ok();
+        }
+
+        public IActionResult CancelCaseByPatient(int requestid, string cancelNotes)
+        {
+            _admin.CancelCaseByPatient(requestid, cancelNotes);
+            return RedirectToAction("ReviewAgreement","Admin", new {id = requestid });
+        }
+
+        public IActionResult EncounterForm()
+        {
+            return View();
         }
     }
 }
