@@ -107,6 +107,9 @@ public partial class Request
     [Column("createduserid")]
     public int? Createduserid { get; set; }
 
+    [InverseProperty("Request")]
+    public virtual ICollection<EncounterForm> EncounterForms { get; set; } = new List<EncounterForm>();
+
     [ForeignKey("Physicianid")]
     [InverseProperty("Requests")]
     public virtual Physician? Physician { get; set; }

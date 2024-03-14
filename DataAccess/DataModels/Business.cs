@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.DataModels;
+
 [Table("business")]
 public partial class Business
 {

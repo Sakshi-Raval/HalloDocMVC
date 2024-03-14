@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.DataModels;
+
 [Keyless]
 [Table("casetag")]
 public partial class Casetag

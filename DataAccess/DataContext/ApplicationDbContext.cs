@@ -36,6 +36,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Emaillog> Emaillogs { get; set; }
 
+    public virtual DbSet<EncounterForm> EncounterForms { get; set; }
+
     public virtual DbSet<Healthprofessional> Healthprofessionals { get; set; }
 
     public virtual DbSet<Healthprofessionaltype> Healthprofessionaltypes { get; set; }
@@ -157,6 +159,17 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Emaillogid).HasName("emaillog_pkey");
         });
 
+        modelBuilder.Entity<EncounterForm>(entity =>
+        {
+            entity.HasKey(e => e.EncounterFormId).HasName("EncounterForm_pkey");
+
+            entity.HasOne(d => d.Admin).WithMany(p => p.EncounterForms).HasConstraintName("EncounterForm_AdminId_fkey");
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.EncounterForms).HasConstraintName("EncounterForm_PhysicianId_fkey");
+
+            entity.HasOne(d => d.Request).WithMany(p => p.EncounterForms).HasConstraintName("EncounterForm_requestid_fkey");
+        });
+
         modelBuilder.Entity<Healthprofessional>(entity =>
         {
             entity.HasKey(e => e.Vendorid).HasName("healthprofessionals_pkey");
@@ -215,6 +228,8 @@ public partial class ApplicationDbContext : DbContext
         modelBuilder.Entity<Request>(entity =>
         {
             entity.HasKey(e => e.Requestid).HasName("request_pkey");
+
+            entity.Property(e => e.Requesttypeid).HasDefaultValueSql("1");
 
             entity.HasOne(d => d.Physician).WithMany(p => p.Requests).HasConstraintName("request_physicianid_fkey");
 

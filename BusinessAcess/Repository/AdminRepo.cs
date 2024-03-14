@@ -27,7 +27,9 @@ namespace BusinessLogic.Repository
             var newPatientsViewModel = (from req in _context.Requests
                                         join reqClient in _context.Requestclients
                                         on req.Requestid equals reqClient.Requestid
-
+                                        join encForm in _context.EncounterForms
+                                        on req.Requestid equals encForm.Requestid into encounterFormJoin
+                                        from encounterForm in encounterFormJoin.DefaultIfEmpty()
                                         orderby req.Createddate descending
                                         select new PatientsListViewModel
                                         {
@@ -48,6 +50,7 @@ namespace BusinessLogic.Repository
                                             Region = _context.Regions.Where(x => x.Regionid == reqClient.Regionid).FirstOrDefault().Name ?? "",
                                             RequestId = req.Requestid,
                                             Email = reqClient.Email ?? "",
+                                            IsFinalize = encounterForm.IsFinalize
                                         }
                                         ).Where(item => (currentStatus.Any(x=>x==item.Status)) 
                                         && (string.IsNullOrEmpty(SearchValue) || item.Name.ToLower().Contains(SearchValue.ToLower()))
@@ -303,5 +306,139 @@ namespace BusinessLogic.Repository
 
         }
 
+        public EncounterFormViewModel DisplayEncounterForm(int requestid)
+        {
+            var req = _context.Requests.Where(x => x.Requestid == requestid).FirstOrDefault();
+            var reqClient = _context.Requestclients.Where(x => x.Requestid == requestid).FirstOrDefault();
+            var ef = _context.EncounterForms.Where(x => x.Requestid == requestid).FirstOrDefault();
+            if(reqClient!=null && req != null)
+            {
+                EncounterFormViewModel encounterFormModel = new();
+
+                encounterFormModel.Requestid = requestid;
+                encounterFormModel.Firstname = reqClient.Firstname;
+                encounterFormModel.Lastname = reqClient.Lastname ?? "";
+                encounterFormModel.Location = (reqClient.Street ?? "") + " " + (reqClient.City ?? "") + " " + (reqClient.State ?? "") + " " + (reqClient.Zipcode ?? "");
+                encounterFormModel.Birthdate = reqClient.Intyear != null && reqClient.Strmonth != null && reqClient.Intdate != null?
+                                                    new DateOnly((int)reqClient.Intyear, int.Parse(reqClient.Strmonth), (int)reqClient.Intdate) : new DateOnly();
+                encounterFormModel.DateOfService = reqClient.Intyear != null && reqClient.Strmonth != null && reqClient.Intdate != null ?
+                                                    new DateOnly((int)reqClient.Intyear, int.Parse(reqClient.Strmonth), (int)reqClient.Intdate) : new DateOnly();
+                encounterFormModel.Phone = reqClient.Phonenumber ?? "";
+                encounterFormModel.Email = reqClient.Email;
+                encounterFormModel.Physicianid = req.Physicianid;
+                encounterFormModel.Adminid = 1;
+                if (ef != null)
+                {
+                    encounterFormModel.HistoryOfIllness = ef.HistoryOfPresentIllnessOrInjury != null ? ef.HistoryOfPresentIllnessOrInjury : "";
+                    encounterFormModel.MedicalHistory = ef.MedicalHistory != null ? ef.MedicalHistory : "";
+                    encounterFormModel.Medications = ef.Medications != null ? ef.Medications : "";
+                    encounterFormModel.Allergies = ef.Allergies != null ? ef.Allergies : "";
+                    encounterFormModel.Temp = ef.Temp != null ? ef.Temp : "";
+                    encounterFormModel.HR = ef.Hr != null ? ef.Hr : "";
+                    encounterFormModel.RR = ef.Rr != null ? ef.Rr : "";
+                    encounterFormModel.BloodPressureSys = ef.BloodPressureSystolic != null ? ef.BloodPressureSystolic : "";
+                    encounterFormModel.BloodPressureDia = ef.BloodPressureDiastolic != null ? ef.BloodPressureDiastolic : "";
+                    encounterFormModel.O2 = ef.O2 != null ? ef.O2 : "";
+                    encounterFormModel.Pain = ef.Pain != null ? ef.Pain : "";
+                    encounterFormModel.Heent = ef.Heent != null ? ef.Heent : "";
+                    encounterFormModel.CV = ef.Cv != null ? ef.Cv : "";
+                    encounterFormModel.Chest = ef.Chest != null ? ef.Chest : "";
+                    encounterFormModel.ABD = ef.Abd != null ? ef.Abd : "";
+                    encounterFormModel.Extremeties = ef.Extremeties != null ? ef.Extremeties : "";
+                    encounterFormModel.Skin = ef.Skin != null ? ef.Skin : "";
+                    encounterFormModel.Neuro = ef.Neuro != null ? ef.Neuro : "";
+                    encounterFormModel.Other = ef.Other != null ? ef.Other : "";
+                    encounterFormModel.Diagnosis = ef.Diagnosis != null ? ef.Diagnosis : "";
+                    encounterFormModel.TreatmentPlan = ef.TreatmentPlan != null ? ef.TreatmentPlan : "";
+                    encounterFormModel.MedicationsDispensed = ef.MedicationsDispensed != null ? ef.MedicationsDispensed : "";
+                    encounterFormModel.Procedures = ef.Procedures != null ? ef.Procedures : "";
+                    encounterFormModel.Followup = ef.FollowUp != null ? ef.FollowUp : "";
+                    encounterFormModel.IsFinalize = ef.IsFinalize;
+                }
+                   
+                
+                return encounterFormModel;
+            }
+            return new EncounterFormViewModel();
+            
+                    
+        }
+        public void SaveEncounterForm(EncounterFormViewModel encFormModel) 
+        {
+            var request = _context.Requests.Where(x => x.Requestid == encFormModel.Requestid).FirstOrDefault();
+            EncounterForm encForm= _context.EncounterForms.Where(x => x.Requestid == encFormModel.Requestid).FirstOrDefault();
+            if (request!=null && encForm == null)
+            {
+                EncounterForm form = new();
+                form.Requestid = request.Requestid;
+                form.HistoryOfPresentIllnessOrInjury = encFormModel.HistoryOfIllness;
+                form.MedicalHistory = encFormModel.MedicalHistory;
+                form.Medications = encFormModel.Medications;
+                form.Allergies = encFormModel.Allergies;
+                form.Temp = encFormModel.Temp;
+                form.Hr = encFormModel.HR;
+                form.Rr = encFormModel.RR;
+                form.BloodPressureDiastolic = encFormModel.BloodPressureDia;
+                form.BloodPressureSystolic = encFormModel.BloodPressureSys;
+                form.O2 = encFormModel.O2;
+                form.Pain = encFormModel.Pain;
+                form.Heent = encFormModel.Heent;
+                form.Cv = encFormModel.CV;
+                form.Chest = encFormModel.Chest;
+                form.Abd = encFormModel.ABD;
+                form.Extremeties = encFormModel.Extremeties;
+                form.Skin = encFormModel.Skin;
+                form.Neuro = encFormModel.Neuro;
+                form.Other = encFormModel.Other;
+                form.Diagnosis = encFormModel.Diagnosis;
+                form.TreatmentPlan = encFormModel.TreatmentPlan;
+                form.MedicationsDispensed = encFormModel.MedicationsDispensed;
+                form.Procedures = encFormModel.Procedures;
+                form.FollowUp = encFormModel.Followup;
+
+                //admin id is to be taken
+                form.PhysicianId = request.Physicianid;
+                form.IsFinalize = false;
+
+                _context.Add(form);
+                _context.SaveChanges();
+            }
+            else if(request != null && encForm != null)
+            {
+                encForm.Requestid = encFormModel.Requestid;
+                encForm.HistoryOfPresentIllnessOrInjury = encFormModel.HistoryOfIllness;
+                encForm.MedicalHistory = encFormModel.MedicalHistory;
+                encForm.Medications = encFormModel.Medications;
+                encForm.Allergies = encFormModel.Allergies;
+                encForm.Temp = encFormModel.Temp;
+                encForm.Hr = encFormModel.HR;
+                encForm.Rr = encFormModel.RR;
+                encForm.BloodPressureDiastolic = encFormModel.BloodPressureDia;
+                encForm.BloodPressureSystolic = encFormModel.BloodPressureSys;
+                encForm.O2 = encFormModel.O2;
+                encForm.Pain = encFormModel.Pain;
+                encForm.Heent = encFormModel.Heent;
+                encForm.Cv = encFormModel.CV;
+                encForm.Chest = encFormModel.Chest;
+                encForm.Abd = encFormModel.ABD;
+                encForm.Extremeties = encFormModel.Extremeties;
+                encForm.Skin = encFormModel.Skin;
+                encForm.Neuro = encFormModel.Neuro;
+                encForm.Other = encFormModel.Other;
+                encForm.Diagnosis = encFormModel.Diagnosis;
+                encForm.TreatmentPlan = encFormModel.TreatmentPlan;
+                encForm.MedicationsDispensed = encFormModel.MedicationsDispensed;
+                encForm.Procedures = encFormModel.Procedures;
+                encForm.FollowUp = encFormModel.Followup;
+
+                //admin id is to be taken
+                encForm.PhysicianId = request.Physicianid;
+                encForm.IsFinalize = false;
+
+                _context.Update(encForm);
+                _context.SaveChanges();
+            }
+            
+        }
     }
 }

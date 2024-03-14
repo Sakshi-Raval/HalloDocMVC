@@ -40,6 +40,7 @@ namespace HalloDoc.Controllers
             ViewBag.ConcludeCount = _context.Requests.Where(x => x.Status == 6).Count();
             ViewBag.ToCloseCount = _context.Requests.Where(x => x.Status == 3 || x.Status == 7 || x.Status == 8).Count();
             ViewBag.UnpaidCount = _context.Requests.Where(x => x.Status == 9).Count();
+
             return View();
         }
         public IActionResult AdminDashboardPartial()
@@ -288,9 +289,47 @@ namespace HalloDoc.Controllers
             return RedirectToAction("ReviewAgreement","Admin", new {id = requestid });
         }
 
-        public IActionResult EncounterForm()
+        [HttpGet]
+        public IActionResult EncounterForm(int requestid)
         {
-            return View();
+            var encounterForm = _admin.DisplayEncounterForm(requestid);
+            if (encounterForm == null)
+            {
+                return View();
+            }
+            if (encounterForm.IsFinalize == false)
+            {
+                return View("EncounterForm", encounterForm);
+            }
+            return PartialView("_FinalizeModalPartial");
+
+            //var encounter= _context.EncounterForms.Where(x => x.Requestid == requestid).FirstOrDefault();
+            //if (!encounter.IsFinalize)
+            //{
+            //    var encounterForm = _admin.DisplayEncounterForm(requestid);
+            //    return View("EncounterForm", encounterForm);
+            //}
+            //else
+            //{
+            //    return PartialView("_FinalizeModalPartial");
+            //}
+
+        }
+        
+
+        [HttpPost]
+        public IActionResult EncounterForm(EncounterFormViewModel encFormModel)
+        {
+            _admin.SaveEncounterForm(encFormModel);
+            return RedirectToAction("EncounterForm", "Admin",new { requestid = encFormModel.Requestid});
+        }
+        public IActionResult Finalize(int requestid)
+        {
+            var encounterForm = _context.EncounterForms.Where(x => x.Requestid == requestid).FirstOrDefault();
+            encounterForm.IsFinalize = true;
+            _context.Update(encounterForm);
+            _context.SaveChanges();
+            return RedirectToAction("AdminPage", "Admin");
         }
     }
 }

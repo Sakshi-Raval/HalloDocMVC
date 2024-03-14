@@ -30,5 +30,6 @@ namespace DataAccess.ViewModel
         public int RequestId { get; set; }
         public string? Region {  get; set; }
         public string Email { get; set; }
+        public bool IsFinalize { get; set; }
     }
 }

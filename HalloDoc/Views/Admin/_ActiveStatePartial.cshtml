@@ -1,4 +1,5 @@
 ﻿@model List<PatientsListViewModel>
+
 <div class="row d-flex mx-0 mt-2 justify-content-between table-responsive">
     <table class="table tableDash">
         <colgroup>
@@ -195,7 +196,7 @@
                                 </button>
                                 </li>
                                 <li>
-                                <a class="dropdown-item" asp-action="EncounterForm" asp-controller="Admin">
+                                <a class="dropdown-item" asp-action="EncounterForm" asp-controller="Admin" asp-route-requestid="@item.RequestId">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text me-3" viewBox="0 0 16 16">
                                         <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
                                         <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />

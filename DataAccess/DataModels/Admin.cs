@@ -88,6 +88,9 @@ public partial class Admin
     public virtual Aspnetuser Aspnetuser { get; set; } = null!;
 
     [InverseProperty("Admin")]
+    public virtual ICollection<EncounterForm> EncounterForms { get; set; } = new List<EncounterForm>();
+
+    [InverseProperty("Admin")]
     public virtual ICollection<Requeststatuslog> Requeststatuslogs { get; set; } = new List<Requeststatuslog>();
 
     [InverseProperty("Admin")]

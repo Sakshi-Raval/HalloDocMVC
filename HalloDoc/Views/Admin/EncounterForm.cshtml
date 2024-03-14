@@ -1,7 +1,34 @@
-﻿@{
+﻿@model EncounterFormViewModel
+@{
     Layout = "_AdminLayout";
     ViewData["Title"] = "Encounter Form";
 }
+<style>
+    textarea {
+        overflow: auto;
+    }
+</style>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            
+        });
+        function Finalize(requestid) {
+            $.ajax({
+                url: '/Admin/Finalize',
+                type: 'POST',
+                data: { requestid: requestid },
+                success: function (response) {
+                    // window.location.href = "/Admin/AdminPage";
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error in Finalizing:', error);
+                }
+            });
+        }
+    </script>
+}
+
 <div class="row justify-content-center">
     <div class="col-10 col-lg-8  d-inline-flex justify-content-between">
         <div class="d-flex">
@@ -19,28 +46,30 @@
     </div>
 </div>
 <div class="row justify-content-center text-center">
-    <div class="col-10 col-lg-8 shadow">
+    <div class="col-10 col-lg-8 mb-4 shadow">
         <div class="row justify-content-center">
             <h3 class="text-info fw-bold mt-3">Medical Report - Confidential</h3>
         </div>
+        <form asp-action="EncounterForm" asp-controller="Admin">
         <div class="row">
             <div class="col-md-6 col-12">
+                <input type="number" name="requestid" asp-for="Requestid" value="@Model.Requestid" hidden />
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="patientFirstname" placeholder="Firstname">
+                    <input type="text" class="form-control" id="patientFirstname" placeholder="Firstname" asp-for="Firstname" value="@Model.Firstname">
                     <label for="patientFirstname" class="text-muted floating-label">Firstname</label>
-                    <span class="text-danger"></span>
+                    <span asp-validation-for="Firstname" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="patientLastname" placeholder="Lastname">
+                    <input type="text" class="form-control" id="patientLastname" placeholder="Lastname" asp-for="Lastname" value="@Model.Lastname">
                 <label for="patientLastname" class="text-muted floating-label">Lastname</label>
                 <span class="text-danger"></span>
                 </div>
             </div>
             <div class="col-12">
                 <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="location" placeholder="Location">
+                    <input type="text" class="form-control" id="location" placeholder="Location" asp-for="Location" value="@Model.Location">
                 <label for="location" class="text-muted floating-label">Location</label>
                 <span class="text-danger"></span>
                 </div>
@@ -49,19 +78,257 @@
         <div class="row">
             <div class="col-md-6">
                     <div class="form-floating mb-3">
-                <input type="date" class="form-control" id="dob" placeholder="Date of Birth">
+                    <input type="date" class="form-control" id="dob" placeholder="Date of Birth" asp-for="Birthdate" value="@Model.Birthdate.ToString("yyyy-MM-dd")">
                 <label for="dob" class="text-muted floating-label">Date of Birth</label>
-                <span class="text-danger"></span>
+                <span asp-validation-for="Birthdate" class="text-danger"></span>
                     </div>
             </div>
             <div class="col-md-6">
                         <div class="form-floating mb-3">
-                <input type="date" class="form-control" id="dos" placeholder="Date of Service">
+                    <input type="date" class="form-control" id="dos" placeholder="Date of Service" asp-for="DateOfService" value="@Model.DateOfService">
                 <label for="dos" class="text-muted floating-label">Date of Service</label>
                 <span class="text-danger"></span>
                     </div>
             </div>
-            
+            <div class="col-md-6">
+                <input type="tel" id="phone" class="input w-100 h-100 phone" asp-for="Phone" data-error-msg-id="errorMsg1" value="@Model.Phone">
+                <span class="text-danger" id="errorMsg1"></span>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="email" placeholder="Email" asp-for="Email" value="@Model.Email">
+                    <label for="email" class="text-muted floating-label">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="History Of Present Illness Or Injury" id="historyOfIllness" asp-for="HistoryOfIllness" value="@Model.HistoryOfIllness"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        History Of Present Illness Or Injury
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Medical History" id="medicalHistory" asp-for="MedicalHistory" value="@Model.MedicalHistory"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Medical History
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Medications" id="medications" asp-for="Medications" value="@Model.Medications"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Medications
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Allergies" id="allergies" asp-for="Allergies" value="@Model.Allergies"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Allergies
+                    </label>
+                </div>
+            </div>
         </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-12">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Temp" id="temp" asp-for="Temp" value="@Model.Temp"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Temp
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-12">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="HR" id="hr" asp-for="HR" value="@Model.HR"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        HR
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-12">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="RR" id="rr" asp-for="RR" value="@Model.RR"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        RR
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-3 col-6">
+                <div class="form-floating mb-3 overflow-hidden">
+                    <textarea class="form-control p-0" placeholder="Blood Pressure(Sys)" id="bp_sys" asp-for="BloodPressureSys" value="@Model.BloodPressureSys"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label mt-0">
+                        Blood Pressure(Sys)
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-3 col-6">
+                <div class="form-floating mb-3 overflow-hidden">
+                    <textarea class="form-control p-0" placeholder="Blood Pressure(Dia)" id="bp_dia" asp-for="BloodPressureDia" value="@Model.BloodPressureDia"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label mt-0">
+                        Blood Pressure(Dia)
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-12">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="O2" id="o2Level" asp-for="O2" value="@Model.O2"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        O2
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-12">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Pain" id="pain" asp-for="Pain" value="@Model.Pain"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Pain
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Heent" id="heent" asp-for="Heent" value="@Model.Heent"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Heent
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="CV" id="cv" asp-for="CV" value="@Model.CV"
+                              style="height: 8vh;"></textarea> 
+                    <label class="text-muted floating-label ms-2">
+                        CV
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Chest" id="chest" asp-for="Chest" value="@Model.Chest"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Chest
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="ABD" id="abd" asp-for="ABD" value="@Model.ABD"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        ABD
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Extr" id="extr" asp-for="Extremeties" value="@Model.Extremeties"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Extr
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Skin" id="skin" asp-for="Skin" value="@Model.Skin"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Skin
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Neuro" id="neuro" asp-for="Neuro" value="@Model.Neuro"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Neuro
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Other" id="other" asp-for="Other" value="@Model.Other"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Other
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Diagnosis" id="diagnosis" asp-for="Diagnosis" value="@Model.Diagnosis"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Diagnosis
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Treatment Plan" id="tratmentPlan" asp-for="TreatmentPlan" value="@Model.TreatmentPlan"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Treatment Plan
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Medications Dispensed" id="medicationsDispensed" asp-for="MedicationsDispensed" value="@Model.MedicationsDispensed"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Medications Dispensed
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Procedures" id="procedures" asp-for="Procedures" value="@Model.Procedures"
+                              style="height: 8vh;"></textarea>
+                    <label class="text-muted floating-label ms-2">
+                        Procedures
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Followup" id="followup" asp-for="Followup" value="@Model.Followup"
+                    style="height: 8vh;"></textarea>
+                        <label class="text-muted floating-label ms-2">
+                            Followup
+                        </label>
+                </div>
+            </div>
+        </div>
+        <div class="d-grid gap-2 d-md-flex my-4 justify-content-md-end">
+            <button class="btn btn-info me-md-2 text-white" type="submit">Save Changes</button>
+                <button class="btn text-white" type="button" style="background-color:#943db8" onclick="Finalize('@Model.Requestid')">Finalize</button>
+            <a class="btn btn-outline-info" asp-action="AdminPage" asp-controller="Admin">Cancel</a>
+        </div>
+        </form>
     </div>
 </div>

@@ -20,5 +20,7 @@ namespace BusinessLogic.IRepository
         public void SendOrderDetails(SendOrderViewModel model);
         public void Agreed(int id);
         public void CancelCaseByPatient(int requestid, string cancelNotes);
+        public EncounterFormViewModel DisplayEncounterForm(int requestid);
+        public void SaveEncounterForm(EncounterFormViewModel encFormModel);
     }
 }

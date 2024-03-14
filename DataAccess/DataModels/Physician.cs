@@ -138,6 +138,9 @@ public partial class Physician
     public virtual Aspnetuser? Aspnetuser { get; set; }
 
     [InverseProperty("Physician")]
+    public virtual ICollection<EncounterForm> EncounterForms { get; set; } = new List<EncounterForm>();
+
+    [InverseProperty("Physician")]
     public virtual ICollection<Physiciannotification> Physiciannotifications { get; set; } = new List<Physiciannotification>();
 
     [InverseProperty("Physician")]
