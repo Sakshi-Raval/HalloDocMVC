@@ -101,68 +101,7 @@
     </div>
 </div>
 
-@* modal for send agreement *@
-<div class="modal fade" id="sendAgreementModal" tabindex="-1" aria-labelledby="sendAgreementModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-info text-white">
-                <h1 class="modal-title fs-5" id="sendAgreementModalLabel">Send agreement</h1>
-                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="sendAgreementForm">
-                <div class="modal-body">
-                    <span>
-                        @if (TempData["reqType"].Equals(1))
-                        {
-                            <svg height="10" width="10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <circle fill="#5fbc61" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
-                            </svg>
-                            <span class="ms-1 text-muted fs-6">Patient</span>
-                        }
-                        else if (TempData["reqType"].Equals(2))
-                        {
-                            <svg height="10" width="10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <circle fill="#ed9124" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
-                            </svg>
-                            <span class="ms-1 text-muted fs-6">Family/Friend</span>
-                        }
-                        else if (TempData["reqType"].Equals(3))
-                        {
-                            <svg height="10" width="10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <circle fill="#007fc6" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
-                            </svg>
-                            <span class="ms-1 text-muted fs-6">Concierge</span>
-                        }
-                        else if (TempData["reqType"].Equals(4))
-                        {
-                            <svg height="10" width="10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <circle fill="#e26277" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
-                            </svg>
-                            <span class="ms-1 text-muted fs-6">Business</span>
-                        }
-                    </span><br />
-                    <small class="text-muted my-2 ">To send agreement please make sure that you are updating the correct contact information below for the responsible party.</small><br />
-                    <br />
-                    <input type="number" id="RequestId" name="RequestId" hidden />
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number">
-                        <label class="text-muted floating-label">Phone Number</label>
-                        <span class="text-danger"></span>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="email" name="email" placeholder="Email">
-                        <label class="text-muted floating-label">Email</label>
-                        <span class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="modal-footer border-top-0">
-                    <button type="submit" class="btn btn-info text-white">Send</button>
-                    <button type="button" class="btn btn-outline-info" id="cancelBtn" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+
 
 
 <div class="row d-flex mx-0 mt-2 justify-content-between table-responsive">
@@ -632,5 +571,91 @@
             i++;
         }
 
+    </div>
+</div>
+
+@if (ViewBag.Count > 2)
+{
+    <div class="d-flex justify-content-center">
+        <div class="">
+            <nav id="pagination" aria-label="Page navigation ">
+                <ul class="pagination">
+                    @for (int b = 1; b <= ViewBag.TotalPages; b++)
+                    {
+                        <li class="page-item @(b == ViewBag.CurrentPage ? "active" : "")">
+                            <a class="page-link" data-page="@b">@b</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+}
+
+
+@* modal for send agreement *@
+<div class="modal fade" id="sendAgreementModal" tabindex="-1" aria-labelledby="sendAgreementModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h1 class="modal-title fs-5" id="sendAgreementModalLabel">Send agreement</h1>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="sendAgreementForm">
+                <div class="modal-body">
+                    <span>
+                        @if (TempData["reqType"] != null)
+                        {
+                            @if (TempData["reqType"].Equals(1))
+                            {
+                                <svg height="10" width="10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                    <circle fill="#5fbc61" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+                                </svg>
+                                <span class="ms-1 text-muted fs-6">Patient</span>
+                            }
+                            else if (TempData["reqType"].Equals(2))
+                            {
+                                <svg height="10" width="10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                    <circle fill="#ed9124" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+                                </svg>
+                                <span class="ms-1 text-muted fs-6">Family/Friend</span>
+                            }
+                            else if (TempData["reqType"].Equals(3))
+                            {
+                                <svg height="10" width="10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                    <circle fill="#007fc6" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+                                </svg>
+                                <span class="ms-1 text-muted fs-6">Concierge</span>
+                            }
+                            else if (TempData["reqType"].Equals(4))
+                            {
+                                <svg height="10" width="10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                    <circle fill="#e26277" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+                                </svg>
+                                <span class="ms-1 text-muted fs-6">Business</span>
+                            }
+                        }
+                       
+                    </span><br />
+                    <small class="text-muted my-2 ">To send agreement please make sure that you are updating the correct contact information below for the responsible party.</small><br />
+                    <br />
+                    <input type="number" id="RequestId" name="RequestId" hidden />
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+                        <label class="text-muted floating-label">Phone Number</label>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+                        <label class="text-muted floating-label">Email</label>
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="submit" class="btn btn-info text-white">Send</button>
+                    <button type="button" class="btn btn-outline-info" id="cancelBtn" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

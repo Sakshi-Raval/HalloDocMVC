@@ -1,4 +1,7 @@
 ﻿@model List<PatientsListViewModel>
+
+
+
 <div class="row d-flex mx-0 mt-2 justify-content-between table-responsive">
     <table class="table tableDash">
         <colgroup>
@@ -68,7 +71,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-fill me-2" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
                             </svg>@item.PhoneNumber
-                        </button><br /><span>(Patient)</span>
+                        </button><br /><span>(Patient)</span><br>
                         @if (item.RequestTypeId == 2)
                         {
                             <br>
@@ -172,13 +175,25 @@
                                 </button>
                             </li>
                             <li>
-                                <button class="dropdown-item" href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text me-3" viewBox="0 0 16 16">
-                                        <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
-                                        <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
-                                        <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
-                                    </svg>Encounter
-                                </button>
+                               @if (item.IsFinalize)
+                                {
+                                    <button class="dropdown-item" onclick="finalizeModal(this)" data-ReqId="@item.RequestId">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text me-3" viewBox="0 0 16 16">
+                                            <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
+                                            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
+                                            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
+                                        </svg>Encounter
+                                    </button>
+                                }
+                                else{
+                                    <a class="dropdown-item" asp-action="EncounterForm" asp-controller="Admin" asp-route-requestid="@item.RequestId">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text me-3" viewBox="0 0 16 16">
+                                            <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
+                                            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
+                                            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
+                                        </svg>Encounter
+                                    </a>
+                                }
                             </li>
                         </ul>
                     </td>
@@ -340,7 +355,17 @@
                                 <a class="btn btn-success text-white border-1 px-3 rounded-pill btn w-100" asp-action="ViewUploads" asp-controller="Admin" asp-route-requestid="@item.RequestId">View Uploads</a>
                             </div>
                             <div class="col-6 px-3">
-                                <button class="btn btn-success text-white border-1 rounded-pill btn w-100">Encounter</button>
+                                @if (item.IsFinalize)
+                                {
+                                            <button class="btn btn-success text-white border-1 rounded-pill btn w-100" onclick="finalizeModal(this)" data-ReqId="@item.RequestId">Encounter
+                                            </button>
+                                }
+                                else
+                                {
+                                            <a class="btn btn-success text-white border-1 rounded-pill btn w-100" asp-action="EncounterForm" asp-controller="Admin" asp-route-requestid="@item.RequestId">
+                                                Encounter
+                                            </a>
+                                }
                             </div>
                             <div class="col-6 px-3">
                                 <button class="btn border-1 btn-success px-3 rounded-pill btn w-100"> Email</button>
@@ -355,3 +380,21 @@
 
     </div>
 </div>
+
+@if (ViewBag.Count > 2)
+{
+            <div class="d-flex justify-content-center">
+            <div class="">
+                <nav id="pagination" aria-label="Page navigation ">
+                <ul class="pagination">
+                    @for (int b = 1; b <= ViewBag.TotalPages; b++)
+                    {
+                            <li class="page-item @(b == ViewBag.CurrentPage ? "active" : "")">
+                                <a class="page-link" data-page="@b">@b</a>
+                            </li>
+                    }
+                </ul>
+            </nav>
+            </div>
+        </div>
+}

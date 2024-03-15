@@ -1,6 +1,7 @@
 using BusinessLogic.IRepository;
 using BusinessLogic.Repository;
 using DataAccess.DataContext;
+using Rotativa.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +36,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseRotativa();
 app.UseSession();
 
 app.MapControllerRoute(

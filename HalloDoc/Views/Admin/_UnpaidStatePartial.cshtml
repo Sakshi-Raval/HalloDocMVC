@@ -334,3 +334,20 @@
 
     </div>
 </div>
+@if (ViewBag.Count > 2)
+{
+    <div class="d-flex justify-content-center">
+        <div class="">
+            <nav id="pagination" aria-label="Page navigation ">
+                <ul class="pagination">
+                    @for (int b = 1; b <= ViewBag.TotalPages; b++)
+                    {
+                        <li class="page-item @(b == ViewBag.CurrentPage ? "active" : "")">
+                            <a class="page-link" data-page="@b">@b</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+}

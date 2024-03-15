@@ -1,0 +1,215 @@
+﻿@model List<ViewDocumentsViewModel>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Close Case";
+    var requestid = ViewBag.Requestid;
+}
+@section Scripts{
+    <script>
+  
+        $(document).ready(function () {
+            $('#SubmitRow').hide();
+            var requestid = @requestid;
+            console.log(requestid);
+            $.ajax({
+                url: '/Admin/RequestedClient',
+                type: 'GET',
+                data: { requestid: requestid},
+                success: function (response) {
+                    console.log(response);
+                    $('#firstname').val(response.firstname).prop('disabled', true);
+                    $('#lastname').val(response.lastname).prop('disabled', true);
+                    if(response.intyear!=null && response.strmonth!=null && response.intdate!=null){
+                        var dob = response.intyear + "-" + response.strmonth + "-" + response.intdate;
+                        $('#dob').val(dob).prop('disabled', true);
+                    }
+                    $('#phone').val(response.phonenumber).prop('disabled', true);
+                    $('#email').val(response.email).prop('disabled', true);
+                },
+                error: function (xhr, status, error) {
+
+                    console.error('Error submitting form:', error);
+                }
+            });
+
+            $('#SaveBtn').on('click',function (event) {
+                var email = $('#email').val();
+                var phone = $('#phone').val();
+                console.log(email);
+                console.log(phone);
+                var dataToSend = {
+                    requestid : requestid,
+                    email: email,
+                    phone: phone
+                };
+                $.ajax({
+                    url: '/Admin/SaveChangesCloseCase',
+                    type: 'POST',
+                    data: dataToSend,
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.href = "/Admin/CloseCase?requestid=" + requestid;
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error submitting form:', error);
+                    }
+                });
+            });
+
+            $('#EditBtn').on('click', function () {
+                $(this).closest('#EditRow').hide();
+                $('#SubmitRow').show();
+                $('#phone').prop('disabled', false);
+                $('#email').prop('disabled', false);
+                //enable phone and email
+
+            });
+
+            $('#CancelBtn').on('click', function () {
+                $('#SubmitRow').hide();
+                $('#EditRow').show();
+                $('#phone').prop('disabled', true);
+                $('#email').prop('disabled', true);
+                //disable fields again
+            });
+
+            // $('#closeCaseBtn').on('click', function () {
+            //     $.ajax({
+            //         url: '/Admin/CloseCaseInstance',
+            //         type: 'POST',
+            //         data: {requestid:requestid},
+            //         success: function (response) {
+            //             // if (response.closed) {
+            //             //     window.location.href = "/Admin/AdminPage";
+            //             // }
+            //         },
+            //         error: function (xhr, status, error) {
+            //             console.error('Error submitting form:', error);
+            //         }
+            //     });
+            // });
+
+        });
+        
+    </script>
+}
+<div class="container-fluid rounded mx-3 mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-10 d-inline-flex justify-content-between">
+            <div class="d-flex">
+                <h3 class="h3 mt-3">Close Case</h3>
+            </div>
+            <div class="d-flex">
+                <button class="btn btn-outline-info my-3 ms-auto backBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                         height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                    </svg>Back
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row rounded justify-content-center">
+        <div class="col-md-8 col-10 mb-2 rounded" style=" box-shadow: 2px 2px 20px rgb(179, 177, 177)">
+            <small class="mx-2 mt-3 mb-2">Patient Name</small>
+            <div><span class="text-info fs-5 m-2">@ViewBag.PatientName</span><small>(@ViewBag.ConfNum)</small></div>
+
+            <div class="">
+                <h5 class="h5 mt-3 ">Documents</h5>
+            </div>
+            <table class="my-2  table table-responsive">
+                <colgroup>
+              
+                    
+                    <col span="1" style="width: 52%;">
+                    <col span="1" style="width: 38%;">
+                    <col span="1" style="width: 10%;">
+
+                </colgroup>
+                <tbody>
+                    <tr class="bg-light">
+
+                        <th scope="col">    </th>
+                        <th scope="col">Uploaded date</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Filename.Substring(item.Filename.IndexOf('_')+1)</td>
+                            <td>@item.CreatedDate</td>
+                            <td>
+                                <a class="btn btn-outline-info mb-2" id="downloadLink" href="/uploads/@item.Filename" download>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#10bce9" class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
+                                        <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293z" />
+                                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <form id="closeCaseForm" class="ms-2 mt-4">
+                <h5 class="">Patient Information</h5>
+                <div class="row mt-4 ">
+                    <div class="col-12 col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="firstname" placeholder="Firstname">
+                            <label for="patientFirstname" class="text-muted floating-label">Firstname</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col col-12 col-md-6 mb-3">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="lastname" placeholder="Lastname">
+                            <label for="patientLastname" class="text-muted floating-label">Lastname</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col col-md-6 col-12">
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="dob" placeholder="Date of Birth" >
+                            <label for="dob" class="text-muted floating-label">Date of Birth</label>
+                            <span  class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 d-flex">
+                        <input type="tel" id="phone" class="input w-100 h-100 phone"  data-error-msg-id="errorMsg1">
+                        <span class="text-danger" id="errorMsg1"></span>
+                        <button class=" btn btn-outline-info h-75 ms-2 px-0" style="width: 20%;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="email" placeholder="Email">
+                            <label for="email" class="text-muted floating-label">Email</label>
+                            <span  class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row" id="EditRow">
+                        <div class="d-grid gap-2 my-4 d-md-flex justify-content-md-end">
+                            <button class="btn btn-info me-md-2 text-white fw-medium" type="button" id="EditBtn">Edit</button>
+                            <a class="btn btn-outline-info fw-medium" id="closeCaseBtn" asp-action="CloseCaseInstance" asp-controller="Admin" asp-route-requestid="@requestid">Close Case</a>
+                        </div>
+                     
+                        
+                    </div>
+                    <div class="row" id="SubmitRow">
+                        <div class="d-grid gap-2 my-4 d-md-flex justify-content-md-end">
+                            <button class="btn btn-info me-md-2 text-white fw-medium" type="button" id="SaveBtn">Submit</button>
+                            <button class="btn btn-outline-info fw-medium " type="button" id="CancelBtn">Cancel</button>
+                        </div>
+                    </div>
+                   
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

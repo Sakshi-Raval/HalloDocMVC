@@ -11,8 +11,44 @@
             // $('.states').removeClass('active');
             // $('#newState').addClass('active');
             // FilteredPartial(currentPartialName, currentStatus);
-            NewStateLoad();
-            //camcel case
+
+            retrieveStorageDetails();
+            switch(currentStatus){
+                case 1 :
+                    NewStateLoad();
+                    break;
+                case 2:
+                    PendingStateLoad();
+                    break;
+                case 4:
+                case 5:
+                    ActiveStateLoad();
+                    break;
+                case 6:
+                    ConcludeStateLoad();
+                    break;
+                case 3:
+                case 7:
+                case 8: 
+                    ToCloseStateLoad();
+                    break;
+                case 9:
+                    UnpaidStateLoad();
+                    break;
+                case 10:
+                    break;
+                default:
+                    NewStateLoad();
+            }
+
+               $(document).on("click", "#pagination a.page-link", function () {
+        console.log("Pagination link clicked!");
+        currentpage = $(this).text().trim();
+        console.log("Current Page: " + currentpage);
+        console.log(pagesize);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+    });
+            //cancel case
             $('#modalForm').submit(function (event) {
                 event.preventDefault();
 
@@ -94,7 +130,6 @@
         
     </script>
 
-    <div id="finalizeModalContainer"></div>
 
     <!-- Modal for Cancel Case -->
     <div class="modal fade" id="cancelCaseModal" tabindex="-1" aria-labelledby="cancelCaseModalLabel" aria-hidden="true">

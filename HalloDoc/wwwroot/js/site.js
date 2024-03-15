@@ -158,19 +158,45 @@ birthdateInput.addEventListener('change', function () {
 //admin dashboard
 
 
-function FilteredPartial(currentPartialName, currentStatus) {
+function setLocalStorageDetails(currentPartialName, currentStatus, pagesize, currentpage) {
+    localStorage.setItem("currentPartialName", currentPartialName);
+    localStorage.setItem("currentStatus", currentStatus);
+    localStorage.setItem("pagesize", pagesize);
+    localStorage.setItem("currentpage", currentpage);
+}
+function retrieveStorageDetails() {
+    var storedCurrentPartialName = localStorage.getItem("currentPartialName");
+    var storedCurrentStatus = localStorage.getItem("currentStatus");
+    var storedPagesize = localStorage.getItem("pagesize");
+    var storedCurrentpage = localStorage.getItem("currentpage");
 
+    if (storedCurrentPartialName && storedCurrentStatus && storedPagesize && storedCurrentpage) {
+        currentPartialName = storedCurrentPartialName;
+        currentStatus = storedCurrentStatus;
+        pagesize = parseInt(storedPagesize);
+        currentpage = parseInt(storedCurrentpage);
+    }
+}
+
+var pagesize = 2;
+var currentpage = 1;
+function FilteredPartial(currentPartialName, currentStatus,pagesize,currentpage) {
+  
     $.get("/Admin/CheckSession", function (response) {
+/*        retrieveStorageDetails();*/
         if (response.sessionExists) {
             var SearchText = $('#searchInput').val();
             var districtSelect = $('#districtSelect').find(':selected').data('value');
             var selectedFilter = $('.active-filter').data('value');
+
             var dataToSend = {
                 SearchValue: SearchText,
                 districtSelect: districtSelect,
                 selectedFilter: selectedFilter,
                 currentPartialName: currentPartialName,
                 currentStatus: currentStatus,
+                pagesize: pagesize,
+                currentpage: currentpage,
             }
             $.ajax({
                 url: '/Admin/LoadPartialView',
@@ -179,6 +205,8 @@ function FilteredPartial(currentPartialName, currentStatus) {
                 data: dataToSend,
                 success: function (response) {
                     $('#partialContainer').html(response);
+                    setLocalStorageDetails(currentPartialName, currentStatus, pagesize, currentpage);
+
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -198,22 +226,25 @@ function NewStateLoad() {
     $('#newState').addClass('active');
     currentStatus = [1];
     currentPartialName = "_NewStatePartial"
-    FilteredPartial(currentPartialName, currentStatus);
+    FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
 
 
     $('#searchInput').on('input', function () {
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
     });
     $('#districtSelect').on('change', function () {
         console.log("dfsuig");
 
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
     });
     $('.filter-options').on('click', function () {
         $('.filter-options').removeClass('active-filter');
         $(this).addClass('active-filter');
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
     });
    
@@ -225,22 +256,26 @@ function PendingStateLoad() {
     $('#pendingState').addClass('active');
     currentStatus = [2];
     currentPartialName = "_PendingStatePartial"
-    FilteredPartial(currentPartialName, currentStatus);
+    FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
 
     $('#searchInput').on('input', function () {
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
     });
     $('#districtSelect').on('change', function () {
 
 
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
     });
     $('.filter-options').on('click', function () {
         $('.filter-options').removeClass('active-filter');
         $(this).addClass('active-filter');
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
     });
 }
@@ -250,22 +285,26 @@ function ToCloseStateLoad() {
     $('#toCloseState').addClass('active');
     currentStatus = [3,7,8];
     currentPartialName = "_ToCloseStatePartial"
-    FilteredPartial(currentPartialName, currentStatus);
+    FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
 
     $('#searchInput').on('input', function () {
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
     });
     $('#districtSelect').on('change', function () {
 
 
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
     });
     $('.filter-options').on('click', function () {
         $('.filter-options').removeClass('active-filter');
         $(this).addClass('active-filter');
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
     });
 }
@@ -275,22 +314,26 @@ function ActiveStateLoad() {
     $('#activeState').addClass('active');
     currentStatus = [4, 5];
     currentPartialName = "_ActiveStatePartial"
-    FilteredPartial(currentPartialName, currentStatus);
+    FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
 
     $('#searchInput').on('input', function () {
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
     });
     $('#districtSelect').on('change', function () {
 
 
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
     });
     $('.filter-options').on('click', function () {
         $('.filter-options').removeClass('active-filter');
         $(this).addClass('active-filter');
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
     });
 }
@@ -300,22 +343,26 @@ function ConcludeStateLoad() {
     $('#concludeState').addClass('active');
     currentStatus = [6];
     currentPartialName = "_ConcludeStatePartial"
-    FilteredPartial(currentPartialName, currentStatus);
+    FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
 
     $('#searchInput').on('input', function () {
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
     });
     $('#districtSelect').on('change', function () {
 
 
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
     });
     $('.filter-options').on('click', function () {
         $('.filter-options').removeClass('active-filter');
         $(this).addClass('active-filter');
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
     });
 }
@@ -325,22 +372,26 @@ function UnpaidStateLoad() {
     $('#unpaidState').addClass('active');
     currentStatus = [9];
     currentPartialName = "_UnpaidStatePartial"
-    FilteredPartial(currentPartialName, currentStatus);
+    FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
 
     $('#searchInput').on('input', function () {
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
     });
     $('#districtSelect').on('change', function () {
 
 
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
     });
     $('.filter-options').on('click', function () {
         $('.filter-options').removeClass('active-filter');
         $(this).addClass('active-filter');
-        FilteredPartial(currentPartialName, currentStatus);
+        FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+
 
     });
 }

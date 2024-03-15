@@ -27,30 +27,27 @@ namespace BusinessLogic.Repository
             var newPatientsViewModel = (from req in _context.Requests
                                         join reqClient in _context.Requestclients
                                         on req.Requestid equals reqClient.Requestid
-                                        join encForm in _context.EncounterForms
-                                        on req.Requestid equals encForm.Requestid into encounterFormJoin
-                                        from encounterForm in encounterFormJoin.DefaultIfEmpty()
                                         orderby req.Createddate descending
                                         select new PatientsListViewModel
                                         {
                                             Name = (reqClient.Firstname ?? "") + ", " + (reqClient.Lastname ?? ""),
                                             DOB = reqClient.Intyear != null && reqClient.Strmonth != null && reqClient.Intdate != null ?
-                                                    string.Concat(new DateOnly((int)reqClient.Intyear, int.Parse(reqClient.Strmonth), (int)reqClient.Intdate).ToString("MMM dd,yyyy")," (",(DateTime.Now.Year - reqClient.Intyear).ToString(),")")   :
+                                                    string.Concat(new DateOnly((int)reqClient.Intyear, int.Parse(reqClient.Strmonth), (int)reqClient.Intdate).ToString("MMM dd,yyyy"), " (", (DateTime.Now.Year - reqClient.Intyear).ToString(), ")") :
                                                     "---",
                                             Requestor = (req.Firstname) + " " + (req.Lastname ?? ""),
-                                            RequestedDate = req.Createddate.ToString("MMM dd, yyyy")+" "+ (DateTime.Now.Subtract(req.Createddate).Days*24+DateTime.Now.Subtract(req.Createddate).Hours).ToString() + "h "+
-                                            (DateTime.Now.Subtract(req.Createddate).Minutes).ToString()+ "m " + (DateTime.Now.Subtract(req.Createddate).Seconds).ToString() + "s",
+                                            RequestedDate = req.Createddate.ToString("MMM dd, yyyy") + " " + (DateTime.Now.Subtract(req.Createddate).Days * 24 + DateTime.Now.Subtract(req.Createddate).Hours).ToString() + "h " +
+                                            (DateTime.Now.Subtract(req.Createddate).Minutes).ToString() + "m " + (DateTime.Now.Subtract(req.Createddate).Seconds).ToString() + "s",
                                             PhoneNumber = reqClient.Phonenumber,
                                             OtherPhoneNumber = req.Phonenumber,
                                             Address = (reqClient.Street ?? "") + " " + (reqClient.City ?? "") + " " + (reqClient.State ?? "") + " " + (reqClient.Zipcode ?? ""),
-                                            Notes = _context.Requeststatuslogs.Where(x=>x.Requestid == req.Requestid).Select(x=>x.Notes).ToList(),
+                                            Notes = _context.Requeststatuslogs.Where(x => x.Requestid == req.Requestid).Select(x => x.Notes).ToList(),
                                             RequestTypeId = req.Requesttypeid,
                                             Status = req.Status,
                                             RegionId = reqClient.Regionid.ToString() ?? " ",
                                             Region = _context.Regions.Where(x => x.Regionid == reqClient.Regionid).FirstOrDefault().Name ?? "",
                                             RequestId = req.Requestid,
                                             Email = reqClient.Email ?? "",
-                                            IsFinalize = encounterForm.IsFinalize
+                                            IsFinalize = _context.EncounterForms.Where(x => x.Requestid == req.Requestid).Select(x=>x.IsFinalize).FirstOrDefault(),
                                         }
                                         ).Where(item => (currentStatus.Any(x=>x==item.Status)) 
                                         && (string.IsNullOrEmpty(SearchValue) || item.Name.ToLower().Contains(SearchValue.ToLower()))
@@ -222,6 +219,31 @@ namespace BusinessLogic.Repository
             }
         }
 
+        public void CloseCase(int requestid)
+        {
+            var request = _context.Requests.Where(x => x.Requestid == requestid).FirstOrDefault();
+            if (request != null)
+            {
+                request.Status = 9;
+
+                var requestLog = new Requeststatuslog();
+                requestLog.Requestid = requestid;
+                requestLog.Status = 9;
+                requestLog.Createddate = DateTime.Now;
+                requestLog.Physicianid = request.Physicianid;
+                _context.Add(requestLog);
+                _context.SaveChanges();
+
+                var requestclosed = new Requestclosed();
+                requestclosed.Requestid = requestid;
+                requestclosed.Requeststatuslogid = requestLog.Requeststatuslogid;
+                _context.Add(requestclosed);
+                _context.SaveChanges();
+
+                _context.Update(request);
+                _context.SaveChanges();
+            }
+        }
         public void BlockCase(int requestID, string blockReason)
         {
             var request = _context.Requests.Where(x => x.Requestid == requestID).FirstOrDefault();
@@ -344,7 +366,7 @@ namespace BusinessLogic.Repository
                     encounterFormModel.CV = ef.Cv != null ? ef.Cv : "";
                     encounterFormModel.Chest = ef.Chest != null ? ef.Chest : "";
                     encounterFormModel.ABD = ef.Abd != null ? ef.Abd : "";
-                    encounterFormModel.Extremeties = ef.Extremeties != null ? ef.Extremeties : "";
+                    encounterFormModel.Extremeties = ef.Extremeties ?? "";
                     encounterFormModel.Skin = ef.Skin != null ? ef.Skin : "";
                     encounterFormModel.Neuro = ef.Neuro != null ? ef.Neuro : "";
                     encounterFormModel.Other = ef.Other != null ? ef.Other : "";

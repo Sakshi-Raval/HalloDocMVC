@@ -7,10 +7,13 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
+using Rotativa.AspNetCore;
 using System.Collections;
 using System.Configuration;
+using System.Drawing.Printing;
 using System.Net.Mail;
 using System.Reflection.Metadata.Ecma335;
+using System.Web.Helpers;
 
 namespace HalloDoc.Controllers
 {
@@ -48,10 +51,20 @@ namespace HalloDoc.Controllers
             return PartialView("_AdminDashboardPartial");
         }
 
-        public IActionResult LoadPartialView(string SearchValue, string districtSelect, string selectedFilter, string currentPartialName, int[] currentStatus)
+        public IActionResult LoadPartialView(string SearchValue, string districtSelect, string selectedFilter, string currentPartialName, int[] currentStatus, int pagesize=2, int currentpage=1)
         {
             var newPatientsViewModel = _admin.GetPatients(SearchValue, districtSelect, selectedFilter, currentStatus);
-            return PartialView(currentPartialName, newPatientsViewModel);
+            int totalItems = newPatientsViewModel.Count();
+            int totalPages = (int)Math.Ceiling((double)totalItems / pagesize);
+            if(SearchValue!=null || districtSelect!=null || selectedFilter!=null)
+            {
+                currentpage = 1;
+            }
+            var paginatedData = newPatientsViewModel.Skip((currentpage - 1) * pagesize).Take(pagesize).ToList();
+            ViewBag.Count = totalItems;
+            ViewBag.CurrentPage = currentpage;
+            ViewBag.TotalPages = totalPages;
+            return PartialView(currentPartialName, paginatedData);
         }
 
         public IActionResult ViewCase(int requestid)
@@ -201,6 +214,7 @@ namespace HalloDoc.Controllers
             return results;
         }
 
+       
         public List<Healthprofessionaltype> ProfessionResults()
         {
             return _context.Healthprofessionaltypes.ToList(); ;
@@ -297,11 +311,8 @@ namespace HalloDoc.Controllers
             {
                 return View();
             }
-            if (encounterForm.IsFinalize == false)
-            {
-                return View("EncounterForm", encounterForm);
-            }
-            return PartialView("_FinalizeModalPartial");
+           
+            return View("EncounterForm", encounterForm);
 
             //var encounter= _context.EncounterForms.Where(x => x.Requestid == requestid).FirstOrDefault();
             //if (!encounter.IsFinalize)
@@ -315,7 +326,7 @@ namespace HalloDoc.Controllers
             //}
 
         }
-        
+
 
         [HttpPost]
         public IActionResult EncounterForm(EncounterFormViewModel encFormModel)
@@ -329,7 +340,71 @@ namespace HalloDoc.Controllers
             encounterForm.IsFinalize = true;
             _context.Update(encounterForm);
             _context.SaveChanges();
+            return Ok();
+        }
+
+        public IActionResult CloseCase(int requestid)
+        {
+            var request = _context.Requests.Where(x => x.Requestid == requestid).FirstOrDefault();
+            if (request != null)
+            {
+                var patient = _context.Requestclients.Where(x => x.Requestid == requestid).FirstOrDefault();
+                ViewBag.PatientName = string.Concat(patient.Firstname, ' ', patient.Lastname ?? "");
+                ViewBag.ConfNum = request.Confirmationnumber;
+                ViewBag.Requestid = request.Requestid;
+                var viewDocumentsViewModel = _patient.GetDocuments(requestid);
+                return View(viewDocumentsViewModel);
+            }
+
+            return View();
+        }
+
+        public Requestclient RequestedClient(int requestid)
+        {
+            Requestclient requestclient = _context.Requestclients.Where(x => x.Requestid == requestid).FirstOrDefault();
+            return requestclient;
+        }
+
+        public IActionResult SaveChangesCloseCase(int requestid,string email,string phone)
+        {
+            Requestclient requestclient = _context.Requestclients.Where(x => x.Requestid == requestid).FirstOrDefault();
+            requestclient.Email = email;
+            requestclient.Phonenumber = phone;
+            _context.Update(requestclient);
+            _context.SaveChanges();
+            return Json(new { success = true });
+        }
+        public IActionResult CloseCaseInstance(int requestid)
+        {
+            _admin.CloseCase(requestid);
             return RedirectToAction("AdminPage", "Admin");
         }
+
+        public IActionResult EncounterFormDetails(int requestid)
+        {
+            var encounterForm = _admin.DisplayEncounterForm(requestid);
+            return View(encounterForm);
+        }
+
+        
+        public IActionResult GeneratePDF(int ReqId)
+        {
+
+            var viewEncounterForm = _admin.DisplayEncounterForm(ReqId);
+
+            if (viewEncounterForm == null)
+            {
+                return NotFound();
+            }
+
+            //return View("EncounterFormDetails", encounterFormView);
+            return new ViewAsPdf("EncounterFormDetails", viewEncounterForm)
+            {
+                FileName = "Encounter_Form.pdf"
+            };
+
+        }
+
+
     }
 }
