@@ -112,8 +112,12 @@ namespace HalloDoc.Controllers
             Response.Cookies.Delete("jwt");
             return RedirectToAction("Login", "Login");
         }
-        
 
+        public IActionResult CreateAccount()
+        {
+
+            return View();
+        }
 
     }
 }

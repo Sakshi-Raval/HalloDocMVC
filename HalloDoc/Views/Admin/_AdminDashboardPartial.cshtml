@@ -6,42 +6,49 @@
     <script>
         $(document).ready(function () {
             // var currentPartialName = "_NewStatePartial";
-            // var currentStatus = [1];
             // $('#stateSpan').text(" (New)");
             // $('.states').removeClass('active');
             // $('#newState').addClass('active');
             // FilteredPartial(currentPartialName, currentStatus);
+            //NewStateLoad();
 
             retrieveStorageDetails();
-            switch(currentStatus){
-                case 1 :
-                    NewStateLoad();
-                    break;
-                case 2:
-                    PendingStateLoad();
-                    break;
-                case 4:
-                case 5:
-                    ActiveStateLoad();
-                    break;
-                case 6:
-                    ConcludeStateLoad();
-                    break;
-                case 3:
-                case 7:
-                case 8: 
-                    ToCloseStateLoad();
-                    break;
-                case 9:
-                    UnpaidStateLoad();
-                    break;
-                case 10:
-                    break;
-                default:
-                    NewStateLoad();
-            }
-
-               $(document).on("click", "#pagination a.page-link", function () {
+            console.log(currentStatus);
+            var currentStatusArray= currentStatus.split(",");
+            var status = currentStatusArray.map(str => parseInt(str));
+            console.log(status);
+            status.forEach(currentStatus => {
+                switch (currentStatus) {
+                    case 1:
+                        NewStateLoad();
+                        break;
+                    case 2:
+                        PendingStateLoad();
+                        break;
+                    case 4:
+                    case 5:
+                        ActiveStateLoad();
+                        break;
+                    case 6:
+                        ConcludeStateLoad();
+                        break;
+                    case 3:
+                    case 7:
+                    case 8:
+                        ToCloseStateLoad();
+                        break;
+                    case 9:
+                        UnpaidStateLoad();
+                        break;
+                    case 10:
+                        // handle case 10
+                        break;
+                    default:
+                        NewStateLoad();
+                }
+            });
+           
+        $(document).on("click", "#pagination a.page-link", function () {
         console.log("Pagination link clicked!");
         currentpage = $(this).text().trim();
         console.log("Current Page: " + currentpage);

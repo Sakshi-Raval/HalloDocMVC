@@ -170,7 +170,7 @@ function retrieveStorageDetails() {
     var storedPagesize = localStorage.getItem("pagesize");
     var storedCurrentpage = localStorage.getItem("currentpage");
 
-    if (storedCurrentPartialName && storedCurrentStatus && storedPagesize && storedCurrentpage) {
+    if (storedCurrentPartialName && storedCurrentStatus ) {
         currentPartialName = storedCurrentPartialName;
         currentStatus = storedCurrentStatus;
         pagesize = parseInt(storedPagesize);
@@ -180,6 +180,9 @@ function retrieveStorageDetails() {
 
 var pagesize = 2;
 var currentpage = 1;
+var currentStatus = [1];
+var currentPartialName = "_NewStatePartial";
+
 function FilteredPartial(currentPartialName, currentStatus,pagesize,currentpage) {
   
     $.get("/Admin/CheckSession", function (response) {
@@ -225,7 +228,8 @@ function NewStateLoad() {
     $('.states').removeClass('active');
     $('#newState').addClass('active');
     currentStatus = [1];
-    currentPartialName = "_NewStatePartial"
+    currentPartialName = "_NewStatePartial";
+    currentpage = 1;
     FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
 
 
@@ -255,7 +259,8 @@ function PendingStateLoad() {
     $('.states').removeClass('active');
     $('#pendingState').addClass('active');
     currentStatus = [2];
-    currentPartialName = "_PendingStatePartial"
+    currentPartialName = "_PendingStatePartial";
+    currentpage = 1;
     FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
 
 
@@ -284,7 +289,8 @@ function ToCloseStateLoad() {
     $('.states').removeClass('active');
     $('#toCloseState').addClass('active');
     currentStatus = [3,7,8];
-    currentPartialName = "_ToCloseStatePartial"
+    currentPartialName = "_ToCloseStatePartial";
+    currentpage = 1;
     FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
 
 
@@ -313,7 +319,8 @@ function ActiveStateLoad() {
     $('.states').removeClass('active');
     $('#activeState').addClass('active');
     currentStatus = [4, 5];
-    currentPartialName = "_ActiveStatePartial"
+    currentPartialName = "_ActiveStatePartial";
+    currentpage = 1;
     FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
 
 
@@ -342,7 +349,8 @@ function ConcludeStateLoad() {
     $('.states').removeClass('active');
     $('#concludeState').addClass('active');
     currentStatus = [6];
-    currentPartialName = "_ConcludeStatePartial"
+    currentPartialName = "_ConcludeStatePartial";
+    currentpage = 1;
     FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
 
 
@@ -371,7 +379,8 @@ function UnpaidStateLoad() {
     $('.states').removeClass('active');
     $('#unpaidState').addClass('active');
     currentStatus = [9];
-    currentPartialName = "_UnpaidStatePartial"
+    currentPartialName = "_UnpaidStatePartial";
+    currentpage = 1;
     FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
 
 

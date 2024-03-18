@@ -39,18 +39,9 @@
                         </a>
                     </div>
                 </div>
-                <div class="row backLink">
-                    <div class="col-2 justify-content-center w-auto">
-                        <a asp-action="Index" asp-controller="Home" class="text-info text-decoration-none fw-medium">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left text-info" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
-                            </svg> Back
-                        </a>
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-12 text-center my-3">
-                        <h3 class="h3 fw-medium text-opacity-75 text-center">Login To Your Account</h3>
+                        <h3 class="h3 fw-medium text-opacity-75 text-center">Create Account</h3>
                     </div>
                 </div>
                 <div class="row justify-content-center">
@@ -58,9 +49,9 @@
                         <form asp-action="Login" asp-controller="Login" class="">
                             <div class="input-group mb-4 mt-2" style="max-width: 100%">
                                 <div class="form-floating w-100">
-                                    <input type="text" asp-for="Username" class="form-control" id="username" placeholder="Username">
-                                    <label asp-for="Username" class="text-info">Username</label>
-                                    <span asp-validation-for="Username" class="text-danger"></span>
+                                    <input type="email"  class="form-control" id="email" placeholder="Email">
+                                    <label class="text-info">Email</label>
+                                    <span class="text-danger"></span>
                                     <button class="btn input-image text-muted" disabled>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                              fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16"
@@ -75,9 +66,25 @@
                             </div>
                             <div class="input-group mb-4">
                                 <div class="form-floating w-100">
-                                    <input type="password" asp-for="Passwordhash" class="form-control" id="passwordLogin" placeholder="Password">
-                                    <label asp-for="Passwordhash" class="text-info">Password</label>
-                                    <span asp-validation-for="Passwordhash" class="text-danger"></span>
+                                    <input type="password" class="form-control" id="passwordCreateAcc" placeholder="Password">
+                                    <label class="text-info">Password</label>
+                                    <span class="text-danger"></span>
+                                </div>
+                                <button class="btn input-image text-muted" type="button" onclick="showpass()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                         fill="currentColor" class="bi bi-eye " viewBox="0 0 16 16"
+                                         style="border-left: none; ">
+                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                    </svg>
+                                </button>
+
+                            </div>
+                            <div class="input-group mb-4">
+                                <div class="form-floating w-100">
+                                    <input type="password" class="form-control" id="confPasswordCreateAcc" placeholder="Confirm Password">
+                                    <label class="text-info">Confirm Password</label>
+                                    <span class="text-danger"></span>
                                 </div>
                                 <button class="btn input-image text-muted" type="button" onclick="showpass()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -91,7 +98,6 @@
                             </div>
                             <button type="submit" class="btn btn-info text-white my-2 w-100 fw-medium">Log In</button>
                         </form>
-                        <a asp-action="ForgotPassword" asp-controller="Login" class="text-info text-decoration-none">Forgot Password?</a>
                     </div>
                 </div>
                 <div class="row justify-content-center">

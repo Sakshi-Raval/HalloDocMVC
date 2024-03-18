@@ -51,12 +51,59 @@ namespace HalloDoc.Controllers
             return PartialView("_AdminDashboardPartial");
         }
 
+        public IActionResult MyProfileAdminPartial()
+        {
+            return PartialView("_MyProfileAdminPartial");
+        }
+
+        public AdminProfileViewModel GetAdminProfile()
+        {
+            var email = HttpContext.Session.GetString("Email");
+            var aspnetuser = _context.Aspnetusers.FirstOrDefault(x => x.Email == email);
+            if (aspnetuser != null)
+            {
+                var admin = _context.Admins.FirstOrDefault(x => x.Aspnetuserid == aspnetuser.Id);
+                if (admin != null)
+                {
+                    var region = _context.Regions.FirstOrDefault(x => x.Regionid == admin.Regionid);
+                    AdminProfileViewModel adminProfileViewModel = new();
+                    adminProfileViewModel.Username = aspnetuser.Username;
+                    adminProfileViewModel.Firstname = admin.Firstname;
+                    adminProfileViewModel.Lastname = admin.Lastname ?? "";
+                    adminProfileViewModel.Email = aspnetuser.Email??"";
+                    adminProfileViewModel.Phonenumber = aspnetuser.Phonenumber ?? null;
+                    adminProfileViewModel.Address1 = admin.Address1;
+                    adminProfileViewModel.Address2 = admin.Address2;
+                    adminProfileViewModel.City = admin.City;
+                    adminProfileViewModel.State = region!=null ? region.Name : "";
+                    adminProfileViewModel.Zip = admin.Zip;
+                    adminProfileViewModel.BillingPhones = admin.Mobile;
+                    return adminProfileViewModel;
+                }
+                //return new AdminProfileViewModel();
+            }
+            return new AdminProfileViewModel();
+        }
+        
+        public IActionResult ResetAdminPassword(string adminPassword)
+        {
+            var email = HttpContext.Session.GetString("Email");
+            Aspnetuser aspnetuser = _context.Aspnetusers.FirstOrDefault(x => x.Email == email);
+            if (aspnetuser != null)
+            {
+            aspnetuser.Passwordhash = adminPassword;
+                _context.Update(aspnetuser);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("AdminPage" );
+        }
+
         public IActionResult LoadPartialView(string SearchValue, string districtSelect, string selectedFilter, string currentPartialName, int[] currentStatus, int pagesize=2, int currentpage=1)
         {
             var newPatientsViewModel = _admin.GetPatients(SearchValue, districtSelect, selectedFilter, currentStatus);
             int totalItems = newPatientsViewModel.Count();
             int totalPages = (int)Math.Ceiling((double)totalItems / pagesize);
-            if(SearchValue!=null || districtSelect!=null || selectedFilter!=null)
+            if (SearchValue != null || districtSelect != null || selectedFilter != null)
             {
                 currentpage = 1;
             }
@@ -313,17 +360,6 @@ namespace HalloDoc.Controllers
             }
            
             return View("EncounterForm", encounterForm);
-
-            //var encounter= _context.EncounterForms.Where(x => x.Requestid == requestid).FirstOrDefault();
-            //if (!encounter.IsFinalize)
-            //{
-            //    var encounterForm = _admin.DisplayEncounterForm(requestid);
-            //    return View("EncounterForm", encounterForm);
-            //}
-            //else
-            //{
-            //    return PartialView("_FinalizeModalPartial");
-            //}
 
         }
 
