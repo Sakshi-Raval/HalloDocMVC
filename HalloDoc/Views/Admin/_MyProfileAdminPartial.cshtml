@@ -63,13 +63,18 @@
             $('#btnSubmitRow1').hide();
             $('#btnEditRow1').show();
       
-                $('#firstname').val('@Model.Firstname').prop('disabled',true);
-                $('#lastname').val('@Model.Lastname').prop('disabled',true);
-                $('#email').val('@Model.Email').prop('disabled',true);
-                $('#confEmail').val('@Model.Email').prop('disabled',true);
-                $('#phoneAdministrator').val('@Model.Phonenumber').prop('disabled',true);
-                $('.adminRegions').prop('disabled',true); //make changes here
-            
+            $('#firstname').val('@Model.Firstname').prop('disabled',true);
+            $('#lastname').val('@Model.Lastname').prop('disabled',true);
+            $('#email').val('@Model.Email').prop('disabled',true);
+            $('#confEmail').val('@Model.Email').prop('disabled',true);
+            $('#phoneAdministrator').val('@Model.Phonenumber').prop('disabled',true);
+            $('.adminRegions').each(function (index, checkbox) {
+                var regionid = checkbox.val();
+                if (adminRegions.indexOf(regionid) !== -1) {
+                    checkbox.prop('checked', true);
+                }
+            });
+            $('.adminRegions').prop('disabled',true);//make changes here
         });
 
         $('#btnEdit2').on('click', function () {
@@ -86,14 +91,12 @@
         $('#cancelBtn2').on('click', function () {
             $('#btnSubmitRow2').hide();
             $('#btnEditRow2').show();
-
-                $('#address1').val('@Model.Address1').prop('disabled', true);
-                $('#address2').val('@Model.Address2').prop('disabled', true);
-                $('#city').val('@Model.City').prop('disabled', true);
-                $('#state').prop('disabled', true); //make changes here
-                $('#zip').val('@Model.Zip').prop('disabled', true);
-                $('#phoneBilling').val('@Model.BillingPhones').prop('disabled', true);
-          
+            $('#address1').val('@Model.Address1').prop('disabled', true);
+            $('#address2').val('@Model.Address2').prop('disabled', true);
+            $('#city').val('@Model.City').prop('disabled', true);
+            $('#state').val('@Model.State').prop('disabled', true);
+            $('#zip').val('@Model.Zip').prop('disabled', true); //make changes here
+            $('#phoneBilling').val('@Model.BillingPhones').prop('disabled', true);
         });
 
         $('#editBillingDetails').submit(function (event) {
