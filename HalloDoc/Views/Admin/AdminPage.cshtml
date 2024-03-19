@@ -6,34 +6,23 @@
 }
 @section Scripts{
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var profileTab = document.getElementById("profile-tab");
-            var dashboardTab = document.getElementById("home-tab");
-            document.getElementById("profile").style.display = "none";
 
-            profileTab.addEventListener("click", function () {
-                document.getElementById("home").classList.remove("show", "active");
-                document.getElementById("profile").classList.add("show", "active");
-                document.getElementById("profile").style.display = "block";
+        $(document).ready(function(){
+             $('#home').load('/Admin/AdminDashboardPartial');
+            $('#profile').load('/Admin/MyProfileAdminPartial');
 
-            });
-            dashboardTab.addEventListener("click", function () {
-                document.getElementById("home").classList.add("show", "active");
-                document.getElementById("profile").classList.remove("show", "active");
-                document.getElementById("profile").style.display = "none";
-            });
         });
     </script>
 }
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade pt-2 active show" id="home" role="tabpanel" aria-labelledby="home-tab">
-        @Html.Partial("_AdminDashboardPartial")
+        @* @Html.Partial("_AdminDashboardPartial")  *@
     </div>
     <div class="tab-pane fade pt-2" id="providerLocation" role="tabpanel" aria-labelledby="profile-tab">
 
     </div>
     <div class="tab-pane fade pt-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        @Html.Partial("_MyProfileAdminPartial")
+        
     </div>
     <div class="tab-pane fade pt-2" id="providers" role="tabpanel" aria-labelledby="profile-tab">
     </div>

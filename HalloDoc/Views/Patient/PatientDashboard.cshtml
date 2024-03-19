@@ -9,13 +9,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     
-    @if (TempData["Login"] != null)
+  @*   @if (TempData["Login"] != null)
     {
         <script>
             toastr.success('@TempData["Login"]');
 
         </script>
-    }
+    } *@
     <script>
             function ViewDocument(requestid) {
                 var xhr = new XMLHttpRequest();
@@ -65,6 +65,8 @@
    
     </script>    
 }
+
+<partial name="_Notification" />
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -1,7 +1,9 @@
 *{
     font-family: poppins;
 }
-
+.phone:read-only, .phone:disabled {
+    background-color: #E9ECEF !important;
+}
 .dark-theme {
     background-color: #212529;
     color: #ffffff !important;

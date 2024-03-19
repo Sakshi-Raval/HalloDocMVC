@@ -2,6 +2,7 @@
 using DataAccess.DataContext;
 using DataAccess.DataModels;
 using DataAccess.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -462,5 +463,103 @@ namespace BusinessLogic.Repository
             }
             
         }
+        public AdminProfileViewModel GetAdminProfile(string email)
+        {
+            var aspnetuser = _context.Aspnetusers.FirstOrDefault(x => x.Email == email);
+            if (aspnetuser != null)
+            {
+                var admin = _context.Admins.FirstOrDefault(x => x.Aspnetuserid == aspnetuser.Id);
+                if (admin != null)
+                {
+                    List<int> adminregions = _context.Adminregions.Where(x => x.Adminid == admin.Adminid).Select(x => x.Regionid).ToList();
+                    AdminProfileViewModel adminProfileViewModel = new();
+                    adminProfileViewModel.Username = aspnetuser.Username;
+                    adminProfileViewModel.Firstname = admin.Firstname;
+                    adminProfileViewModel.Lastname = admin.Lastname ?? "";
+                    adminProfileViewModel.Email = aspnetuser.Email ?? "";
+                    adminProfileViewModel.Phonenumber = aspnetuser.Phonenumber ?? null;
+                    adminProfileViewModel.Address1 = admin.Address1;
+                    adminProfileViewModel.Address2 = admin.Address2;
+                    adminProfileViewModel.City = admin.City;
+                    adminProfileViewModel.State = admin.Regionid??null;
+                    adminProfileViewModel.Zip = admin.Zip;
+                    adminProfileViewModel.BillingPhones = admin.Mobile;
+                    adminProfileViewModel.AdminRegions = adminregions; 
+                    return adminProfileViewModel;
+                }
+                //return new AdminProfileViewModel();
+            }
+            return new AdminProfileViewModel();
+        }
+
+        public void EditAdminDetails(string oldEmail, string firstname, string lastname, string email,string phoneAdministrator, List<int> adminRegions)
+        {
+            Aspnetuser aspnetuser = _context.Aspnetusers.FirstOrDefault(x => x.Email == oldEmail);
+            if (aspnetuser != null)
+            {
+                Admin admin = _context.Admins.FirstOrDefault(x => x.Aspnetuserid == aspnetuser.Id);
+                if (admin != null)
+                {
+                    List<Adminregion> adminregion = _context.Adminregions.Where(x => x.Adminid == admin.Adminid).ToList();
+                    if (adminregion != null)
+                    {
+                        foreach(Adminregion item in adminregion)
+                        {
+                            _context.Remove(item);
+                            _context.SaveChanges();
+                        }
+                    }
+                    admin.Firstname = firstname;
+                    admin.Lastname = lastname;
+                    admin.Email = email;
+                    //admin.Mobile = phoneAdministrator;
+                    admin.Modifiedby = admin.Aspnetuserid;
+                    admin.Modifieddate = DateTime.Now;
+                    aspnetuser.Email = email;
+                    aspnetuser.Username = email;
+                    aspnetuser.Phonenumber = phoneAdministrator;
+                    
+                    foreach(var item in adminRegions)
+                    {
+                        Adminregion region = new();
+                        region.Adminid = admin.Adminid;
+                        region.Regionid = item;
+                        _context.Add(region);
+                        _context.SaveChanges();
+                    }
+
+                    _context.Update(admin);
+                    _context.SaveChanges();
+
+                    _context.Update(aspnetuser);
+                    _context.SaveChanges();
+                }
+            }
+        }
+
+        public void EditBillingDetails(string email, string address1, string address2, string city, int state, string zip, string phoneBilling)
+        {
+            Aspnetuser aspnetuser = _context.Aspnetusers.FirstOrDefault(x => x.Email == email);
+            if (aspnetuser != null)
+            {
+                Admin admin = _context.Admins.FirstOrDefault(x => x.Aspnetuserid == aspnetuser.Id);
+                if (admin != null)
+                {
+                    admin.Address1 = address1;
+                    admin.Address2 = address2;
+                    admin.City = city;
+                    admin.Regionid = state;
+                    admin.Zip = zip;
+                    admin.Mobile = phoneBilling;
+                    admin.Modifiedby = admin.Aspnetuserid;
+                    admin.Modifieddate = DateTime.Now;
+
+                    _context.Update(admin);
+                    _context.SaveChanges();
+
+                }
+            }
+        }
+
     }
 }

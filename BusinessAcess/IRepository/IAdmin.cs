@@ -23,5 +23,8 @@ namespace BusinessLogic.IRepository
         public void CancelCaseByPatient(int requestid, string cancelNotes);
         public EncounterFormViewModel DisplayEncounterForm(int requestid);
         public void SaveEncounterForm(EncounterFormViewModel encFormModel);
+        public AdminProfileViewModel GetAdminProfile(string email);
+        public void EditAdminDetails(string oldEmail, string firstname, string lastname, string email, string phoneAdministrator, List<int> adminRegions);
+        public void EditBillingDetails(string email, string address1, string address2, string city, int state, string zip, string phoneBilling);
     }
 }

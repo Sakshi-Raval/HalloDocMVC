@@ -1,71 +1,174 @@
-﻿@{
+﻿@using Newtonsoft.Json;
+@model AdminProfileViewModel
+@{
     ViewData["Title"] = "My Profile";
+    var adminRegionsJson = JsonConvert.SerializeObject(Model.AdminRegions);    
 }
+<script>
+    $(document).ready(function () {
+        $('#btnSubmitRow1').hide();
+        $('#btnSubmitRow2').hide();
 
-    <script>
-        // $(document).ready(function () {
-            $('#btnSubmitRow1').hide();
-            $('#btnSubmitRow2').hide();
+        $.ajax({
+            url: '/Admin/RegionResults',
+            type: 'GET',
+            success: function(data) {
+                // state dropdown
+                var dropdownData = data;
+                console.log(dropdownData);
+                var dropdown = $('.regions');
+                dropdown.empty();
+                dropdownData.forEach(function(item) {
+                    var option = $('<option>').text(item.name).val(item.regionid);
+                    if (item.regionid == '@Model.State') {
+                        option.attr('selected', true);
+                    }
+                    dropdown.append(option);
+                });
 
-            $.ajax({
-            url: '/Admin/GetAdminProfile',
-                type: 'POST',
-                success: function (response) {
-                    console.log(response);
-                    $('#adminUsername').val(response.username).prop('readonly', true);
-                    // $('#password').val('').prop('readonly', true);
-                    //$('#status').val('').prop('readonly', true);
-                    //$('#role').val('').prop('readonly', true);
-                    $('#firstname').val(response.firstname).prop('readonly', true);
-                    $('#lastname').val(response.lastname).prop('readonly', true);
-                    $('#email').val(response.email).prop('readonly', true);
-                    $('#confEmail').val(response.email).prop('readonly', true);
-                    $('#phoneAdministrator').val(response.phonenumber).prop('readonly', true);
-                    $('#address1').val(response.address1).prop('readonly', true);
-                    $('#address2').val(response.address2).prop('readonly', true);
-                    $('#city').val(response.city).prop('readonly', true);
-                    $('#state').val(response.state).prop('readonly', true);
-                    $('#zip').val(response.zip).prop('readonly', true);
-                    $('#phoneBilling').val(response.billingPhones).prop('readonly', true);
+                // Parse JSON data for AdminRegions
+                var adminRegions = @Html.Raw(adminRegionsJson);
+                console.log(adminRegions);
+
+                // region checkboxes
+                console.log("checkboxes initialization");
+                $('#adminRegionContainer').empty(); // Clear existing checkboxes
+                $.each(data, function(index, region) {
+                    var isChecked = (adminRegions.indexOf(region.regionid) !== -1);
+                    var checkbox = $('<div class="form-check form-check-inline">' +
+                        '<input class="form-check-input adminRegions" type="checkbox" id="region' + region.regionid + '" name="adminRegions" value="' + region.regionid + '"' + (isChecked ? ' checked' : '') + ' disabled>' +
+                        '<label class="form-check-label" for="region' + region.regionid + '">' + region.name + '</label>' +
+                        '</div>');
+                    $('#adminRegionContainer').append(checkbox);
+                });
+
             },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+
+        $('#btnEdit1').on('click', function () {
+            $(this).closest('#btnEditRow1').hide();
+            $('#btnSubmitRow1').show();
+            $('#firstname').prop('disabled', false);
+            $('#lastname').prop('disabled', false);
+            $('#email').prop('disabled', false);
+            $('#confEmail').prop('disabled', false);
+            $('#phoneAdministrator').prop('disabled', false);
+            $('.adminRegions').prop('disabled',false);
+        });
+
+        $('#cancelBtn1').on('click', function () {
+            $('#btnSubmitRow1').hide();
+            $('#btnEditRow1').show();
+      
+                $('#firstname').val('@Model.Firstname').prop('disabled',true);
+                $('#lastname').val('@Model.Lastname').prop('disabled',true);
+                $('#email').val('@Model.Email').prop('disabled',true);
+                $('#confEmail').val('@Model.Email').prop('disabled',true);
+                $('#phoneAdministrator').val('@Model.Phonenumber').prop('disabled',true);
+                $('.adminRegions').prop('disabled',true); //make changes here
+            
+        });
+
+        $('#btnEdit2').on('click', function () {
+            $(this).closest('#btnEditRow2').hide();
+            $('#btnSubmitRow2').show();
+            $('#address1').prop('disabled', false);
+            $('#address2').prop('disabled', false);
+            $('#city').prop('disabled', false);
+            $('#state').prop('disabled', false);
+            $('#zip').prop('disabled', false);
+            $('#phoneBilling').prop('disabled', false);
+        });
+
+        $('#cancelBtn2').on('click', function () {
+            $('#btnSubmitRow2').hide();
+            $('#btnEditRow2').show();
+
+                $('#address1').val('@Model.Address1').prop('disabled', true);
+                $('#address2').val('@Model.Address2').prop('disabled', true);
+                $('#city').val('@Model.City').prop('disabled', true);
+                $('#state').prop('disabled', true); //make changes here
+                $('#zip').val('@Model.Zip').prop('disabled', true);
+                $('#phoneBilling').val('@Model.BillingPhones').prop('disabled', true);
+          
+        });
+
+        $('#editBillingDetails').submit(function (event) {
+            console.log("form submit clicked");
+            event.preventDefault();
+            var formData = $(this).serialize();
+            console.log("form data serialized");
+            console.log(formData);
+            $.ajax({
+                url: '/Admin/EditBillingInfo',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+            console.log("ajax success");
+                    $('#profile').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error submitting form:', error);
+                }
+            });
+        });
+
+        $('#resetAdminPassword').submit(function (event) {
+            event.preventDefault();
+            var adminPassword = $('#adminPassword').val();
+            console.log(adminPassword);
+            $.ajax({
+                url: '/Admin/ResetAdminPassword',
+                type: 'POST',
+                   data: { adminPassword: adminPassword },
+                success: function (response) {
+                    $('#profile').html(response);
+                },
                 error: function (xhr, status, error) {
 
                     console.error('Error submitting form:', error);
                 }
             });
-           
-            $('#btnEdit1').on('click', function () {
-                $(this).closest('#btnEditRow1').hide();
-                $('#btnSubmitRow1').show();
-                // $('#fname').prop('disabled', false);
-               
+        });
 
+        $('#editAdministrativeInfo').submit(function (event) {
+            event.preventDefault();
+            var email = $('#email').val();
+            var confEmail = $('#confEmail').val();
+            if (confEmail != email) {
+                $('#confEmailValidation').text("Email and Confirm Email do not match");
+                return;
+            }
+            else {
+                $('#confEmailValidation').text("");
+            }
+            if($('input[type="checkbox"]:checked').length === 0){
+                $('#checkboxValidation').text("Select atleast one Region");
+                return
+            }
+            else{
+                $('#checkboxValidation').text("");
+            }
+            var formData = $(this).serialize();
+            console.log(formData);
+            $.ajax({
+                url: '/Admin/EditAdministrativeInfo',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    $('#profile').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error submitting form:', error);
+                }
             });
-
-            $('#cancelBtn1').on('click', function () {
-                $('#btnSubmitRow1').hide();
-                $('#btnEditRow1').show();
-                // $('#fname').val('').prop('disabled', true);
-
-            });
-
-            $('#btnEdit2').on('click', function () {
-                $(this).closest('#btnEditRow2').hide();
-                $('#btnSubmitRow2').show();
-                // $('#fname').prop('disabled', false);
-
-
-            });
-
-            $('#cancelBtn2').on('click', function () {
-                $('#btnSubmitRow2').hide();
-                $('#btnEditRow2').show();
-                // $('#fname').val('').prop('disabled', true);
-
-            });
-        // });
-    </script>
-
+        });
+    });
+</script>
+<partial name="_Notification" />
 <div class="row justify-content-center">
     <div class="col-10 col-md-8 col-lg-6  d-inline-flex justify-content-between">
         <div class="d-flex">
@@ -88,11 +191,11 @@
             <div class="row">
                 <h6 class="h6 py-3">Account Information</h6>
             </div>
-            <form asp-action="ResetAdminPassword" asp-controller="Admin" enctype="multipart/form-data">
+            <form id="resetAdminPassword" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="adminUsername" placeholder="Username">
+                            <input type="text" class="form-control" id="adminUsername" placeholder="Username" value="@Model.Username" disabled>
                             <label class="text-muted floating-label">Username</label>
                             @* <span asp-validation-for="Firstname" class="text-danger"></span> *@
                         </div>
@@ -106,7 +209,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <select class="form-select border text-muted mb-2" name="status" id="status" aria-label="Default select example" >
+                            <select class="form-select border text-muted mb-2" name="status" id="status" aria-label="Default select example" disabled>
                                 <option selected value="">--</option>
                             </select>
                             <label for="status" class="text-muted">Status</label>
@@ -114,143 +217,146 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <select class="form-select border text-muted mb-2" name="role" id="role" aria-label="Default select example" >
+                            <select class="form-select border text-muted mb-2" name="role" id="role" aria-label="Default select example" disabled>
                                 <option selected value="">--</option>
                             </select>
                             <label for="role" class="text-muted">Role</label>
                         </div>
 
                     </div>
-                    </div>
-                    <div class="row p-0">
-                        <div class="d-grid gap-2 my-4 d-md-flex justify-content-md-end p-0">
-                            <button class="btn btn-outline-info text-info fw-medium my-2" type="submit" id="">Reset Password</button>
-                        </div>
-                    </div>
-            </form>
-                    @* account info closed *@
                 </div>
-            <div class="row">
-                <div class="col-12">
-                    <h6 class="h6 py-3">Administrator Information</h6>
-                </div>
-            </div>
-            <form>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="firstname" placeholder="Firstname" >
-                            <label class="text-muted floating-label">Firstname</label>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="lastname" placeholder="Lastname" >
-                            <label class="text-muted floating-label">Lastname</label>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="email" placeholder="Email" >
-                            <label class="text-muted floating-label">Email</label>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="confEmail" placeholder="Confirm Email" >
-                            <label class="text-muted floating-label">Confirm Email</label>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <input type="tel" id="phoneAdministrator" class="input w-100 h-100 phone mb-3" data-error-msg-id="errorMsg1" >
-                        @* <span asp-validation-for="Phone" class="text-danger" id="errorMsg1"></span> *@
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="dc" value="1">
-                            <label class="form-check-label" for="dc">District Of Columbia</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="ny" value="2">
-                            <label class="form-check-label" for="ny">New York</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="vr" value="3">
-                            <label class="form-check-label" for="vr">Virginia</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="ml" value="4">
-                            <label class="form-check-label" for="ml">Maryland</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" id="btnEditRow1">
-                    <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
-                        <button class="btn btn-info me-md-2 text-white fw-medium my-2" type="button" id="btnEdit1">Edit</button>
-                    </div>
-                </div>
-                <div class="row" id="btnSubmitRow1">
-                    <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
-                        <button class="btn btn-info me-md-2 text-white fw-medium" type="submit">Submit</button>
-                        <button class="btn btn-outline-info fw-medium link-info" type="button" id="cancelBtn1">Cancel</button>
+                <div class="row p-0">
+                    <div class="d-grid gap-2 my-4 d-md-flex justify-content-md-end p-0">
+                        <button class="btn btn-outline-info text-info fw-medium my-2" type="submit">Reset Password</button>
                     </div>
                 </div>
             </form>
-            <div class="row">
-                <div class="col-12">
-                    <h6 class="h6 py-3">Mailing & Billing Information</h6>
-                </div>
+            @* account info closed *@
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <h6 class="h6 py-3">Administrator Information</h6>
             </div>
+        </div>
+        <form id="editAdministrativeInfo">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="address1" placeholder="Address1" >
-                        <label class="text-muted floating-label">Address1</label>
+                        <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Firstname" value="@Model.Firstname" disabled>
+                        <label class="text-muted floating-label">Firstname</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="address2" placeholder="Address2" >
-                        <label class="text-muted floating-label">Address2</label>
+                        <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Lastname" value="@Model.Lastname" disabled>
+                        <label class="text-muted floating-label">Lastname</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="city" placeholder="City" >
-                        <label class="text-muted floating-label">City</label>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <select class="form-select border text-muted mb-2" name="state" id="state" aria-label="Default select example" >
-                            <option selected value="">--</option>
-                        </select>
-                        <label for="reasons" class="text-muted">State</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="@Model.Email" disabled> 
+                        <label class="text-muted floating-label">Email</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="zip" placeholder="Zip" >
-                        <label class="text-muted floating-label">Zip</label>
+                        <input type="email" class="form-control" id="confEmail" placeholder="Confirm Email" value="@Model.Email" disabled>
+                        <label class="text-muted floating-label">Confirm Email</label>
+                        <span class="text-danger" id="confEmailValidation"></span>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <input type="tel" id="phoneBilling" class="input w-100 h-100 phone mb-3" data-error-msg-id="errorMsg1" >
+                    <input type="tel" id="phoneAdministrator" name="phoneAdministrator" class="input w-100 h-100 phone mb-3" data-error-msg-id="errorMsg1" value="@Model.Phonenumber" disabled>
                     @* <span asp-validation-for="Phone" class="text-danger" id="errorMsg1"></span> *@
                 </div>
-            </div>
-            <div class="row" id="btnEditRow2">
-                <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
-                    <button class="btn btn-info me-md-2 text-white fw-medium my-2" type="button" id="btnEdit2">Edit</button>
+                <div class="col-md-6" id="adminRegionContainer">
+                   @*  <div class="form-check form-check-inline">
+                        <input class="form-check-input adminRegions" type="checkbox" id="dc" name="adminRegions" value="1">
+                        <label class="form-check-label" for="dc">District Of Columbia</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input adminRegions" type="checkbox" id="ny" name="adminRegions" value="2">
+                        <label class="form-check-label" for="ny">New York</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input adminRegions" type="checkbox" id="vr" name="adminRegions" value="3">
+                        <label class="form-check-label" for="vr">Virginia</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input adminRegions" type="checkbox" id="ml" name="adminRegions" value="4">
+                        <label class="form-check-label" for="ml">Maryland</label>
+                    </div> *@
+                    <span class="text-danger" id="checkboxValidation"></span>
                 </div>
             </div>
-            <div class="row" id="btnSubmitRow2">
+            <div class="row" id="btnEditRow1">
+                <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
+                    <button class="btn btn-info me-md-2 text-white fw-medium my-2" type="button" id="btnEdit1">Edit</button>
+                </div>
+            </div>
+            <div class="row" id="btnSubmitRow1">
                 <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
                     <button class="btn btn-info me-md-2 text-white fw-medium" type="submit">Submit</button>
-                    <button class="btn btn-outline-info fw-medium link-info" type="button" id="cancelBtn2">Cancel</button>
+                    <button class="btn btn-outline-info fw-medium link-info" type="button" id="cancelBtn1">Cancel</button>
                 </div>
             </div>
-          </div>
+        </form >
+        <div class="row">
+            <div class="col-12">
+                <h6 class="h6 py-3">Mailing & Billing Information</h6>
+            </div>
+        </div>
+        <form id="editBillingDetails">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="address1" name="address1" placeholder="Address1" value="@Model.Address1" disabled>
+                    <label class="text-muted floating-label">Address1</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="address2" name="address2" placeholder="Address2" value="@Model.Address2" disabled>
+                    <label class="text-muted floating-label">Address2</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="city" name="city" placeholder="City" value="@Model.City" disabled>
+                    <label class="text-muted floating-label">City</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <select class="form-select border text-muted mb-2 regions" name="state" id="state" aria-label="Default select example" disabled>
+                    </select>
+                    <label for="reasons" class="text-muted">State</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="zip" name="zip" placeholder="Zip" value="@Model.Zip" disabled>
+                    <label class="text-muted floating-label">Zip</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <input type="tel" id="phoneBilling" name="phoneBilling" class="input w-100 h-100 phone mb-3" data-error-msg-id="errorMsg1" value="@Model.BillingPhones" disabled>
+                @* <span asp-validation-for="Phone" class="text-danger" id="errorMsg1"></span> *@
+            </div>
+        </div>
+        <div class="row" id="btnEditRow2">
+            <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
+                <button class="btn btn-info me-md-2 text-white fw-medium my-2" type="button" id="btnEdit2">Edit</button>
+            </div>
+        </div>
+        <div class="row" id="btnSubmitRow2">
+            <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
+                <button class="btn btn-info me-md-2 text-white fw-medium" type="submit">Submit</button>
+                <button class="btn btn-outline-info fw-medium link-info" type="button" id="cancelBtn2">Cancel</button>
+            </div>
+        </div>
+        </form>
     </div>
 </div>
+
 

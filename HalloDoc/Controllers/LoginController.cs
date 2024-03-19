@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.IRepository;
 using DataAccess.DataContext;
+using DataAccess.DataModels;
 using DataAccess.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
@@ -42,41 +43,61 @@ namespace HalloDoc.Controllers
                 }
                 //TempData["UserName"] = string.Concat(user.Firstname, ' ', user.Lastname);
                 //TempData.Keep("UserName");
-                var user = _context.Users.Where(m => m.Aspnetuserid == status.Id && m.Email == status.Email).FirstOrDefault();
                 var userRoles = _context.Aspnetuserroles.Where(m => m.Userid == status.Id).FirstOrDefault();
                 var role = _context.Aspnetroles.Where(m => m.Id == userRoles.Roleid).FirstOrDefault();
                 HttpContext.Session.SetString("Aspnetuserid", status.Id);
                 HttpContext.Session.SetString("Email", status.Email);
                 HttpContext.Session.SetString("Role", role.Name);
                 ViewBag.Email = status.Email;
-                if (user != null)
-                {
-                    if (user.Lastname != null)
-                    {
-                        var username = string.Concat(user.Firstname, ' ', user.Lastname);
-                        //HttpContext.Session.SetString("Username", username);
-                        HttpContext.Session.SetString("username", username);
-                    }
-                    else
-                    {
-                        var username = user.Firstname;
-                        //HttpContext.Session.SetString("Username", username);
-                        HttpContext.Session.SetString("username", username);
-
-                    }
-
-                }
-                TempData["username"] = HttpContext.Session.GetString("username");
+                
                 var jwtToken = _jwtService.GenerateToken(status);
                 Response.Cookies.Append("jwt", jwtToken);
-                TempData["Login"] = "Login Successful";
+                TempData["message"] = "Login Successful";
                 if(role.Name=="Patient")
                 {
+                    var user = _context.Users.Where(m => m.Aspnetuserid == status.Id && m.Email == status.Email).FirstOrDefault();
+                    if (user != null)
+                    {
+                        if (user.Lastname != null)
+                        {
+                            var username = string.Concat(user.Firstname, ' ', user.Lastname);
+                            //HttpContext.Session.SetString("Username", username);
+                            HttpContext.Session.SetString("username", username);
+                        }
+                        else
+                        {
+                            var username = user.Firstname;
+                            //HttpContext.Session.SetString("Username", username);
+                            HttpContext.Session.SetString("username", username);
+
+                        }
+
+                    }
+                    TempData["username"] = HttpContext.Session.GetString("username");
                     return RedirectToAction("PatientDashboard", "Patient");
 
                 }
                 else if (role.Name == "Admin")
                 {
+                    Admin admin = _context.Admins.FirstOrDefault(x => x.Email == status.Email);
+                    if (admin != null)
+                    {
+                        if (admin.Lastname != null)
+                        {
+                            var username = string.Concat(admin.Firstname, ' ', admin.Lastname);
+                            //HttpContext.Session.SetString("Username", username);
+                            HttpContext.Session.SetString("username", username);
+                        }
+                        else
+                        {
+                            var username = admin.Firstname;
+                            //HttpContext.Session.SetString("Username", username);
+                            HttpContext.Session.SetString("username", username);
+
+                        }
+
+                    }
+                    TempData["username"] = HttpContext.Session.GetString("username");
                     return RedirectToAction("AdminPage", "Admin");
 
                 }

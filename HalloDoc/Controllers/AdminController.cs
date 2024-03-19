@@ -37,68 +37,77 @@ namespace HalloDoc.Controllers
 
         public IActionResult AdminPage()
         {
+            return View();
+        }
+        public IActionResult AdminDashboardPartial()
+        {
             ViewBag.NewCount = _context.Requests.Where(x => x.Status == 1).Count();
             ViewBag.PendingCount = _context.Requests.Where(x => x.Status == 2).Count();
             ViewBag.ActiveCount = _context.Requests.Where(x => x.Status == 4 || x.Status == 5).Count();
             ViewBag.ConcludeCount = _context.Requests.Where(x => x.Status == 6).Count();
             ViewBag.ToCloseCount = _context.Requests.Where(x => x.Status == 3 || x.Status == 7 || x.Status == 8).Count();
             ViewBag.UnpaidCount = _context.Requests.Where(x => x.Status == 9).Count();
-
-            return View();
-        }
-        public IActionResult AdminDashboardPartial()
-        {
             return PartialView("_AdminDashboardPartial");
         }
 
         public IActionResult MyProfileAdminPartial()
         {
-            return PartialView("_MyProfileAdminPartial");
+            var email = HttpContext.Session.GetString("Email");
+            var adminProfileViewModel = _admin.GetAdminProfile(email ?? "");
+            //ViewBag.AdminProfile = adminProfileViewModel;
+            return PartialView("_MyProfileAdminPartial",adminProfileViewModel);
         }
 
-        public AdminProfileViewModel GetAdminProfile()
-        {
-            var email = HttpContext.Session.GetString("Email");
-            var aspnetuser = _context.Aspnetusers.FirstOrDefault(x => x.Email == email);
-            if (aspnetuser != null)
-            {
-                var admin = _context.Admins.FirstOrDefault(x => x.Aspnetuserid == aspnetuser.Id);
-                if (admin != null)
-                {
-                    var region = _context.Regions.FirstOrDefault(x => x.Regionid == admin.Regionid);
-                    AdminProfileViewModel adminProfileViewModel = new();
-                    adminProfileViewModel.Username = aspnetuser.Username;
-                    adminProfileViewModel.Firstname = admin.Firstname;
-                    adminProfileViewModel.Lastname = admin.Lastname ?? "";
-                    adminProfileViewModel.Email = aspnetuser.Email??"";
-                    adminProfileViewModel.Phonenumber = aspnetuser.Phonenumber ?? null;
-                    adminProfileViewModel.Address1 = admin.Address1;
-                    adminProfileViewModel.Address2 = admin.Address2;
-                    adminProfileViewModel.City = admin.City;
-                    adminProfileViewModel.State = region!=null ? region.Name : "";
-                    adminProfileViewModel.Zip = admin.Zip;
-                    adminProfileViewModel.BillingPhones = admin.Mobile;
-                    return adminProfileViewModel;
-                }
-                //return new AdminProfileViewModel();
-            }
-            return new AdminProfileViewModel();
-        }
-        
+
         public IActionResult ResetAdminPassword(string adminPassword)
         {
             var email = HttpContext.Session.GetString("Email");
-            Aspnetuser aspnetuser = _context.Aspnetusers.FirstOrDefault(x => x.Email == email);
-            if (aspnetuser != null)
+            if (email != null)
             {
-            aspnetuser.Passwordhash = adminPassword;
-                _context.Update(aspnetuser);
-                _context.SaveChanges();
+                Aspnetuser aspnetuser = _context.Aspnetusers.FirstOrDefault(x => x.Email == email);
+                if (aspnetuser != null)
+                {
+                    aspnetuser.Passwordhash = adminPassword;
+                    _context.Update(aspnetuser);
+                    _context.SaveChanges();
+                    TempData["message"] = "Reset Password Successful";
+                }
+                //var adminProfileViewModel = _admin.GetAdminProfile(email);
+                //return PartialView("_MyProfileAdminPartial", adminProfileViewModel);
+                return RedirectToAction("MyProfileAdminPartial");
             }
-            return RedirectToAction("AdminPage" );
+            return NotFound();
         }
 
-        public IActionResult LoadPartialView(string SearchValue, string districtSelect, string selectedFilter, string currentPartialName, int[] currentStatus, int pagesize=2, int currentpage=1)
+        public IActionResult EditAdministrativeInfo(string firstname, string lastname, string email, string phoneAdministrator, List<int> adminRegions)
+        {
+            var oldEmail = HttpContext.Session.GetString("Email");
+            if (oldEmail != null)
+            {
+                _admin.EditAdminDetails(oldEmail, firstname, lastname, email, phoneAdministrator, adminRegions);
+                HttpContext.Session.SetString("Email", email);
+                var username = string.Concat(firstname, ' ', lastname??"");
+                HttpContext.Session.SetString("username", username);
+                TempData["username"] = HttpContext.Session.GetString("username");
+                TempData["message"] = "Administrative information edited successfully";
+                return RedirectToAction("MyProfileAdminPartial");
+            }
+            return NotFound();
+        }
+        public IActionResult EditBillingInfo(string address1, string address2, string city, int state, string zip, string phoneBilling)
+        {
+            var email = HttpContext.Session.GetString("Email");
+            if (email != null)
+            {
+                _admin.EditBillingDetails(email, address1, address2, city, state, zip, phoneBilling);
+                TempData["message"] = "Mailing and Billing Information edited successfully";
+                return RedirectToAction("MyProfileAdminPartial");
+
+            }
+            return NotFound();
+        }
+
+        public IActionResult LoadPartialView(string SearchValue, string districtSelect, string selectedFilter, string currentPartialName, int[] currentStatus, int pagesize = 2, int currentpage = 1)
         {
             var newPatientsViewModel = _admin.GetPatients(SearchValue, districtSelect, selectedFilter, currentStatus);
             int totalItems = newPatientsViewModel.Count();
@@ -261,7 +270,7 @@ namespace HalloDoc.Controllers
             return results;
         }
 
-       
+
         public List<Healthprofessionaltype> ProfessionResults()
         {
             return _context.Healthprofessionaltypes.ToList(); ;
@@ -335,19 +344,19 @@ namespace HalloDoc.Controllers
 
         }
 
-        public IActionResult SendAgreementEmail(int RequestId, string phone, string email) 
+        public IActionResult SendAgreementEmail(int RequestId, string phone, string email)
         {
             var subject = "Review Agreement";
-            var url = Url.Action("ReviewAgreement", "Admin", new { id = RequestId },Request.Scheme);
+            var url = Url.Action("ReviewAgreement", "Admin", new { id = RequestId }, Request.Scheme);
             var body = $"Click on the link below to review agreement. {url}";
-            _emailService.SendEmailAsync(email,subject,body);
+            _emailService.SendEmailAsync(email, subject, body);
             return Ok();
         }
 
         public IActionResult CancelCaseByPatient(int requestid, string cancelNotes)
         {
             _admin.CancelCaseByPatient(requestid, cancelNotes);
-            return RedirectToAction("ReviewAgreement","Admin", new {id = requestid });
+            return RedirectToAction("ReviewAgreement", "Admin", new { id = requestid });
         }
 
         [HttpGet]
@@ -358,7 +367,7 @@ namespace HalloDoc.Controllers
             {
                 return View();
             }
-           
+
             return View("EncounterForm", encounterForm);
 
         }
@@ -368,7 +377,7 @@ namespace HalloDoc.Controllers
         public IActionResult EncounterForm(EncounterFormViewModel encFormModel)
         {
             _admin.SaveEncounterForm(encFormModel);
-            return RedirectToAction("EncounterForm", "Admin",new { requestid = encFormModel.Requestid});
+            return RedirectToAction("EncounterForm", "Admin", new { requestid = encFormModel.Requestid });
         }
         public IActionResult Finalize(int requestid)
         {
@@ -401,7 +410,7 @@ namespace HalloDoc.Controllers
             return requestclient;
         }
 
-        public IActionResult SaveChangesCloseCase(int requestid,string email,string phone)
+        public IActionResult SaveChangesCloseCase(int requestid, string email, string phone)
         {
             Requestclient requestclient = _context.Requestclients.Where(x => x.Requestid == requestid).FirstOrDefault();
             requestclient.Email = email;
@@ -422,7 +431,7 @@ namespace HalloDoc.Controllers
             return View(encounterForm);
         }
 
-        
+
         public IActionResult GeneratePDF(int ReqId)
         {
 
