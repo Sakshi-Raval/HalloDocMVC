@@ -20,7 +20,7 @@ namespace BusinessLogic.IRepository
         public void SubmitReqMe(PatientRequestViewModel model, int userid);
         public void SubmitReqElse(PatientRequestViewModel model, User userModel);
         public void FileUpload(IFormFile file, int requestId);
-
+        public bool CheckEmail(string email);
 
     }
 }

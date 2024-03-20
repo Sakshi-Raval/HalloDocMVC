@@ -35,7 +35,7 @@
 
                     </li>
                         <li class="nav-item me-2">
-                        <a class="btn btn-outline-info" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
+                        <button class="btn btn-outline-info" onclick="Logout()">Logout</button>
             </li>
             <li class="nav-item">
                             <button class="btn btn-outline-info" type="button" id="darkBtn">
@@ -75,5 +75,21 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/darkMode.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        function Logout() {
+            $.ajax({
+                url: '/Login/Logout',
+                type: 'POST',
+                success: function (response) {
+                    // localStorage.clear();
+                    window.location.href = "/Login/Login";
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error in Logging out:', error);
+                }
+            });
+        }
+    </script>
+
 </body>
 </html>

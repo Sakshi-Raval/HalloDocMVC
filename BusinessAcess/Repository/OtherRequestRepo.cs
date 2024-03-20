@@ -4,13 +4,9 @@ using DataAccess.DataModels;
 using DataAccess.ViewModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Policy;
 
 namespace BusinessLogic.Repository
 {
@@ -18,12 +14,17 @@ namespace BusinessLogic.Repository
     {
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public OtherRequestRepo(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
+        private readonly IPatient _patient;
+        private readonly IEmailService _emailService;
+        private readonly IUrlHelper _urlHelper;
+        public OtherRequestRepo(ApplicationDbContext context, IHostingEnvironment hostingEnvironment, IPatient patient, IEmailService emailService)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
+            _patient = patient;
+            _emailService = emailService;
         }
-        public void CreateOtherRequest(OtherRequestViewModel model, int requestTypeId)
+        public int CreateOtherRequest(OtherRequestViewModel model, int requestTypeId)
         {
             //Aspnetuser aspnetuser = new();
             //User user = new User();
@@ -104,36 +105,31 @@ namespace BusinessLogic.Repository
             _context.Update(request);
             _context.SaveChanges();
 
+           
             if (model.File != null)
             {
                 foreach (var file in model.File)
                 {
-                    FileUpload(file, request.Requestid);
+                    _patient.FileUpload(file, request.Requestid);
                 }
 
             }
+            return request.Requestid;
         }
-        public void FileUpload(IFormFile file, int requestId)
+
+        public void EmailSending(IUrlHelper urlHelper,string email,int requestid, string scheme) 
         {
-            if (file.Length > 0)
+            if (!_patient.CheckEmail(email))
             {
-                var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-                var filePath = Path.Combine(uploadsFolder, file.FileName);
-                Requestwisefile requestwisefile = new();
-                requestwisefile.Requestid = requestId;
-                requestwisefile.Filename = file.FileName;
-                requestwisefile.Createddate = DateTime.Now;
-                _context.Add(requestwisefile);
-                _context.SaveChanges();
-                using (var stream = System.IO.File.Create(filePath))
-                {
-                    file.CopyTo(stream);
-                }
+                string token = Guid.NewGuid().ToString();
+                DateTime expiryTime = DateTime.UtcNow.AddHours(24);
+
+                string link = urlHelper.Action("CreateAccount", "Login", new { token = token,requestid = requestid,expiryTime = expiryTime,email=email }, scheme);
+                string subject = "Create Account";
+                string body = $"Here is the link to create account. Link expires in 24 hours. {link}";
+                _emailService.SendEmailAsync(email, subject, body);
             }
+
         }
     }
 }

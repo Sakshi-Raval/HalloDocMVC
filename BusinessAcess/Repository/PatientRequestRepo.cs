@@ -13,11 +13,13 @@ namespace BusinessLogic.Repository
     {
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IPatient _patient;
 
-        public PatientRequestRepo(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
+        public PatientRequestRepo(ApplicationDbContext context, IHostingEnvironment hostingEnvironment, IPatient patient)
         {
-            _context=context;
-            _hostingEnvironment=hostingEnvironment;
+            _context = context;
+            _hostingEnvironment = hostingEnvironment;
+            _patient = patient;
         }
         public  void CreatePatientRequest(PatientRequestViewModel model)
         {
@@ -201,36 +203,15 @@ namespace BusinessLogic.Repository
             {
                 foreach (var file in model.File)
                 {
-                    FileUpload(file, request.Requestid);
+                    _patient.FileUpload(file, request.Requestid);
                 }
                 
             }
 
         }
-        public void FileUpload(IFormFile file, int requestId)
-        {
-            if (file.Length > 0)
-            {
-                var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-                var filePath = Path.Combine(uploadsFolder, file.FileName);
-                Requestwisefile requestwisefile = new();
-                requestwisefile.Requestid = requestId;
-                requestwisefile.Filename = file.FileName;
-                requestwisefile.Createddate = DateTime.Now;
-                _context.Add(requestwisefile);
-                _context.SaveChanges();
-                using (var stream = System.IO.File.Create(filePath))
-                {
-                    file.CopyTo(stream);
-                }
-            }
-        }
+       
 
-        public void PatientRequestAdmin(PatientRequestViewModel patientRequestViewModel, string email)
+        public int PatientRequestAdmin(PatientRequestViewModel patientRequestViewModel, string email)
         {
             Request request = new();
             Requestclient requestclient = new();
@@ -307,8 +288,7 @@ namespace BusinessLogic.Repository
                     _context.SaveChanges();
                 }
             }
-
-            //send email if not an existing user
+            return request.Requestid;
          
         }
 

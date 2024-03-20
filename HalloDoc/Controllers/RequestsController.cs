@@ -67,9 +67,12 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult FamilyRequest(OtherRequestViewModel model)
         {
+           IUrlHelper urlHelper = Url;
            if(ModelState.IsValid)
             {
-                _iOtherRequest.CreateOtherRequest(model,2);
+                int requestid = _iOtherRequest.CreateOtherRequest(model, 2);
+                string scheme = HttpContext.Request.Scheme;
+                _iOtherRequest.EmailSending(urlHelper, model.Email, requestid, scheme);
                 TempData["message"] = "Request created successfully";
 
                 return RedirectToAction("FamilyRequest", "Requests");
@@ -83,9 +86,13 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult ConciergeRequest(OtherRequestViewModel model)
         {
+            IUrlHelper urlHelper = Url;
+            
             if (ModelState.IsValid)
             {
-                _iOtherRequest.CreateOtherRequest(model, 3);
+                int requestid = _iOtherRequest.CreateOtherRequest(model, 3);
+                string scheme = HttpContext.Request.Scheme;
+                _iOtherRequest.EmailSending(urlHelper, model.Email, requestid, scheme);
                 TempData["message"] = "Request created successfully";
 
                 return RedirectToAction("ConciergeRequest", "Requests");
@@ -99,32 +106,28 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult BusinessRequest(OtherRequestViewModel model)
         {
+            IUrlHelper urlHelper = Url;
+
             if (ModelState.IsValid)
             {
-                _iOtherRequest.CreateOtherRequest(model,4);
+                int requestid = _iOtherRequest.CreateOtherRequest(model, 4);
+                string scheme = HttpContext.Request.Scheme;
+                _iOtherRequest.EmailSending(urlHelper, model.Email, requestid, scheme);
                 TempData["message"] = "Request created successfully";
 
                 return RedirectToAction("BusinessRequest", "Requests");
             }
             return View();
         }
-        [HttpPost]
-        public void SendEmailAsync(string email)
-        {
-            var user = _context.Users.Where(u => u.Email == email).FirstOrDefault();
-            if(user==null)
-            {
-                string token = Guid.NewGuid().ToString();
-                DateTime expiryTime = DateTime.UtcNow.AddHours(24);
+        //[HttpPost]
+        //public void SendEmailAsync(string email)
+        //{
+        //    var user = _context.Users.Where(u => u.Email == email).FirstOrDefault();
+        //    if(user==null)
+        //    {
+               
+        //    }
 
-                string link = Url.Action("Login", "Login", new { token = token }, Request.Scheme);
-
-                link += $"?expiryTime={expiryTime}";
-                string subject = "Create Account";
-                string body = "Here is the link to create account. Link expires in 24 hours." + link;
-                 _emailService.SendEmailAsync(email, subject, body );
-            }
-
-        }
+        //}
     }
 }

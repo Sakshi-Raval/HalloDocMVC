@@ -10,6 +10,6 @@ namespace BusinessLogic.IRepository
     public interface IPatientRequest
     {
         public void CreatePatientRequest(PatientRequestViewModel model);
-        public void PatientRequestAdmin(PatientRequestViewModel patientRequestViewModel,string email);
+        public int PatientRequestAdmin(PatientRequestViewModel patientRequestViewModel,string email);
     }
 }

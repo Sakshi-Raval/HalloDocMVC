@@ -9,10 +9,41 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src=""></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
- 
-    }
+    
+    <script>
+        $('#createAccountForm').submit(function (event) {
+            event.preventDefault();
+            var password = $('#passwordCreateAcc').val();
+            var confPassword = $('#confPasswordCreateAcc').val();
+            console.log(password);
+            console.log(confPassword);
+            if (password != confPassword) {
+                $('#confPassValidation').text("Password and Confirm Password do no match");
+                return;
+            }
+            else {
+                $('#confPassValidation').text("");
+            }
+            var formData = $(this).serialize();
+            console.log(formData);
+            $.ajax({
+                url: '/Login/CreateAccount',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    
+                },
+                error: function (xhr, status, error) {
 
+                    console.error('Error submitting form:', error);
+                }
+            });
+        });
+    </script>
 
+}
+
+<partial name="_Notification" />
 <div class="container-fluid" style="min-width: 100%;">
 
     <div class="row g-3">
@@ -46,10 +77,10 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-8 text-center loginForm">
-                        <form asp-action="Login" asp-controller="Login" class="">
+                        <form id="createAccountForm" class="">
                             <div class="input-group mb-4 mt-2" style="max-width: 100%">
                                 <div class="form-floating w-100">
-                                    <input type="email"  class="form-control" id="email" placeholder="Email">
+                                    <input type="email"  class="form-control" id="email" name="email" placeholder="Email" value="@ViewBag.Email" readonly>
                                     <label class="text-info">Email</label>
                                     <span class="text-danger"></span>
                                     <button class="btn input-image text-muted" disabled>
@@ -66,7 +97,7 @@
                             </div>
                             <div class="input-group mb-4">
                                 <div class="form-floating w-100">
-                                    <input type="password" class="form-control" id="passwordCreateAcc" placeholder="Password">
+                                    <input type="password" class="form-control" id="passwordCreateAcc" name="passwordCreateAcc" placeholder="Password">
                                     <label class="text-info">Password</label>
                                     <span class="text-danger"></span>
                                 </div>
@@ -84,7 +115,7 @@
                                 <div class="form-floating w-100">
                                     <input type="password" class="form-control" id="confPasswordCreateAcc" placeholder="Confirm Password">
                                     <label class="text-info">Confirm Password</label>
-                                    <span class="text-danger"></span>
+                                    <span class="text-danger" id="confPassValidation"></span>
                                 </div>
                                 <button class="btn input-image text-muted" type="button" onclick="showpass()">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -96,7 +127,8 @@
                                 </button>
 
                             </div>
-                            <button type="submit" class="btn btn-info text-white my-2 w-100 fw-medium">Log In</button>
+                            <input type="hidden" id="requestId" name="requestId" value="@ViewBag.Requestid" />
+                            <button type="submit" class="btn btn-info text-white my-2 w-100 fw-medium">Sign Up</button>
                         </form>
                     </div>
                 </div>

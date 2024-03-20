@@ -289,5 +289,15 @@ namespace BusinessLogic.Repository
                 }
             }
         }
+
+        public bool CheckEmail(string email)
+        {
+            Aspnetuser aspnetuser=_context.Aspnetusers.FirstOrDefault(x=>x.Email==email);
+            if (aspnetuser != null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

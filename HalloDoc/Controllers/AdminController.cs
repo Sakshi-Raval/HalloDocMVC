@@ -24,7 +24,8 @@ namespace HalloDoc.Controllers
         private readonly IPatientRequest _patientRequest;
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
         private readonly IEmailService _emailService;
-        public AdminController(ApplicationDbContext context, IAdmin admin, IPatient patient, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IEmailService emailService, IPatientRequest patientRequest)
+        private readonly IOtherRequest _iOtherRequest;
+        public AdminController(ApplicationDbContext context, IAdmin admin, IPatient patient, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IEmailService emailService, IPatientRequest patientRequest, IOtherRequest otherRequest)
         {
             _context = context;
             _admin = admin;
@@ -32,6 +33,7 @@ namespace HalloDoc.Controllers
             _hostingEnvironment = hostingEnvironment;
             _emailService = emailService;
             _patientRequest = patientRequest;
+            _iOtherRequest = otherRequest;
         }
 
         public IActionResult AdminPage()
@@ -347,7 +349,7 @@ namespace HalloDoc.Controllers
         {
             _admin.Agreed(id);
             //return RedirectToAction("ReviewAgreement","Admin", new {id = id});
-            return Ok();
+            return RedirectToAction("Login","Login");
 
         }
 
@@ -469,7 +471,6 @@ namespace HalloDoc.Controllers
 
         [HttpGet]
         public IActionResult AdminCreateReq()
-
         {
             return View();
         }
@@ -478,7 +479,10 @@ namespace HalloDoc.Controllers
         public IActionResult AdminCreateReq(PatientRequestViewModel patientRequestViewModel)
         {
             var email = HttpContext.Session.GetString("Email");
-            _patientRequest.PatientRequestAdmin(patientRequestViewModel, email);
+            int requestid = _patientRequest.PatientRequestAdmin(patientRequestViewModel, email);
+            IUrlHelper urlHelper = Url;
+            string scheme = HttpContext.Request.Scheme;
+            _iOtherRequest.EmailSending(urlHelper, patientRequestViewModel.Email, requestid, scheme);
             TempData["message"] = "Request Created";
             return RedirectToAction("AdminCreateReq");
         }

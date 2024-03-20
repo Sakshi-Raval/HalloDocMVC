@@ -10,17 +10,6 @@
         const myModal = new bootstrap.Modal("#myModal");
         $(document).ready(function () {  
             myModal.show();
-            $('#patientEmail').on('blur', function () {
-                var email = $(this).val();
-                $.ajax({
-                    url: '/Requests/SendEmail',
-                    type: 'POST',
-                    data: { email: email },
-                    success: function (data) {
-                       
-                    }
-                });
-            });
         });
         function hideAlertBox() {
             myModal.hide();

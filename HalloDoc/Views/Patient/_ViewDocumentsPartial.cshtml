@@ -74,7 +74,7 @@
                         {
                             <tr>
                             <td><input type="checkbox" class="checkBox" value="@item.Filename"/></td>
-                            <td>@item.Filename</td>
+                            <td>@item.Filename.Substring(item.Filename.IndexOf('_') + 1)</td>
                             <td>@item.UploaderName</td>
                             <td>@item.CreatedDate</td>
                             <td>
@@ -89,7 +89,6 @@
                         }
                 </tbody>
                 </table>
-          
         </div>
     </div>
 </div>

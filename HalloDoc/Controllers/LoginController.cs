@@ -2,6 +2,7 @@
 using DataAccess.DataContext;
 using DataAccess.DataModels;
 using DataAccess.ViewModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
@@ -136,9 +137,73 @@ namespace HalloDoc.Controllers
         }
 
         [HttpGet]
-        public IActionResult CreateAccount(int requestid)
+        public IActionResult CreateAccount(string token,string requestid,DateTime expiryTime,string email)
         {
+            if(DateTime.UtcNow > expiryTime)
+            {
+                string htmlContent = "<html><body><h1>Link Expired</h1></body></html>";
+                return new ContentResult
+                {
+                    Content = htmlContent,
+                    ContentType = "text/html"
+                };
+            }
+            ViewBag.Requestid = requestid;
+            ViewBag.Email = email;
+            return View();
+        }
 
+        [HttpPost]
+        public IActionResult CreateAccount(string email, string passwordCreateAcc, string requestId)
+        {
+            Request request = _context.Requests.FirstOrDefault(x => x.Requestid == int.Parse(requestId));
+            Requestclient requestclient= _context.Requestclients.FirstOrDefault(x => x.Requestid == int.Parse(requestId));
+            if (request != null && requestclient!=null)
+            {
+                Aspnetuser aspnetuser = new();
+                Guid guid = Guid.NewGuid(); 
+                aspnetuser.Id = guid.ToString();
+                aspnetuser.Email = email;
+                aspnetuser.Username = email;
+                aspnetuser.Passwordhash = passwordCreateAcc;
+                aspnetuser.Phonenumber = requestclient.Phonenumber;
+                aspnetuser.Createddate = DateTime.Now;
+                _context.Add(aspnetuser);
+                _context.SaveChanges();
+
+                Aspnetuserrole aspnetuserrole = new();
+                aspnetuserrole.Userid = aspnetuser.Id;
+                aspnetuserrole.Roleid = _context.Aspnetroles.Where(x => x.Name == "Patient").Select(x=>x.Id).FirstOrDefault().ToString()??"2";
+                _context.Add(aspnetuserrole);
+                _context.SaveChanges();
+
+                User user = new();
+                user.Aspnetuserid = aspnetuser.Id;
+                user.Firstname = requestclient.Firstname;
+                user.Lastname = requestclient.Lastname;
+                user.Email = email;
+                user.Mobile = requestclient.Phonenumber;
+                user.Street = requestclient.Street;
+                user.State = requestclient.State;
+                user.City = requestclient.City;
+                user.Regionid = requestclient.Regionid;
+                user.Zipcode = requestclient.Zipcode;
+                user.Strmonth = requestclient.Strmonth;
+                user.Intdate = requestclient.Intdate;
+                user.Intyear = requestclient.Intyear;
+                user.Createdby = aspnetuser.Id;
+                _context.Add(user);
+                _context.SaveChanges();
+
+                request.Userid = user.Userid;
+                _context.Update(request);
+                _context.SaveChanges();
+
+                TempData["message"] = "Account Created Successfully";
+
+                return RedirectToAction("CreateAccount");
+
+            }
             return View();
         }
 
