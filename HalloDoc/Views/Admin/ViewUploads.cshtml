@@ -85,7 +85,8 @@
                 data: { files:files,
                         requestid:requestid},
                 success: function (response) {
-                    alert("Email Sent Successfully");
+                    // alert("Email Sent Successfully");
+                    window.location.href = "/Admin/ViewUploads?requestid=" + requestid;
                 },
                 error: function (xhr, status, error) {
                     console.error('Error sending mail:', error);
@@ -94,6 +95,8 @@
         }
     </script>
 }
+<partial name="_Notification" />
+
 <div class="container-fluid rounded mx-3 mt-4">
     <div class="row justify-content-center">
         <div class="col-md-8 col-10 d-inline-flex justify-content-between">

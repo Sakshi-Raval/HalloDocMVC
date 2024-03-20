@@ -4,13 +4,8 @@ using DataAccess.DataModels;
 using DataAccess.ViewModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Policy;
 
 namespace BusinessLogic.Repository
 {
@@ -32,6 +27,7 @@ namespace BusinessLogic.Repository
             User user = new User();
             Request request = new();
             Requestclient requestclient = new();
+            Aspnetuserrole aspnetuserrole = new();
             if (status == null)
             {
 
@@ -78,12 +74,17 @@ namespace BusinessLogic.Repository
                 user.Intdate = model.DOB.Day;
                 user.Strmonth = model.DOB.Month.ToString();
                 user.Intyear = model.DOB.Year;
-                user.Createdby = "xyz";
+                user.Createdby = aspnetuser.Id;
                 user.Createddate = DateTime.Now;
                 user.Status = 1;
                 user.Isdeleted = false;
                 user.Isrequestwithemail = true;
                 _context.Add(user);
+                _context.SaveChanges();
+
+                aspnetuserrole.Userid = aspnetuser.Id;
+                aspnetuserrole.Roleid = _context.Aspnetroles.Where(x => x.Name == "Patient").Select(x => x.Id).FirstOrDefault()??"2";
+                _context.Add(aspnetuserrole);
                 _context.SaveChanges();
 
                 request.Requesttypeid = 1;
@@ -228,5 +229,89 @@ namespace BusinessLogic.Repository
                 }
             }
         }
+
+        public void PatientRequestAdmin(PatientRequestViewModel patientRequestViewModel, string email)
+        {
+            Request request = new();
+            Requestclient requestclient = new();
+
+            request.Requesttypeid = 1;
+            request.Firstname = patientRequestViewModel.Firstname;
+            request.Lastname = patientRequestViewModel.Lastname;
+            request.Phonenumber = patientRequestViewModel.Phone;
+            request.Email = patientRequestViewModel.Email;
+            request.Status = 1;
+            request.Createddate = DateTime.Now;
+            bool[] bitValues = { true };
+            BitArray bits = new BitArray(bitValues);
+            request.Isurgentemailsent = bits;
+
+            _context.Add(request);
+            _context.SaveChanges();
+
+            requestclient.Requestid = request.Requestid;
+            requestclient.Firstname = patientRequestViewModel.Firstname;
+            requestclient.Lastname = patientRequestViewModel.Lastname;
+            requestclient.Intyear = patientRequestViewModel.DOB.Year;
+            requestclient.Intdate = patientRequestViewModel.DOB.Day;
+            requestclient.Strmonth = patientRequestViewModel.DOB.Month.ToString();
+            requestclient.Phonenumber = patientRequestViewModel.Phone;
+            requestclient.Email = patientRequestViewModel.Email;
+            requestclient.Street = patientRequestViewModel.Street;
+            requestclient.State =  _context.Regions.Where(x => x.Regionid == int.Parse(patientRequestViewModel.State)).Select(x => x.Name).FirstOrDefault();
+            requestclient.Regionid = patientRequestViewModel.State != null ? int.Parse(patientRequestViewModel.State) : null;
+            requestclient.City = patientRequestViewModel.City;
+            requestclient.Zipcode = patientRequestViewModel.Zip;
+
+            _context.Add(requestclient);
+            _context.SaveChanges();
+
+            int count = _context.Requests.Where(x => x.Createddate.Date == request.Createddate.Date).Count() + 1;
+            var region = _context.Regions.Where(x => x.Regionid == requestclient.Regionid).FirstOrDefault();
+
+            if (region != null)
+            {
+                var confirmNum = string.Concat(region.Abbreviation.ToUpper(), request.Createddate.ToString("ddMMyy"), requestclient.Lastname.Substring(0, 2).ToUpper() ?? "",
+               requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
+                request.Confirmationnumber = confirmNum;
+            }
+            else
+            {
+                var confirmNum = string.Concat("MD", request.Createddate.ToString("ddMMyy"), requestclient.Lastname.Substring(0, 2).ToUpper() ?? "",
+              requestclient.Firstname.Substring(0, 2).ToUpper(), count.ToString("D4"));
+                request.Confirmationnumber = confirmNum;
+            }
+            _context.Update(request);
+            _context.SaveChanges();
+
+            if (patientRequestViewModel.Notes != null)
+            {
+                Requestnote requestnote = new();
+                Aspnetuser aspnetuser = _context.Aspnetusers.FirstOrDefault(x => x.Email == email);
+                if (aspnetuser != null)
+                {
+                    var roleid = _context.Aspnetuserroles.Where(x=>x.Userid==aspnetuser.Id).Select(x=>x.Roleid).FirstOrDefault();
+                    requestnote.Requestid = request.Requestid;
+                    requestnote.Createddate = DateTime.Now;
+                    if(roleid=="1")
+                    {
+                        requestnote.Adminnotes = patientRequestViewModel.Notes;
+                        requestnote.Createdby = aspnetuser.Id;
+                    }
+                    else if (roleid == "3")
+                    {
+                        requestnote.Physiciannotes = patientRequestViewModel.Notes;
+                        requestnote.Createdby = aspnetuser.Id;
+                    }
+                    _context.Add(requestnote);
+                    _context.SaveChanges();
+                }
+            }
+
+            //send email if not an existing user
+         
+        }
+
     }
 }
+

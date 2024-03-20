@@ -4,6 +4,7 @@ using DataAccess.DataModels;
 using DataAccess.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System;
@@ -49,6 +50,7 @@ namespace BusinessLogic.Repository
                                             RequestId = req.Requestid,
                                             Email = reqClient.Email ?? "",
                                             IsFinalize = _context.EncounterForms.Where(x => x.Requestid == req.Requestid).Select(x=>x.IsFinalize).FirstOrDefault(),
+                                            PhysicianName = _context.Physicians.Where(x=>x.Physicianid==req.Physicianid).Select(x=>x.Firstname).FirstOrDefault() + " " + _context.Physicians.Where(x => x.Physicianid == req.Physicianid).Select(x => x.Firstname).FirstOrDefault() ?? "",
                                         }
                                         ).Where(item => (currentStatus.Any(x=>x==item.Status)) 
                                         && (string.IsNullOrEmpty(SearchValue) || item.Name.ToLower().Contains(SearchValue.ToLower()))
@@ -560,6 +562,8 @@ namespace BusinessLogic.Repository
                 }
             }
         }
+
+      
 
     }
 }

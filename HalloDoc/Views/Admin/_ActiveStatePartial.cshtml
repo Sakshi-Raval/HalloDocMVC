@@ -33,6 +33,7 @@
 
     @* finalize modal *@
 
+<partial name="_Notification" />
 
 <div class="modal fade" id="finalizeModal" tabindex="-1" aria-labelledby="finalizeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -138,7 +139,7 @@
                         <td class="my-auto"><span>Business, </span>@item.Requestor</td>
 
                         }
-                        <td class="my-auto">--</td>
+                    <td class="my-auto">@item.PhysicianName</td>
                         <td class="my-auto"></td>
                         <td class="my-auto">@item.RequestedDate</td>
                         <td class="my-auto">

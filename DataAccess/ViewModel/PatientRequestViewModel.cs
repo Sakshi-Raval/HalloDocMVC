@@ -38,6 +38,7 @@ namespace DataAccess.ViewModel
         
         public List<IFormFile>? File {  get; set; }
         public string? Relation {  get; set; }
+        public string? Notes {  get; set; }
     }
     public class DateNotInFutureAttribute : ValidationAttribute
     {

@@ -178,14 +178,15 @@ function retrieveStorageDetails() {
     }
 }
 
-var pagesize = 2;
+var pagesize = 5;
 var currentpage = 1;
 var currentStatus = [1];
 var currentPartialName = "_NewStatePartial";
+//setLocalStorageDetails(currentPartialName, currentStatus, pagesize, currentpage);
+//console.log("initialising");
 
 function FilteredPartial(currentPartialName, currentStatus,pagesize,currentpage) {
-  
-    $.get("/Admin/CheckSession", function (response) {
+      $.get("/Admin/CheckSession", function (response) {
 /*        retrieveStorageDetails();*/
         if (response.sessionExists) {
             var SearchText = $('#searchInput').val();
@@ -557,4 +558,25 @@ function sendAgreementModal(btn) {
 
     const email = btn.getAttribute('data-email');
     document.getElementById('email').value = email;
+}
+
+function sendLinkModal() {
+    console.log("Button clicked");
+    const myModal = document.getElementById("sendLinkModal");
+    var bsModal = new bootstrap.Modal(myModal);
+    bsModal.show();
+
+}
+function ExportToExcel() {
+    //var dataToSend = {};
+    $.ajax({
+        url: '/Admin/ExportToExcel',
+        type: 'POST',
+        success: function (data) {
+        
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
 }

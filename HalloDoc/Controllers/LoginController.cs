@@ -131,10 +131,12 @@ namespace HalloDoc.Controllers
         {
             HttpContext.Session.Clear();
             Response.Cookies.Delete("jwt");
-            return RedirectToAction("Login", "Login");
+            return Ok();
+            //return RedirectToAction("Login", "Login");
         }
 
-        public IActionResult CreateAccount()
+        [HttpGet]
+        public IActionResult CreateAccount(int requestid)
         {
 
             return View();

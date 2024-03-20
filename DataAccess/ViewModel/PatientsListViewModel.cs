@@ -31,5 +31,6 @@ namespace DataAccess.ViewModel
         public string? Region {  get; set; }
         public string Email { get; set; }
         public bool IsFinalize { get; set; }
+        public string? PhysicianName { get; set; }
     }
 }

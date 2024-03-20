@@ -3,17 +3,14 @@ using BusinessLogic.Repository;
 using DataAccess.DataContext;
 using DataAccess.DataModels;
 using DataAccess.ViewModel;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.CodeAnalysis.Elfie.Serialization;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json;
+using OfficeOpenXml;
 using Rotativa.AspNetCore;
 using System.Collections;
-using System.Configuration;
-using System.Drawing.Printing;
 using System.Net.Mail;
-using System.Reflection.Metadata.Ecma335;
-using System.Web.Helpers;
+using System.Reflection;
 
 namespace HalloDoc.Controllers
 {
@@ -24,15 +21,17 @@ namespace HalloDoc.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IAdmin _admin;
         private readonly IPatient _patient;
+        private readonly IPatientRequest _patientRequest;
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
         private readonly IEmailService _emailService;
-        public AdminController(ApplicationDbContext context, IAdmin admin, IPatient patient, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IEmailService emailService)
+        public AdminController(ApplicationDbContext context, IAdmin admin, IPatient patient, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IEmailService emailService, IPatientRequest patientRequest)
         {
             _context = context;
             _admin = admin;
             _patient = patient;
             _hostingEnvironment = hostingEnvironment;
             _emailService = emailService;
+            _patientRequest = patientRequest;
         }
 
         public IActionResult AdminPage()
@@ -55,7 +54,7 @@ namespace HalloDoc.Controllers
             var email = HttpContext.Session.GetString("Email");
             var adminProfileViewModel = _admin.GetAdminProfile(email ?? "");
             //ViewBag.AdminProfile = adminProfileViewModel;
-            return PartialView("_MyProfileAdminPartial",adminProfileViewModel);
+            return PartialView("_MyProfileAdminPartial", adminProfileViewModel);
         }
 
 
@@ -86,7 +85,9 @@ namespace HalloDoc.Controllers
             {
                 _admin.EditAdminDetails(oldEmail, firstname, lastname, email, phoneAdministrator, adminRegions);
                 HttpContext.Session.SetString("Email", email);
-                var username = string.Concat(firstname, ' ', lastname??"");
+                HttpContext.Session.SetString("Email", email);
+                var newemail = HttpContext.Session.GetString("Email");
+                var username = string.Concat(firstname, ' ', lastname ?? "");
                 HttpContext.Session.SetString("username", username);
                 TempData["username"] = HttpContext.Session.GetString("username");
                 TempData["message"] = "Administrative information edited successfully";
@@ -107,14 +108,17 @@ namespace HalloDoc.Controllers
             return NotFound();
         }
 
-        public IActionResult LoadPartialView(string SearchValue, string districtSelect, string selectedFilter, string currentPartialName, int[] currentStatus, int pagesize = 2, int currentpage = 1)
+        public IActionResult LoadPartialView(string SearchValue, string districtSelect, string selectedFilter, string currentPartialName, int[] currentStatus, int pagesize = 5, int currentpage = 1)
         {
             var newPatientsViewModel = _admin.GetPatients(SearchValue, districtSelect, selectedFilter, currentStatus);
             int totalItems = newPatientsViewModel.Count();
             int totalPages = (int)Math.Ceiling((double)totalItems / pagesize);
             if (SearchValue != null || districtSelect != null || selectedFilter != null)
             {
-                currentpage = 1;
+                if (totalPages <= 1)
+                {
+                    currentpage = 1;
+                }
             }
             var paginatedData = newPatientsViewModel.Skip((currentpage - 1) * pagesize).Take(pagesize).ToList();
             ViewBag.Count = totalItems;
@@ -146,6 +150,7 @@ namespace HalloDoc.Controllers
             requestnote.Createddate = DateTime.Now;
             _context.Add(requestnote);
             _context.SaveChanges();
+            TempData["message"] = "Added notes successfully";
             return Ok();
         }
 
@@ -217,6 +222,7 @@ namespace HalloDoc.Controllers
                 var subject = "Uploaded Documents";
                 var body = "PFA uploaded documents";
                 _emailService.SendEmailAsync(recepientEmail, subject, body, attachments);
+                TempData["message"] = "Email sent!";
             }
 
             return Ok();
@@ -309,6 +315,7 @@ namespace HalloDoc.Controllers
             if (ModelState.IsValid)
             {
                 _admin.SendOrderDetails(model);
+                TempData["message"] = "Order sent!";
             }
             return RedirectToAction("SendOrder");
         }
@@ -377,6 +384,7 @@ namespace HalloDoc.Controllers
         public IActionResult EncounterForm(EncounterFormViewModel encFormModel)
         {
             _admin.SaveEncounterForm(encFormModel);
+            TempData["message"] = "Saved Changes";
             return RedirectToAction("EncounterForm", "Admin", new { requestid = encFormModel.Requestid });
         }
         public IActionResult Finalize(int requestid)
@@ -441,7 +449,7 @@ namespace HalloDoc.Controllers
             {
                 return NotFound();
             }
-
+            //TempData["message"] = "PDF Downloaded";
             //return View("EncounterFormDetails", encounterFormView);
             return new ViewAsPdf("EncounterFormDetails", viewEncounterForm)
             {
@@ -450,6 +458,100 @@ namespace HalloDoc.Controllers
 
         }
 
+        public IActionResult SendLinkEmail(string sendLinkFirstname, string sendLinkLarstname, string sendLinkEmail)
+        {
+            var url = Url.Action("PatientRequest", "Requests", null, Request.Scheme);
+            string subject = "Submit Request for " + sendLinkFirstname + " " + sendLinkLarstname ?? "";
+            var body = $"Click on the link below to submit request. {url}";
+            _emailService.SendEmailAsync(sendLinkEmail, subject, body);
+            return Ok();
+        }
 
+        [HttpGet]
+        public IActionResult AdminCreateReq()
+
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AdminCreateReq(PatientRequestViewModel patientRequestViewModel)
+        {
+            var email = HttpContext.Session.GetString("Email");
+            _patientRequest.PatientRequestAdmin(patientRequestViewModel, email);
+            TempData["message"] = "Request Created";
+            return RedirectToAction("AdminCreateReq");
+        }
+
+        public IActionResult ExportAllToExcel()
+        {
+            int[] allStatus = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            List<PatientsListViewModel> patientList = _admin.GetPatients("", "", "", allStatus);
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Sheet1");
+
+                PropertyInfo[] properties = typeof(PatientsListViewModel).GetProperties();
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    worksheet.Cells[1, i + 1].Value = properties[i].Name;
+                }
+                for (int rowIndex = 0; rowIndex < patientList.Count; rowIndex++)
+                {
+                    for (int colIndex = 0; colIndex < properties.Length; colIndex++)
+                    {
+                        worksheet.Cells[rowIndex + 2, colIndex + 1].Value = properties[colIndex].GetValue(patientList[rowIndex]);
+                    }
+                }
+                //save excel package to a memory stream
+                MemoryStream stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                stream.Position = 0; //set it as 0 to ensure that it is read from the beginning
+                string excelName = $"ExportAll_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
+
+                //return excel file as downloadable file
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+            }
+        }
+        public IActionResult ExportToExcel(string jsonData)
+        {
+            List<PatientsListViewModel> patientList = JsonConvert.DeserializeObject<List<PatientsListViewModel>>(jsonData);
+            if (patientList != null)
+            {
+
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Sheet1");
+
+                    PropertyInfo[] properties = typeof(PatientsListViewModel).GetProperties();
+                    for (int i = 0; i < properties.Length; i++)
+                    {
+                        worksheet.Cells[1, i + 1].Value = properties[i].Name;
+                    }
+                    for (int rowIndex = 0; rowIndex < patientList.Count; rowIndex++)
+                    {
+                        for (int colIndex = 0; colIndex < properties.Length; colIndex++)
+                        {
+                            worksheet.Cells[rowIndex + 2, colIndex + 1].Value = properties[colIndex].GetValue(patientList[rowIndex]);
+                        }
+                    }
+                    //save excel package to a memory stream
+                    MemoryStream stream = new MemoryStream();
+                    package.SaveAs(stream);
+
+                    stream.Position = 0; //set it as 0 to ensure that it is read from the beginning
+                    string excelName = $"ExportAll_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
+
+                    //return excel file as downloadable file
+                    return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+                }
+            }
+            return NotFound();
+        }
     }
 }
+ 

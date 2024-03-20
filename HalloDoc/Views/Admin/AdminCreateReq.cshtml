@@ -1,0 +1,155 @@
+﻿@model PatientRequestViewModel
+@{
+    ViewData["Title"] = "Submit request";
+    Layout = "_AdminLayout";
+}
+
+@section Scripts{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            populateRegionDropdown();
+        });
+    </script>
+}
+<partial name="_Notification" />
+<partial name="_ValidationScriptsPartial" />
+
+<div class="row justify-content-center">
+    <div class="col-10 col-md-8 col-lg-6  d-inline-flex justify-content-between">
+        <div class="d-flex">
+            <h4 class="h4 mt-5 mb-3">Submit Information</h4>
+        </div>
+        <div class="d-flex">
+            <button class="btn btn-outline-info mt-5 mb-3 ms-auto backBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                     height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                </svg>Back
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-10 col-md-8 col-lg-6 rounded mb-3" style="box-shadow: 2px 2px 20px rgb(179, 177, 177);">
+        <form asp-action="AdminCreateReq" asp-controller="Admin" enctype="multipart/form-data">
+            <div class="container-fluid">
+                <div class="row">
+                    <h6 class="h6 py-3">Patient</h6>
+@*                  
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="Patient Notes" id="patientNotes" 
+                                  style="height: 15vh;" readonly></textarea>
+                        <label class="text-muted floating-label ms-2">
+                            Patient Notes
+                        </label>
+                    </div> *@
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="fname" placeholder="First Name" asp-for="Firstname" >
+                            <label class="text-muted floating-label">First Name</label>
+                            <span asp-validation-for="Firstname" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="lname" placeholder="Last Name" asp-for="Lastname"  >
+                            <label class="text-muted floating-label">Last Name</label>
+                            <span asp-validation-for="Lastname" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="tel" id="phone" class="input w-100 h-100 phone mb-2" data-error-msg-id="errorMsg1" asp-for="Phone" >
+                        @* <span asp-validation-for="Phone" class="text-danger" id="errorMsg1"></span> *@
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="patientEmail" asp-for="Email"
+                                   placeholder="name@example.com" required >
+                            <label class="text-muted floating-label">Email address</label>
+                            @* <span asp-validation-for="Email" class="text-danger"></span> *@
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="dob" placeholder="Date of Birth" asp-for="DOB"  >
+                            <label class="text-muted floating-label">Date of Birth</label>
+                            <span asp-validation-for="DOB" class="text-danger" id="dobSpan"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="h6 py-3">Location</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" asp-for="Street" class="form-control" id="street" placeholder="Street">
+                            <label asp-for="Street" class="text-muted floating-label">Street</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" asp-for="City" class="form-control" id="city" placeholder="City">
+                            <label asp-for="City" class="text-muted floating-label">City</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select class="form-select border text-muted mb-2 regions" id="state" aria-label="Default select example" asp-for="State">
+                            </select>
+                            <label for="state">State</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" asp-for="Zip" class="form-control" id="zip" placeholder="Zip Code">
+                            <label asp-for="Zip" class="text-muted floating-label">Zip Code</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" asp-for="RoomNum" class="form-control" id="roomNum"
+                                   placeholder="Room #/ Suite (Optional)">
+                            <label asp-for="RoomNum" class="text-muted floating-label">Room #/ Suite (Optional)</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-floating mb-3">
+                        <button class=" btn btn-outline-info p-3 ">
+                            <span class="fs-6">Verify</span>
+                        </button>
+                        <button class=" btn btn-outline-info p-3 ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                            </svg>
+                            <span class="fs-6"> Map</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="Notes" id="notes" asp-for="Notes"
+                                  style="height: 15vh;" ></textarea>
+                        <label class="text-muted floating-label ms-2">
+                            Notes
+                        </label>
+                    </div> 
+                </div>
+                <div class="row">
+                    <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
+                        <button class="btn btn-info me-md-2 text-white fw-medium" type="submit" >Save</button>
+                        <button class="btn btn-outline-info fw-medium " type="reset" >Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

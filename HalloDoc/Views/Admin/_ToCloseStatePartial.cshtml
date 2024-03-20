@@ -60,7 +60,7 @@
                         </td>
                         <td class="my-auto">@item.DOB</td>
                         <td class="my-auto">@item.Region</td>
-                        <td class="my-auto">--</td>
+                    <td class="my-auto">@item.PhysicianName</td>
                         <td class="my-auto"></td>
                         <td class="my-auto">@item.Address</td>
                         <td class="my-auto">
@@ -283,7 +283,18 @@
                                     <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
                                 </svg>
                             </button>
-                            <span class="text-muted"> Transfer Notes: </span><span>@item.Notes</span>
+                            <span class="text-muted"> Transfer Notes: </span><span>
+                                @{
+                                    var count = 1;
+                                }
+                                @foreach (var note in item.Notes)
+                                {
+                                    <span>@count) @note</span>
+
+                                    <br />
+                                    count++;
+                                }
+                            </span>
                         </h6>
                         <h6 class="w-100">
                             <button class="btn border-1 rounded-circle border-info">
@@ -301,7 +312,7 @@
                                     <path d="M4.5 0A2.5 2.5 0 0 0 2 2.5V14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2.5A2.5 2.5 0 0 0 11.5 0zM3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v10.795a4.2 4.2 0 0 0-.776-.492C11.392 12.387 10.063 12 8 12s-3.392.387-4.224.803a4.2 4.2 0 0 0-.776.492z" />
                                 </svg>
                             </button>
-                            <span class="text-muted"> Physician: </span><span>--</span>
+                            <span class="text-muted"> Physician: </span><span>@item.PhysicianName</span>
                         </h6>
                         <h6 class="w-100">
                             <button class="btn border-1 rounded-circle border-info">

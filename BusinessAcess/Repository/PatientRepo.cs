@@ -204,6 +204,7 @@ namespace BusinessLogic.Repository
             Request request = new();
             request.Requesttypeid = 2;
             //request.Userid = user.Userid;
+            request.Userid = userModel.Userid;
             request.Firstname = userModel.Firstname;
             request.Lastname = userModel.Lastname;
             request.Phonenumber = userModel.Mobile;

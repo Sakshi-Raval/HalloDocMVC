@@ -3,12 +3,12 @@
 @{
     ViewData["Title"] = "My Profile";
     var adminRegionsJson = JsonConvert.SerializeObject(Model.AdminRegions);    
+    var adminRegionIdJson = JsonConvert.SerializeObject(Model.AdminRegions);
 }
 <script>
     $(document).ready(function () {
         $('#btnSubmitRow1').hide();
         $('#btnSubmitRow2').hide();
-
         $.ajax({
             url: '/Admin/RegionResults',
             type: 'GET',
@@ -68,13 +68,22 @@
             $('#email').val('@Model.Email').prop('disabled',true);
             $('#confEmail').val('@Model.Email').prop('disabled',true);
             $('#phoneAdministrator').val('@Model.Phonenumber').prop('disabled',true);
+
+            var adminRegionIds = @Html.Raw(adminRegionIdJson);
+            console.log(adminRegionIds);
             $('.adminRegions').each(function (index, checkbox) {
-                var regionid = checkbox.val();
-                if (adminRegions.indexOf(regionid) !== -1) {
-                    checkbox.prop('checked', true);
+                var regionid = parseInt($(checkbox).val());
+                console.log(regionid);
+                var ischecked = adminRegionIds.includes(regionid);
+                console.log(ischecked);
+                if (ischecked) {
+                    $(checkbox).prop('checked', true);
                 }
+                else{
+                    $(checkbox).prop('checked', false);
+                }
+                $(checkbox).prop('disabled', true);
             });
-            $('.adminRegions').prop('disabled',true);//make changes here
         });
 
         $('#btnEdit2').on('click', function () {
@@ -205,7 +214,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="password" class="form-control" name="adminPassword" id="adminPassword" placeholder="Password">
+                            <input type="password" class="form-control" name="adminPassword" id="adminPassword" placeholder="Password" required>
                             <label class="text-muted floating-label">Password</label>
                             @* <span asp-validation-for="Firstname" class="text-danger"></span> *@
                         </div>
