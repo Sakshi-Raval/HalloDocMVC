@@ -24,7 +24,7 @@ namespace BusinessLogic.Repository
             _context = context;
         }
 
-        public List<PatientsListViewModel> GetPatients(string SearchValue, string districtSelect, string selectedFilter, int[] currentStatus)
+        public List<PatientsListViewModel> GetPatients(string SearchValue, string districtSelect, int[] checkedFilter, int[] currentStatus)
         {
             var newPatientsViewModel = (from req in _context.Requests
                                         join reqClient in _context.Requestclients
@@ -56,7 +56,7 @@ namespace BusinessLogic.Repository
                                         ).Where(item => (currentStatus.Any(x=>x==item.Status)) 
                                         && (string.IsNullOrEmpty(SearchValue) || item.Name.ToLower().Contains(SearchValue.ToLower()))
                                         && (string.IsNullOrEmpty(districtSelect) || item.RegionId == districtSelect) 
-                                        && (string.IsNullOrEmpty(selectedFilter) || item.RequestTypeId == int.Parse(selectedFilter))).ToList();
+                                        && (checkedFilter.Length==0 || checkedFilter.Any(x=>x==item.RequestTypeId))).ToList();
           
             return newPatientsViewModel;
 

@@ -178,6 +178,16 @@ function retrieveStorageDetails() {
     }
 }
 
+function updateCheckedValues() {
+    var checkedValues = [];
+    $(".filter-options:checked").not("#allCheck").each(function () {
+        checkedValues.push($(this).val());
+    });
+    console.log(checkedValues);
+    return checkedValues;
+}
+
+
 var pagesize = 5;
 var currentpage = 1;
 var currentStatus = [1];
@@ -191,12 +201,35 @@ function FilteredPartial(currentPartialName, currentStatus,pagesize,currentpage)
         if (response.sessionExists) {
             var SearchText = $('#searchInput').val();
             var districtSelect = $('#districtSelect').find(':selected').data('value');
-            var selectedFilter = $('.active-filter').data('value');
+            var checkedValues = [];
+            // Iterate over checked checkboxes
+            $(".filter-options:checked").not("#allCheck").each(function () {
+                checkedValues.push($(this).val());
+            });
+
+            // If "All" checkbox is checked, empty the checkedValues array
+            if ($("#allCheck").prop("checked")) {
+                checkedValues = [];
+            }
+            else {
+                $(".filter-options:checked").each(function () {
+                    checkedValues.push($(this).val());
+                });
+            }
+
+            // Perform table filtering based on checkedValues
+            // Implement your table filtering logic here
+
+            // For example, you can log the checked values
+            console.log("Checked values:", checkedValues);
+            // Print the array of checked values
+            console.log("Checked values:", checkedValues);
+
 
             var dataToSend = {
                 SearchValue: SearchText,
                 districtSelect: districtSelect,
-                selectedFilter: selectedFilter,
+                checkedFilter: checkedValues,
                 currentPartialName: currentPartialName,
                 currentStatus: currentStatus,
                 pagesize: pagesize,
@@ -243,11 +276,22 @@ function NewStateLoad() {
         FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
     });
     $('.filter-options').on('click', function () {
-        $('.filter-options').removeClass('active-filter');
-        $(this).addClass('active-filter');
+        var anyChecked = $(".filter-options").is(":checked");
+
+        // If any other checkbox is checked, uncheck #allCheck
+        if (anyChecked) {
+            $("#allCheck").prop("checked", false);
+        }
         FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
     });
-   
+    $("#allCheck").on('click', function () {
+        // If #allCheck is checked, uncheck all other checkboxes
+        if ($(this).is(":checked")) {
+            $(".filter-options").prop("checked", false);
+            FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+        }
+    });
+    
 }
 
 function PendingStateLoad() {
@@ -273,11 +317,20 @@ function PendingStateLoad() {
 
     });
     $('.filter-options').on('click', function () {
-        $('.filter-options').removeClass('active-filter');
-        $(this).addClass('active-filter');
+        var anyChecked = $(".filter-options").is(":checked");
+
+        // If any other checkbox is checked, uncheck #allCheck
+        if (anyChecked) {
+            $("#allCheck").prop("checked", false);
+        }
         FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
-
-
+    });
+    $("#allCheck").on('click', function () {
+        // If #allCheck is checked, uncheck all other checkboxes
+        if ($(this).is(":checked")) {
+            $(".filter-options").prop("checked", false);
+            FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+        }
     });
 }
 function ToCloseStateLoad() {
@@ -303,11 +356,20 @@ function ToCloseStateLoad() {
 
     });
     $('.filter-options').on('click', function () {
-        $('.filter-options').removeClass('active-filter');
-        $(this).addClass('active-filter');
+        var anyChecked = $(".filter-options").is(":checked");
+
+        // If any other checkbox is checked, uncheck #allCheck
+        if (anyChecked) {
+            $("#allCheck").prop("checked", false);
+        }
         FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
-
-
+    });
+    $("#allCheck").on('click', function () {
+        // If #allCheck is checked, uncheck all other checkboxes
+        if ($(this).is(":checked")) {
+            $(".filter-options").prop("checked", false);
+            FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+        }
     });
 }
 function ActiveStateLoad() {
@@ -333,11 +395,20 @@ function ActiveStateLoad() {
 
     });
     $('.filter-options').on('click', function () {
-        $('.filter-options').removeClass('active-filter');
-        $(this).addClass('active-filter');
+        var anyChecked = $(".filter-options").is(":checked");
+
+        // If any other checkbox is checked, uncheck #allCheck
+        if (anyChecked) {
+            $("#allCheck").prop("checked", false);
+        }
         FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
-
-
+    });
+    $("#allCheck").on('click', function () {
+        // If #allCheck is checked, uncheck all other checkboxes
+        if ($(this).is(":checked")) {
+            $(".filter-options").prop("checked", false);
+            FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+        }
     });
 }
 function ConcludeStateLoad() {
@@ -363,11 +434,20 @@ function ConcludeStateLoad() {
 
     });
     $('.filter-options').on('click', function () {
-        $('.filter-options').removeClass('active-filter');
-        $(this).addClass('active-filter');
+        var anyChecked = $(".filter-options").is(":checked");
+
+        // If any other checkbox is checked, uncheck #allCheck
+        if (anyChecked) {
+            $("#allCheck").prop("checked", false);
+        }
         FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
-
-
+    });
+    $("#allCheck").on('click', function () {
+        // If #allCheck is checked, uncheck all other checkboxes
+        if ($(this).is(":checked")) {
+            $(".filter-options").prop("checked", false);
+            FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+        }
     });
 }
 function UnpaidStateLoad() {
@@ -393,11 +473,20 @@ function UnpaidStateLoad() {
 
     });
     $('.filter-options').on('click', function () {
-        $('.filter-options').removeClass('active-filter');
-        $(this).addClass('active-filter');
+        var anyChecked = $(".filter-options").is(":checked");
+
+        // If any other checkbox is checked, uncheck #allCheck
+        if (anyChecked) {
+            $("#allCheck").prop("checked", false);
+        }
         FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
-
-
+    });
+    $("#allCheck").on('click', function () {
+        // If #allCheck is checked, uncheck all other checkboxes
+        if ($(this).is(":checked")) {
+            $(".filter-options").prop("checked", false);
+            FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
+        }
     });
 }
 

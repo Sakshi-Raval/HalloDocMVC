@@ -1,6 +1,9 @@
 *{
     font-family: poppins;
 }
+.filter-btn:active {
+    border: 1px solid #040f13 !important;
+}
 .phone:read-only, .phone:disabled {
     background-color: #E9ECEF !important;
 }

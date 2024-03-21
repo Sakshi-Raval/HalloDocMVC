@@ -113,12 +113,12 @@ namespace HalloDoc.Controllers
             return NotFound();
         }
 
-        public IActionResult LoadPartialView(string SearchValue, string districtSelect, string selectedFilter, string currentPartialName, int[] currentStatus, int pagesize = 5, int currentpage = 1)
+        public IActionResult LoadPartialView(string SearchValue, string districtSelect, int[] checkedFilter, string currentPartialName, int[] currentStatus, int pagesize = 5, int currentpage = 1)
         {
-            var newPatientsViewModel = _admin.GetPatients(SearchValue, districtSelect, selectedFilter, currentStatus);
+            var newPatientsViewModel = _admin.GetPatients(SearchValue, districtSelect, checkedFilter, currentStatus);
             int totalItems = newPatientsViewModel.Count();
             int totalPages = (int)Math.Ceiling((double)totalItems / pagesize);
-            if (SearchValue != null || districtSelect != null || selectedFilter != null)
+            if (SearchValue != null || districtSelect != null || checkedFilter.Length!=0)
             {
                 if (totalPages <= 1)
                 {
@@ -510,7 +510,8 @@ namespace HalloDoc.Controllers
         public IActionResult ExportAllToExcel()
         {
             int[] allStatus = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            List<PatientsListViewModel> patientList = _admin.GetPatients("", "", "", allStatus);
+            int[] empty = new int[0];
+            List<PatientsListViewModel> patientList = _admin.GetPatients("", "",empty , allStatus);
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage())
@@ -544,12 +545,19 @@ namespace HalloDoc.Controllers
         {
             List<int> status = new();
             string[] strStatuses = currentStatus.Split(',');
+            List<int> ints = new List<int>();
+            string[] strings = btnFilter.Split(",");
             foreach (string strStatus in strStatuses)
             {
                 status.Add(int.Parse(strStatus));
             }
+            foreach (string strFilter in strings)
+            {
+                ints.Add(int.Parse(strFilter));
+            }
             int[] statusArray = status.ToArray();
-            List<PatientsListViewModel> patientList = _admin.GetPatients(searchFilter, districtFilter, btnFilter, statusArray);
+            int[] btnFilterArray= ints.ToArray();
+            List<PatientsListViewModel> patientList = _admin.GetPatients(searchFilter, districtFilter, btnFilterArray, statusArray);
             var paginatedData = patientList.Skip((currentpage - 1) * pagesize).Take(pagesize).ToList();
             if (paginatedData != null)
             {

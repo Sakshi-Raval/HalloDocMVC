@@ -176,24 +176,17 @@
                 $('#currentStatus').val(currentStatus);
                 var searchFilter = $('#searchInput').val();
                 var districtFilter = $('#districtSelect').find(':selected').data('value');
-                var btnFilter = $('.active-filter').data('value');
+                var btnFilter = updateCheckedValues();
+                console.log(btnFilter);
                 $('#searchFilter').val(searchFilter);
                 $('#districtFilter').val(districtFilter);
                 $('#btnFilter').val(btnFilter);
                 console.log(typeof currentStatus);
                 this.submit();
             });
-            $('.filter-options').on('click', function () {
-                var checked = [];
-            $('.filter-options:checked').each(function(){
-                checked.push($(this).val());
-            });
-            console.log(checked);
-           
-            });
 
-
-
+            $("#allCheck").prop("checked", true);
+            
         });
 
     </script>
@@ -500,62 +493,87 @@
                 </div>
             </div>
             @* <div class="d-flex text-wrap col-lg-6 col-12 ms-lg-auto filters">
-                <button class="active-filter filter-options p-0 me-sm-2 me-0 align-items-center rounded btn d-none d-md-inline" data-value="">
-                    <span>All</span>
-                </button>
+            <button class="active-filter filter-options p-0 me-sm-2 me-0 align-items-center rounded btn d-none d-md-inline" data-value="">
+            <span>All</span>
+            </button>
 
-                <button class="filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap btn" data-value="1">
-                    <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
-                        <circle fill="#5fbc61" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
-                    </svg>
-                    <span class="ms-1">Patient</span>
-                </button>
+            <button class="filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap btn" data-value="1">
+            <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
+            <circle fill="#5fbc61" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+            </svg>
+            <span class="ms-1">Patient</span>
+            </button>
 
-                <button class="filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap btn" data-value="2">
-                    <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
-                        <circle fill="#ed9124" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
-                    </svg>
-                    <span class="ms-1">Family/Friend</span>
-                </button>
-                <button class="filter-options rounded p-0 me-sm-2 me-0 align-items-center btn" data-value="4">
-                    <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
-                        <circle fill="#e26277" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
-                    </svg>
-                    <span class="ms-1">Business</span>
-                </button>
-                <button class="filter-options rounded p-0 me-sm-2 me-0 align-items-center btn" data-value="3">
-                    <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
-                        <circle fill="#007fc6" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
-                    </svg>
-                    <span class="ms-1">Concierge</span>
-                </button>
-                <button class="filter-options rounded p-0 me-sm-2 me-0 align-items-center btn">
-                    <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
-                        <circle fill="#9966cd" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
-                    </svg>
-                    <span class="">VIP</span>
-                </button>
+            <button class="filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap btn" data-value="2">
+            <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
+            <circle fill="#ed9124" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+            </svg>
+            <span class="ms-1">Family/Friend</span>
+            </button>
+            <button class="filter-options rounded p-0 me-sm-2 me-0 align-items-center btn" data-value="4">
+            <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
+            <circle fill="#e26277" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+            </svg>
+            <span class="ms-1">Business</span>
+            </button>
+            <button class="filter-options rounded p-0 me-sm-2 me-0 align-items-center btn" data-value="3">
+            <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
+            <circle fill="#007fc6" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+            </svg>
+            <span class="ms-1">Concierge</span>
+            </button>
+            <button class="filter-options rounded p-0 me-sm-2 me-0 align-items-center btn">
+            <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
+            <circle fill="#9966cd" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+            </svg>
+            <span class="">VIP</span>
+            </button>
             </div> *@
 
             <div class="d-flex text-wrap col-lg-6 col-12 ms-lg-auto filters">
 
-                <input type="checkbox" class="btn-check active-filter filter-options p-0 me-sm-2 me-0 align-items-center rounded btn d-none d-md-inline" id="allCheck" value="" checked autocomplete="off">
-                <label class="btn" for="allCheck">All</label>
+                <input type="checkbox" class="btn-check p-0 me-sm-2 me-0 align-items-center rounded d-none d-md-inline" id="allCheck" autocomplete="off">
+                <label class="btn filter-btn" for="allCheck">All</label>
 
-                <input type="checkbox" class="btn-check filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap btn" id="patient" value="1" name="filter" autocomplete="off">
-                <label class="btn" for="patient">Patient</label>
+                <input type="checkbox" class="btn-check filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap " id="patient" value="1" name="filter" autocomplete="off">
+                <label class="btn filter-btn" for="patient">
+                    <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
+                        <circle fill="#5fbc61" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+                    </svg>
+                    <span class="ms-1">Patient</span>
+                </label>
 
-                <input type="checkbox" class="btn-check filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap btn" id="family" value="2" name="filter" autocomplete="off">
-                <label class="btn" for="family">Family/Friend</label>
+                <input type="checkbox" class="btn-check filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap " id="family" value="2" name="filter" autocomplete="off">
+                <label class="btn filter-btn" for="family">
+                    <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
+                        <circle fill="#ed9124" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+                    </svg>
+                    <span class="ms-1">Family/Friend</span>
+                </label>
 
-                <input type="checkbox" class="btn-check filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap btn" id="business" value="4" name="filter" autocomplete="off">
-                <label class="btn" for="business">Business</label>
+                <input type="checkbox" class="btn-check filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap " id="business" value="4" name="filter" autocomplete="off">
+                <label class="btn filter-btn" for="business">
+                    <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
+                        <circle fill="#e26277" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+                    </svg>
+                    <span class="ms-1">Business</span>
+                </label>
 
-                <input type="checkbox" class="btn-check filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap btn" id="concierge" value="3" name="filter" autocomplete="off">
-                <label class="btn" for="concierge">Concierge</label>
+                <input type="checkbox" class="btn-check filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap " id="concierge" value="3" name="filter" autocomplete="off">
+                <label class="btn filter-btn" for="concierge">
+                    <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
+                        <circle fill="#007fc6" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+                    </svg>
+                    <span class="ms-1">Concierge
+                </label>
 
-                <input type="checkbox" class="btn-check filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap btn" id="vip" value="" name="filter" autocomplete="off">
-                <label class="btn" for="vip">Vip</label>
+                @* <input type="checkbox" class="btn-check filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap " id="vip" name="filter" autocomplete="off">
+                <label class="btn filter-btn" for="vip"><svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
+                <circle fill="#9966cd" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+                </svg><svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
+                <circle fill="#9966cd" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
+                </svg>
+                <span class="">VIP</span></label> *@
 
             </div>
 
