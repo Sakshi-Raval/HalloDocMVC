@@ -50,6 +50,7 @@ namespace BusinessLogic.Repository
                                             RequestId = req.Requestid,
                                             Email = reqClient.Email ?? "",
                                             IsFinalize = _context.EncounterForms.Where(x => x.Requestid == req.Requestid).Select(x=>x.IsFinalize).FirstOrDefault(),
+                                            PhysicianId = req.Physicianid,
                                             PhysicianName = _context.Physicians.Where(x=>x.Physicianid==req.Physicianid).Select(x=>x.Firstname).FirstOrDefault() + " " + _context.Physicians.Where(x => x.Physicianid == req.Physicianid).Select(x => x.Firstname).FirstOrDefault() ?? "",
                                         }
                                         ).Where(item => (currentStatus.Any(x=>x==item.Status)) 
@@ -90,49 +91,56 @@ namespace BusinessLogic.Repository
             return caseViewModel;
 
         }
-        public List<NotesViewModel> ViewNotes(int requestid)
+        public NotesViewModel ViewNotes(int requestid)
         {
-            var leftJoin = from rn in _context.Requestnotes
-                           join rs in _context.Requeststatuslogs on rn.Requestid equals rs.Requestid into rsJoin
-                           from rs in rsJoin.DefaultIfEmpty()
-                           join a in _context.Admins on rs.Adminid equals a.Adminid into aJoin
-                           from a in aJoin.DefaultIfEmpty()
-                           join p in _context.Physicians on rs.Physicianid equals p.Physicianid into pJoin
-                           from p in pJoin.DefaultIfEmpty()
-                           where rn.Requestid == requestid
-                           select new NotesViewModel
-                           {
-                               TransToPhysicianId = rs.Transtophysicianid,
-                               Status = rs.Status,
-                               AdminName = a.Firstname ?? "" + " " + a.Lastname ?? "",
-                               PhysicianName = p.Firstname ?? "" + " " + p.Lastname ?? "",
-                               AdminNotes = rn.Adminnotes,
-                               PhysicianNotes = rn.Physiciannotes,
-                               TransferNotes = rs.Notes,
-                               Cancelcount = _context.Requeststatuslogs.Count(item => item.Status == 3 || item.Status == 7)
-                           };
+            //var leftJoin = from rn in _context.Requestnotes
+            //               join rs in _context.Requeststatuslogs on rn.Requestid equals rs.Requestid into rsJoin
+            //               from rs in rsJoin.DefaultIfEmpty()
+            //               join a in _context.Admins on rs.Adminid equals a.Adminid into aJoin
+            //               from a in aJoin.DefaultIfEmpty()
+            //               join p in _context.Physicians on rs.Physicianid equals p.Physicianid into pJoin
+            //               from p in pJoin.DefaultIfEmpty()
+            //               where rn.Requestid == requestid
+            //               select new NotesViewModel
+            //               {
+            //                   TransToPhysicianId = rs.Transtophysicianid,
+            //                   Status = rs.Status,
+            //                   AdminName = a.Firstname ?? "" + " " + a.Lastname ?? "",
+            //                   PhysicianName = p.Firstname ?? "" + " " + p.Lastname ?? "",
+            //                   AdminNotes = rn.Adminnotes,
+            //                   PhysicianNotes = rn.Physiciannotes,
+            //                   TransferNotes = rs.Notes,
+            //                   Cancelcount = _context.Requeststatuslogs.Count(item => item.Status == 3 || item.Status == 7)
+            //               };
 
-            var rightJoin = from rs in _context.Requeststatuslogs
-                            join rn in _context.Requestnotes on rs.Requestid equals rn.Requestid into rnJoin
-                            from rn in rnJoin.DefaultIfEmpty()
-                            join a in _context.Admins on rs.Adminid equals a.Adminid into aJoin
-                            from a in aJoin.DefaultIfEmpty()
-                            join p in _context.Physicians on rs.Physicianid equals p.Physicianid into pJoin
-                            from p in pJoin.DefaultIfEmpty()
-                            where rs.Requestid == requestid // Filter only records not in left join result
-                            select new NotesViewModel
-                            {
-                                TransToPhysicianId = rs.Transtophysicianid,
-                                Status = rs.Status,
-                                AdminName = a.Firstname ?? "" + " " + a.Lastname ?? "",
-                                PhysicianName = p.Firstname ?? "" + " " + p.Lastname ?? "",
-                                AdminNotes = rn.Adminnotes,
-                                PhysicianNotes = rn.Physiciannotes,
-                                TransferNotes = rs.Notes,
-                                Cancelcount = _context.Requeststatuslogs.Count(item => item.Status == 3 || item.Status == 7)
-                            };
-            var result = leftJoin.Union(rightJoin).ToList();
-            return result;
+            //var rightJoin = from rs in _context.Requeststatuslogs
+            //                join rn in _context.Requestnotes on rs.Requestid equals rn.Requestid into rnJoin
+            //                from rn in rnJoin.DefaultIfEmpty()
+            //                join a in _context.Admins on rs.Adminid equals a.Adminid into aJoin
+            //                from a in aJoin.DefaultIfEmpty()
+            //                join p in _context.Physicians on rs.Physicianid equals p.Physicianid into pJoin
+            //                from p in pJoin.DefaultIfEmpty()
+            //                where rs.Requestid == requestid // Filter only records not in left join result
+            //                select new NotesViewModel
+            //                {
+            //                    TransToPhysicianId = rs.Transtophysicianid,
+            //                    Status = rs.Status,
+            //                    AdminName = a.Firstname ?? "" + " " + a.Lastname ?? "",
+            //                    PhysicianName = p.Firstname ?? "" + " " + p.Lastname ?? "",
+            //                    AdminNotes = rn.Adminnotes,
+            //                    PhysicianNotes = rn.Physiciannotes,
+            //                    TransferNotes = rs.Notes,
+            //                    Cancelcount = _context.Requeststatuslogs.Count(item => item.Status == 3 || item.Status == 7)
+            //                };
+            //var result = leftJoin.Union(rightJoin).ToList();
+            //return result;
+            Request request = _context.Requests.FirstOrDefault(x => x.Requestid == requestid);
+            NotesViewModel notesViewModel = new();
+            notesViewModel.TransferNotes = _context.Requeststatuslogs.Where(x=>x.Requestid == requestid && x.Status!=3 && x.Status!=7).OrderByDescending(x=>x.Createddate).Select(x=>x.Notes).ToList();
+            notesViewModel.AdminNotes = _context.Requestnotes.Where(x => x.Requestid == requestid).OrderByDescending(x => x.Createddate).Select(x => x.Adminnotes).ToList();
+            notesViewModel.AdminCancelNotes = _context.Requeststatuslogs.Where(x => x.Requestid == requestid && x.Status == 3).OrderByDescending(x => x.Createddate).Select(x => x.Notes).ToList();
+            notesViewModel.PatientCancelNotes= _context.Requeststatuslogs.Where(x => x.Requestid == requestid && x.Status == 7).OrderByDescending(x => x.Createddate).Select(x => x.Notes).ToList();
+            return notesViewModel;
 
         }
         public void CancelCase(int requestid, string cancelNotes, string reasons)

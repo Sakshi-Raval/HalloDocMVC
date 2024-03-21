@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 using System.Web.Mvc;
 
 namespace BusinessLogic.Repository
@@ -18,7 +19,8 @@ namespace BusinessLogic.Repository
     {
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public PatientRepo(ApplicationDbContext context, IHostingEnvironment hostingEnvironment) {
+        public PatientRepo(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
+        {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
         }
@@ -36,60 +38,58 @@ namespace BusinessLogic.Repository
             //             Status = req.Status,
             //             DocumentCount = fileGroup.Count(),
             //        });
+            bool[] bitValues = { true };
+            BitArray bits = new BitArray(bitValues);
             var medicalHistoryViewModel = (from req in _context.Requests
                                            join reqFile in _context.Requestwisefiles
-                                           on req.Requestid equals reqFile.Requestid into reqFilesGroup
+                                               on req.Requestid equals reqFile.Requestid into reqFilesGroup
                                            from reqFile in reqFilesGroup.DefaultIfEmpty()
                                            where req.Email == email
-                                           group reqFile by new
+                                           group new { req, reqFile } by new
                                            {
                                                req.Requestid,
                                                req.Createddate,
                                                req.Status,
-
                                            } into reqGroup
                                            orderby reqGroup.Key.Createddate descending
                                            select new MedicalHistoryViewModel
                                            {
                                                CreatedDate = reqGroup.Key.Createddate.ToString("MMM dd, yyyy"),
                                                Status = reqGroup.Key.Status,
-                                               DocumentCount = reqGroup.Count(r=>r!=null),
+                                               DocumentCount = reqGroup.Count(r => r.reqFile != null && r.reqFile.Isdeleted != bits),
                                                requestid = reqGroup.Key.Requestid
-                                               
-                                           }
-                                          );
+                                           });
             return (medicalHistoryViewModel.ToList());
 
-            
+
         }
 
         public List<ViewDocumentsViewModel> GetDocuments(int requestId)
         {
-            bool[] bitValues = { false };
+            bool[] bitValues = { true };
             BitArray bits = new BitArray(bitValues);
             return ((from reqFile in _context.Requestwisefiles
                      join req in _context.Requests
                      on reqFile.Requestid equals req.Requestid
-                     where req.Requestid == requestId && (reqFile.Isdeleted == bits || reqFile.Isdeleted == null)
-                    select new ViewDocumentsViewModel
+                     where req.Requestid == requestId && (reqFile.Isdeleted != bits)
+                     select new ViewDocumentsViewModel
                      {
                          Filename = reqFile.Filename,
                          UploaderName = string.Concat(req.Firstname, ' ', req.Lastname),
                          CreatedDate = reqFile.Createddate.Date.ToString("MMM dd, yyyy"),
-                    }).ToList());
+                     }).ToList());
         }
 
         public User UpdateUser(UserProfileViewModel model, string email)
         {
-            
-                User user = _context.Users.Where(x => x.Email == email).FirstOrDefault();
-                user.Firstname = model.Firstname;
-                user.Lastname = model.Lastname;
-          
-                user.Mobile = model.Phone;
-                user.Street = model.Street;
-                user.City = model.City;
-                user.State = model.State;
+            User user = _context.Users.Where(x => x.Email == email).FirstOrDefault();
+            user.Firstname = model.Firstname;
+            user.Lastname = model.Lastname;
+
+            user.Mobile = model.Phone;
+            user.Street = model.Street;
+            user.City = model.City;
+            user.State = model.State;
             if (model.State != null)
             {
                 if (model.State.ToLower() == "district of columbia")
@@ -110,24 +110,47 @@ namespace BusinessLogic.Repository
                 }
             }
             user.Zipcode = model.Zip;
-                user.Intdate = model.DOB.Day;
-                user.Strmonth = model.DOB.Month.ToString();
-                user.Intyear = model.DOB.Year;
-                user.Modifieddate = DateTime.Now;
-                user.Modifiedby = user.Aspnetuserid;
-                _context.Update(user);
-                _context.SaveChanges();
+            user.Intdate = model.DOB.Day;
+            user.Strmonth = model.DOB.Month.ToString();
+            user.Intyear = model.DOB.Year;
+            user.Modifieddate = DateTime.Now;
+            user.Modifiedby = user.Aspnetuserid;
+            _context.Update(user);
+            _context.SaveChanges();
 
-                Aspnetuser aspnetuser = _context.Aspnetusers.Where(x=>x.Email==email).FirstOrDefault();
-                aspnetuser.Email = email;
-                aspnetuser.Modifieddate = DateTime.Now;
-                aspnetuser.Phonenumber = model.Phone;
-                _context.Update(aspnetuser);
-                _context.SaveChanges();
+            Aspnetuser aspnetuser = _context.Aspnetusers.Where(x => x.Email == email).FirstOrDefault();
+            aspnetuser.Email = email;
+            aspnetuser.Username = email;
+            aspnetuser.Modifieddate = DateTime.Now;
+            aspnetuser.Phonenumber = model.Phone;
+            _context.Update(aspnetuser);
+            _context.SaveChanges();
 
-             
-            return user;         
-           
+            return user;
+
+        }
+
+        public UserProfileViewModel UserProfile(User user)
+        {
+            UserProfileViewModel userModel = new();
+
+            userModel.Firstname = user.Firstname;
+            userModel.Lastname = user.Lastname ?? "";
+            if (user.Intyear != null && user.Strmonth != null && user.Intdate != null)
+            {
+                userModel.DOB = new DateOnly((int)user.Intyear, int.Parse(user.Strmonth), (int)user.Intdate);
+            }
+            else
+            {
+                userModel.DOB = new DateOnly();
+            }
+            userModel.Email = user.Email ?? "";
+            userModel.Phone = user.Mobile ?? "";
+            userModel.Street = user.Street ?? "";
+            userModel.City = user.City ?? "";
+            userModel.State = user.State ?? "";
+            userModel.Zip = user.Zipcode ?? "";
+            return userModel;
         }
 
         public void SubmitReqMe(PatientRequestViewModel model, int userid)
@@ -159,7 +182,7 @@ namespace BusinessLogic.Repository
             requestclient.Street = model.Street;
             requestclient.State = model.State;
             var id = _context.Users.Where(x => x.Userid == userid).FirstOrDefault();
-            if (id!=null && id.Regionid!=null)
+            if (id != null && id.Regionid != null)
             {
                 requestclient.Regionid = id.Regionid;
             }
@@ -292,7 +315,7 @@ namespace BusinessLogic.Repository
 
         public bool CheckEmail(string email)
         {
-            Aspnetuser aspnetuser=_context.Aspnetusers.FirstOrDefault(x=>x.Email==email);
+            Aspnetuser aspnetuser = _context.Aspnetusers.FirstOrDefault(x => x.Email == email);
             if (aspnetuser != null)
             {
                 return true;

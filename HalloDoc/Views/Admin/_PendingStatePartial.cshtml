@@ -29,8 +29,28 @@
 
         $('.regions').on('change', function () {
             var regionid = $(this).val();
+            var physicianid = $('#physicianId').val();
             console.log(regionid);
-            populatePhysicianDropdown(regionid);
+            $.ajax({
+                url: '/Admin/TransferPhysician',
+                type: 'GET',
+                data: { regionid: regionid ,
+                physicianid : physicianid},
+                success: function (data) {
+                    var dropdownData = data;
+                    console.log(dropdownData);
+                    var dropdown = $('.physician');
+                    dropdown.empty();
+                    dropdown.append($('<option>').text('--').val(''));
+                    dropdownData.forEach(function (item) {
+                        dropdown.append($('<option>').text(item.firstname + " " + item.lastname).val(item.physicianid));
+
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
         });
 
         //send agreement
@@ -84,6 +104,7 @@
                         <label for="physician">Select Physician</label>
                     </div>
                     <input type="number" id="RequestID" name="RequestID" hidden />
+                    <input type="number" id="physicianId" name="physicianId" hidden />
                     <div class="form-floating ">
                         <textarea class="form-control mt-2" name="desc" placeholder="Description" id="desc"
                                   style="height: 15vh;"></textarea>
@@ -235,17 +256,18 @@
                     </td>
                         <td class="my-auto">@item.Address</td>
                     <td class="my-auto">
-                        
-                        @{
-                            var count = 1;
-                        }
-                        @foreach(var note in item.Notes)
-                        {
-                            <span>@count) @note</span><br />
-                            count++;
-                        }
-                        
-                       
+                        <ol>
+                            @if (item.Notes != null)
+                            {
+                                foreach (var note in item.Notes)
+                                {
+                                    if (note != null)
+                                    {
+                                        <li>@note</li>
+                                    }
+                                }
+                            }
+                        </ol>
                         </td>
                         <td class="my-auto ">
                             
@@ -292,7 +314,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <button class="dropdown-item" onclick="transferCaseModal(this)" data-RequestID="@item.RequestId">
+                                    <button class="dropdown-item" onclick="transferCaseModal(this)" data-RequestID="@item.RequestId" data-physicianid="@item.PhysicianId">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard2-check me-3" viewBox="0 0 16 16">
                                             <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5z" />
                                             <path d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z" />
@@ -522,16 +544,18 @@
                                 </svg>
                             </button>
                             <span class="text-muted"> Transfer Notes: </span><span>
-                                @{
-                                    var count = 1;
-                                }
-                                @foreach (var note in item.Notes)
-                                {
-                                    <span>@count) @note</span>
-
-                                    <br />
-                                    count++;
-                                }
+                                <ol>
+                                    @if (item.Notes != null)
+                                    {
+                                        foreach (var note in item.Notes)
+                                        {
+                                            if (note != null)
+                                            {
+                                                <li>@note</li>
+                                            }
+                                        }
+                                    }
+                                </ol>
                             </span>
                         </h6>
                         <h6 class="w-100">
@@ -585,24 +609,47 @@
     </div>
 </div>
 
-@if (ViewBag.Count > 2)
-{
-    <div class="d-flex justify-content-center">
-        <div class="">
-            <nav id="pagination" aria-label="Page navigation ">
-                <ul class="pagination">
-                    @for (int b = 1; b <= ViewBag.TotalPages; b++)
+<div class="pb-3">
+    <nav id="pagination" aria-label="Page navigation">
+        <ul class="pagination justify-content-center mb-0">
+            @if (ViewBag.CurrentPage >= 1 && ViewBag.CurrentPage <= ViewBag.TotalPages)
+            {
+                int prevpage = Convert.ToInt32(ViewBag.CurrentPage) - 1;
+                int currpage = Convert.ToInt32(ViewBag.CurrentPage);
+                int nextpage = Convert.ToInt32(ViewBag.CurrentPage) + 1;
+                if (ViewBag.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" id="previous" data-page="@(prevpage)" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="visually-hidden">Previous</span>
+                        </a>
+                    </li>
+                }
+                for (int z = 0; z < 3; z++)
+                {
+                    if (currpage + z <= ViewBag.TotalPages)
                     {
-                        <li class="page-item @(b == ViewBag.CurrentPage ? "active" : "")">
-                            <a class="page-link" data-page="@b">@b</a>
+                        <li class="page-item">
+                            <a class="page-link" id="current_@z" data-page="@(currpage + z)" aria-label="Current">
+                                <span>@(ViewBag.CurrentPage + z)</span>
+                            </a>
                         </li>
                     }
-                </ul>
-            </nav>
-        </div>
-    </div>
-}
-
+                }
+                if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" id="next" data-page="@(nextpage)" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="visually-hidden">Next</span>
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
+</div>
 
 @* modal for send agreement *@
 <div class="modal fade" id="sendAgreementModal" tabindex="-1" aria-labelledby="sendAgreementModalLabel" aria-hidden="true">

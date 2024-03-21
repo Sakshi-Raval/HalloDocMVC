@@ -1,54 +1,70 @@
 ﻿@model UserProfileViewModel
 @{
     Layout = null;
-    var userModel = ViewBag.userModel as User;
+    // var userModel = ViewBag.userModel as User;
 }
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#btnSubmitRow').hide();
-
-            $('#fname').val('@userModel.Firstname').prop('disabled', true);
-            $('#lname').val('@userModel.Lastname').prop('disabled', true);
-            $('#phone').val('@userModel.Mobile').prop('disabled', true);
-            //$('#dob').val(bdate).prop('disabled', true);
-            $('#patientEmail').val('@userModel.Email').prop('disabled', true);
-            $('#street').val('@userModel.Street').prop('disabled', true);
-            $('#city').val('@userModel.City').prop('disabled', true);
-            $('#state').val('@userModel.State').prop('disabled', true);
-            $('#zip').val('@userModel.Zipcode').prop('disabled', true);
-        
+        $.ajax({
+            url: '/Patient/GetUserProfile',
+            type: 'POST',
+            success: function (response) {
+                console.log(response);
+                $('#fname').val(response.firstname).prop('readonly', true);
+                $('#lname').val(response.lastname).prop('readonly', true);
+                $('#phone').val(response.phone).prop('readonly', true);
+                $('#dob').val(response.dob).prop('readonly', true);
+                $('#patientEmail').val(response.email).prop('readonly', true);
+                $('#street').val(response.street).prop('readonly', true);
+                $('#city').val(response.city).prop('readonly', true);
+                $('#state').val(response.state).prop('readonly', true);
+                $('#zip').val(response.zip).prop('readonly', true);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error submitting form:', error);
+            }
+        });
        
 
         $('#btnEdit').on('click', function () {
             $(this).closest('#btnEditRow').hide();
             $('#btnSubmitRow').show();
-            $('#fname').prop('disabled', false);
-            $('#lname').prop('disabled', false);
-            $('#phone').prop('disabled', false);
-            $('#dob').prop('disabled', false);
-            $('#patientEmail').prop('disabled', false);
-            $('#street').prop('disabled', false);
-            $('#city').prop('disabled', false);
-            $('#state').prop('disabled', false);
-            $('#zip').prop('disabled', false);
-
+            $('#fname').prop('readonly', false);
+            $('#lname').prop('readonly', false);
+            $('#phone').prop('readonly', false);
+            $('#dob').prop('readonly', false);
+            $('#patientEmail').prop('readonly', false);
+            $('#street').prop('readonly', false);
+            $('#city').prop('readonly', false);
+            $('#state').prop('readonly', false);
+            $('#zip').prop('readonly', false);
         });
 
         $('#cancelBtn').on('click', function () {
             $('#btnSubmitRow').hide();
             $('#btnEditRow').show();
-            //var bdate = @userModel.Intyear.ToString() + "-" + @userModel.Strmonth + "-" + @userModel.Intdate.ToString();
-            $('#fname').val('@userModel.Firstname').prop('disabled', true);
-            $('#lname').val('@userModel.Lastname').prop('disabled', true);
-            $('#phone').val('@userModel.Mobile').prop('disabled', true);
-            //$('dob').val(bdate).prop('disabled', true);
-            $('#patientEmail').val('@userModel.Email').prop('disabled', true);
-            $('#street').val('@userModel.Street').prop('disabled', true);
-            $('#city').val('@userModel.City').prop('disabled', true);
-            $('#state').val('@userModel.State').prop('disabled', true);
-            $('#zip').val('@userModel.Zipcode').prop('disabled', true);
+            $.ajax({
+                url: '/Patient/GetUserProfile',
+                type: 'POST',
+                success: function (response) {
+                    console.log(response);
+                    $('#fname').val(response.firstname).prop('readonly', true);
+                    $('#lname').val(response.lastname).prop('readonly', true);
+                    $('#phone').val(response.phone).prop('readonly', true);
+                    $('#dob').val(response.dob).prop('readonly', true);
+                    $('#patientEmail').val(response.email).prop('readonly', true);
+                    $('#street').val(response.street).prop('readonly', true);
+                    $('#city').val(response.city).prop('readonly', true);
+                    $('#state').val(response.state).prop('readonly', true);
+                    $('#zip').val(response.zip).prop('readonly', true);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error submitting form:', error);
+                }
+            });
         });
     });
 
@@ -71,120 +87,120 @@
             </div>
         </div>
     </div>
-   
+
 
     <div class="row justify-content-center">
         <div class="col-10 rounded text-start" style=" box-shadow: 2px 2px 20px rgb(179, 177, 177)">
-        <form asp-action="_ProfilePartial" asp-controller="Patient">
-            <div class="row">
-                <h5 class="mt-4">General Information</h5>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="fname" asp-for="Firstname"
-                               placeholder="Firstname" >
-                        <label class="text-muted floating-label" for="fname">First Name</label>
-                    </div>
+            <form asp-action="ProfilePartial" asp-controller="Patient">
+                <div class="row">
+                    <h5 class="mt-4">General Information</h5>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="fname" asp-for="Firstname"
+                                   placeholder="Firstname">
+                            <label class="text-muted floating-label" for="fname">First Name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="lname" asp-for="Lastname"
-                               placeholder="Lastname" >
-                        <label class="text-muted floating-label" for="lname">Last Name</label>
+                                   placeholder="Lastname">
+                            <label class="text-muted floating-label" for="lname">Last Name</label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
                             <input type="date" class="form-control" id="dob" asp-for="DOB">
-                        <label class="text-muted floating-label" for="dob">Date of Birth</label>
+                            <label class="text-muted floating-label" for="dob">Date of Birth</label>
                             <span asp-validation-for="DOB" class="text-danger" id="dobSpan"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <h5 class="mt-4">Contact Information</h5>
-            </div>
-            <div class="row">
-                <div class="col-md-2 col-4">
-                    <div class="form-floating mb-3">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example" >
-                           
-                            <option value="1">Email</option>
-                            <option value="2" selected>Mobile</option>
+                <div class="row">
+                    <h5 class="mt-4">Contact Information</h5>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 col-4">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
 
-                        </select>
-                        <label for="floatingSelect" class="text-muted">Type</label>
+                                <option value="1">Email</option>
+                                <option value="2" selected>Mobile</option>
+
+                            </select>
+                            <label for="floatingSelect" class="text-muted">Type</label>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-4 col-8">
+                    <div class="col-md-4 col-8">
                         <input type="tel" id="phone" class="input w-100 h-100 phone" asp-for="Phone" data-error-msg-id="errorMsg1">
                         <span asp-validation-for="Phone" class="text-danger" id="errorMsg1"></span>
-                    
-                </div>
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
                             <input type="email" class="form-control" id="patientEmail" asp-for="Email"
-                               placeholder="name@example.com"  required> 
-                        <label class="text-muted floating-label" for="patientEmail">Email address</label>
+                                   placeholder="name@example.com" required>
+                            <label class="text-muted floating-label" for="patientEmail">Email address</label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <h5 class="mt-4">Location Information</h5>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
+                <div class="row">
+                    <h5 class="mt-4">Location Information</h5>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="street" asp-for="Street"
-                               placeholder="Street" >
-                        <label class="text-muted floating-label" for="street">Street</label>
+                                   placeholder="Street">
+                            <label class="text-muted floating-label" for="street">Street</label>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="city" asp-for="City"
-                               placeholder="City" >
-                        <label class="text-muted floating-label" for="city">City</label>
+                                   placeholder="City">
+                            <label class="text-muted floating-label" for="city">City</label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="state" asp-for="State" placeholder="State" >
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="state" asp-for="State" placeholder="State">
                             <label class="text-muted floating-label" for="state">State</label>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-4 col-6">
-                    <div class="form-floating mb-3">
+                    <div class="col-md-4 col-6">
+                        <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="zip" asp-for="Zip"
-                               placeholder="Zip Code" >
-                        <label class="text-muted floating-label" for="zip">Zip Code</label>
+                                   placeholder="Zip Code">
+                            <label class="text-muted floating-label" for="zip">Zip Code</label>
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-3">
+                        <button class="btn btn-outline-info" onclick='@Url.Action("https://maps.app.goo.gl/ESACrXuWD9ojL2CL9")' style="height:75%">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                                <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
+                                <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                            </svg>Map
+                        </button>
                     </div>
                 </div>
-                <div class="col-md-1 col-3">
-                    <button class="btn btn-outline-info" onclick='@Url.Action("https://maps.app.goo.gl/ESACrXuWD9ojL2CL9")' style="height:75%">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
-                            <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
-                            <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                        </svg>Map
-                    </button>
+                <div class="row" id="btnEditRow">
+                    <div class="d-grid gap-2 my-4 d-md-flex justify-content-md-end">
+                        <button class="btn btn-info me-md-2 text-white fw-medium my-2" type="button" id="btnEdit">Edit</button>
+                    </div>
                 </div>
-            </div>
-            <div class="row" id="btnEditRow">
-                <div class="d-grid gap-2 my-4 d-md-flex justify-content-md-end">
-                    <button class="btn btn-info me-md-2 text-white fw-medium my-2" type="button" id="btnEdit">Edit</button>
-                </div>
-            </div>
-            <div class="row" id="btnSubmitRow">
-                <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
-                    <button class="btn btn-info me-md-2 text-white fw-medium" type="submit">Submit</button>
+                <div class="row" id="btnSubmitRow">
+                    <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
+                        <button class="btn btn-info me-md-2 text-white fw-medium" type="submit">Submit</button>
                         <button class="btn btn-outline-info fw-medium link-info" type="button" id="cancelBtn">Cancel</button>
+                    </div>
                 </div>
-            </div>
             </form>
         </div>
     </div>

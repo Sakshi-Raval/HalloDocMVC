@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Web.Helpers;
 using System.Web.Razor.Generator;
 using BusinessLogic.Repository;
+using System.Net;
 
 namespace HalloDoc.Controllers
 {
@@ -32,11 +33,11 @@ namespace HalloDoc.Controllers
 
         public IActionResult PatientDashboard()
         {
-           
+
             var email = HttpContext.Session.GetString("Email");
             var medicalHistoryViewModels = _patient.GetRequestRecords(email);
-            var userModel = _context.Users.Where(u=>u.Email == email).FirstOrDefault();
-           
+            var userModel = _context.Users.Where(u => u.Email == email).FirstOrDefault();
+
             ViewBag.userModel = userModel;
             return View(medicalHistoryViewModels);
         }
@@ -48,7 +49,7 @@ namespace HalloDoc.Controllers
             var email = HttpContext.Session.GetString("Email");
             Request request = _context.Requests.Where(x => x.Requestid == ReqId).FirstOrDefault();
             Requestclient patient = _context.Requestclients.Where(x => x.Requestid == ReqId).FirstOrDefault();
-            ViewBag.PatientName = string.Concat(patient.Firstname,' ', patient.Lastname);
+            ViewBag.PatientName = string.Concat(patient.Firstname, ' ', patient.Lastname);
             ViewBag.ConfNum = request.Confirmationnumber;
 
             var viewDocumentsViewModel = _patient.GetDocuments(ReqId);
@@ -74,38 +75,63 @@ namespace HalloDoc.Controllers
                 return NotFound();
             }
         }
-        public IActionResult _ProfilePartial(UserProfileViewModel model)
+
+        public UserProfileViewModel GetUserProfile()
+        {
+            var email = HttpContext.Session.GetString("Email");
+           
+            var user = _context.Users.FirstOrDefault(x => x.Email == email);
+            if (user != null)
+            {
+                var userModel = _patient.UserProfile(user);
+                return userModel;
+            }
+            return new UserProfileViewModel();
+        }
+
+        [HttpGet]
+        public IActionResult ProfilePartial()
+        {
+            return PartialView("_ProfilePartial");
+        }
+
+        [HttpPost]
+        public IActionResult ProfilePartial(UserProfileViewModel model)
         {
             var email = HttpContext.Session.GetString("Email");
             if (ModelState.IsValid)
             {
-                var userModel = _patient.UpdateUser(model, email);
-                ViewBag.userModel = userModel;
-                TempData["UpdateMsg"] = "Updated successfully";
-                return View();
+                var user = _patient.UpdateUser(model, email);
+                var userModel = _patient.UserProfile(user);
+                if (email != model.Email)
+                {
+                    HttpContext.Session.SetString("Email", model.Email);
+                }
+                var newemail = HttpContext.Session.GetString("Email");
+                TempData["message"] = "Updated successfully";
+                return RedirectToAction("PatientDashboard", "Patient");
             }
-            return View();
+            return PartialView("_ProfilePartial");
         }
 
         [HttpGet]
         public IActionResult CreateRequestMe()
-            {
+        {
             var email = HttpContext.Session.GetString("Email");
             var userModel = _context.Users.Where(u => u.Email == email).FirstOrDefault();
             ViewBag.userModel = userModel;
-
             return View();
-        }    
+        }
         [HttpPost]
         public IActionResult CreateRequestMe(PatientRequestViewModel model)
-            {
+        {
             var email = HttpContext.Session.GetString("Email");
             var userModel = _context.Users.Where(u => u.Email == email).FirstOrDefault();
             ViewBag.userModel = userModel;
             if (ModelState.IsValid)
             {
                 _patient.SubmitReqMe(model, ViewBag.userModel.Userid);
-                return RedirectToAction("CreateRequestMe","Patient");
+                return RedirectToAction("CreateRequestMe", "Patient");
             }
             return View();
         }

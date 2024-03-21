@@ -223,6 +223,11 @@ namespace BusinessLogic.Repository
             request.Email = patientRequestViewModel.Email;
             request.Status = 1;
             request.Createddate = DateTime.Now;
+            var user = _context.Users.FirstOrDefault(x => x.Email == email);
+            if (user != null)
+            {
+                request.Userid = user.Userid;
+            }
             bool[] bitValues = { true };
             BitArray bits = new BitArray(bitValues);
             request.Isurgentemailsent = bits;

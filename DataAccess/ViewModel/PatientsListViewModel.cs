@@ -32,5 +32,6 @@ namespace DataAccess.ViewModel
         public string Email { get; set; }
         public bool IsFinalize { get; set; }
         public string? PhysicianName { get; set; }
+        public int? PhysicianId {  get; set; }
     }
 }

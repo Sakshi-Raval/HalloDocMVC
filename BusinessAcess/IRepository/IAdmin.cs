@@ -11,7 +11,7 @@ namespace BusinessLogic.IRepository
     {
         public List<PatientsListViewModel> GetPatients(string SearchValue, string districtSelect, string selectedFilter, int[] currentStatus);
         public CaseViewModel ViewCase(int requestid);
-        public List<NotesViewModel> ViewNotes(int requestid);
+        public NotesViewModel ViewNotes(int requestid);
         public void CancelCase(int requestid, string cancelNotes, string reasons);
         public void AssignCase(int regions, int physician, int requestid, string description);
         public void TransferCase(int regions, int physician, int RequestID, string desc);

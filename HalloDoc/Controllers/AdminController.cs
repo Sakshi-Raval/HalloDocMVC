@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using OfficeOpenXml;
 using Rotativa.AspNetCore;
 using System.Collections;
+using System.Drawing.Printing;
 using System.Net.Mail;
 using System.Reflection;
 
@@ -86,8 +87,10 @@ namespace HalloDoc.Controllers
             if (oldEmail != null)
             {
                 _admin.EditAdminDetails(oldEmail, firstname, lastname, email, phoneAdministrator, adminRegions);
-                HttpContext.Session.SetString("Email", email);
-                HttpContext.Session.SetString("Email", email);
+                if (oldEmail != email)
+                {
+                    HttpContext.Session.SetString("Email", email);
+                }
                 var newemail = HttpContext.Session.GetString("Email");
                 var username = string.Concat(firstname, ' ', lastname ?? "");
                 HttpContext.Session.SetString("username", username);
@@ -148,7 +151,12 @@ namespace HalloDoc.Controllers
             Requestnote requestnote = new Requestnote();
             requestnote.Requestid = requestid;
             requestnote.Adminnotes = additionalNotes;
-            requestnote.Createdby = "admin"; //change into admin name
+            var email = HttpContext.Session.GetString("Email");
+            Aspnetuser aspnetuser = _context.Aspnetusers.FirstOrDefault(x => x.Email == email);
+            if (aspnetuser != null)
+            {
+                requestnote.Createdby = aspnetuser.Id;
+            }
             requestnote.Createddate = DateTime.Now;
             _context.Add(requestnote);
             _context.SaveChanges();
@@ -278,6 +286,11 @@ namespace HalloDoc.Controllers
             return results;
         }
 
+        public List<Physician> TransferPhysician(int regionid,int physicianid)
+        {
+            List<Physician> results = _context.Physicians.Where(x => x.Regionid == regionid && x.Physicianid != physicianid).ToList();
+            return results;
+        }
 
         public List<Healthprofessionaltype> ProfessionResults()
         {
@@ -341,7 +354,10 @@ namespace HalloDoc.Controllers
         {
             ViewBag.Id = id;
             var patient = _context.Requestclients.Where(x => x.Requestid == id).FirstOrDefault();
-            ViewBag.Name = patient.Firstname + " " + patient.Lastname ?? "";
+            if (patient != null)
+            {
+                ViewBag.Name = patient.Firstname + " " + patient.Lastname ?? "";
+            }
             return View();
         }
 
@@ -349,7 +365,7 @@ namespace HalloDoc.Controllers
         {
             _admin.Agreed(id);
             //return RedirectToAction("ReviewAgreement","Admin", new {id = id});
-            return RedirectToAction("Login","Login");
+            return RedirectToAction("Login", "Login");
 
         }
 
@@ -365,7 +381,7 @@ namespace HalloDoc.Controllers
         public IActionResult CancelCaseByPatient(int requestid, string cancelNotes)
         {
             _admin.CancelCaseByPatient(requestid, cancelNotes);
-            return RedirectToAction("ReviewAgreement", "Admin", new { id = requestid });
+            return RedirectToAction("Login", "Login");
         }
 
         [HttpGet]
@@ -478,13 +494,17 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult AdminCreateReq(PatientRequestViewModel patientRequestViewModel)
         {
-            var email = HttpContext.Session.GetString("Email");
-            int requestid = _patientRequest.PatientRequestAdmin(patientRequestViewModel, email);
-            IUrlHelper urlHelper = Url;
-            string scheme = HttpContext.Request.Scheme;
-            _iOtherRequest.EmailSending(urlHelper, patientRequestViewModel.Email, requestid, scheme);
-            TempData["message"] = "Request Created";
-            return RedirectToAction("AdminCreateReq");
+            if (ModelState.IsValid)
+            {
+                var email = HttpContext.Session.GetString("Email");
+                int requestid = _patientRequest.PatientRequestAdmin(patientRequestViewModel, email);
+                IUrlHelper urlHelper = Url;
+                string scheme = HttpContext.Request.Scheme;
+                _iOtherRequest.EmailSending(urlHelper, patientRequestViewModel.Email, requestid, scheme);
+                TempData["message"] = "Request Created";
+                return RedirectToAction("AdminCreateReq");
+            }
+            return View("AdminCreateReq");
         }
 
         public IActionResult ExportAllToExcel()
@@ -520,10 +540,18 @@ namespace HalloDoc.Controllers
                 return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
             }
         }
-        public IActionResult ExportToExcel(string jsonData)
+        public IActionResult ExportToExcel(int currentpage, string currentPartialName, string currentStatus, string searchFilter, string districtFilter, string btnFilter, int pagesize = 5)
         {
-            List<PatientsListViewModel> patientList = JsonConvert.DeserializeObject<List<PatientsListViewModel>>(jsonData);
-            if (patientList != null)
+            List<int> status = new();
+            string[] strStatuses = currentStatus.Split(',');
+            foreach (string strStatus in strStatuses)
+            {
+                status.Add(int.Parse(strStatus));
+            }
+            int[] statusArray = status.ToArray();
+            List<PatientsListViewModel> patientList = _admin.GetPatients(searchFilter, districtFilter, btnFilter, statusArray);
+            var paginatedData = patientList.Skip((currentpage - 1) * pagesize).Take(pagesize).ToList();
+            if (paginatedData != null)
             {
 
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -536,11 +564,11 @@ namespace HalloDoc.Controllers
                     {
                         worksheet.Cells[1, i + 1].Value = properties[i].Name;
                     }
-                    for (int rowIndex = 0; rowIndex < patientList.Count; rowIndex++)
+                    for (int rowIndex = 0; rowIndex < paginatedData.Count; rowIndex++)
                     {
                         for (int colIndex = 0; colIndex < properties.Length; colIndex++)
                         {
-                            worksheet.Cells[rowIndex + 2, colIndex + 1].Value = properties[colIndex].GetValue(patientList[rowIndex]);
+                            worksheet.Cells[rowIndex + 2, colIndex + 1].Value = properties[colIndex].GetValue(paginatedData[rowIndex]);
                         }
                     }
                     //save excel package to a memory stream
@@ -548,7 +576,7 @@ namespace HalloDoc.Controllers
                     package.SaveAs(stream);
 
                     stream.Position = 0; //set it as 0 to ensure that it is read from the beginning
-                    string excelName = $"ExportAll_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
+                    string excelName = $"Export_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
 
                     //return excel file as downloadable file
                     return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
@@ -558,4 +586,3 @@ namespace HalloDoc.Controllers
         }
     }
 }
- 

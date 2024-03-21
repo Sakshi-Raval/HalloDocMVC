@@ -21,6 +21,7 @@ namespace BusinessLogic.IRepository
         public void SubmitReqElse(PatientRequestViewModel model, User userModel);
         public void FileUpload(IFormFile file, int requestId);
         public bool CheckEmail(string email);
+        public UserProfileViewModel UserProfile(User user);
 
     }
 }

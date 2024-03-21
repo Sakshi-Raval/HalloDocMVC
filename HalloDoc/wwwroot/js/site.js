@@ -236,21 +236,16 @@ function NewStateLoad() {
 
     $('#searchInput').on('input', function () {
         FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
-
     });
     $('#districtSelect').on('change', function () {
         console.log("dfsuig");
 
         FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
-
-
     });
     $('.filter-options').on('click', function () {
         $('.filter-options').removeClass('active-filter');
         $(this).addClass('active-filter');
         FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
-
-
     });
    
 }
@@ -528,7 +523,9 @@ function transferCaseModal(btn) {
     bsModal.show();
 
     const requestID = btn.getAttribute('data-RequestID');
+    const physicianId = btn.getAttribute('data-physicianid');
     document.getElementById('RequestID').value = requestID;
+    document.getElementById('physicianId').value = physicianId;
     populateRegionDropdown();
 }
 

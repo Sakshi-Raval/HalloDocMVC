@@ -61,7 +61,9 @@
                     }
               
             }
-        
+        $(document).ready(function () {
+            $('#profile').load('/Patient/ProfilePartial');
+        });
    
     </script>    
 }
@@ -149,7 +151,7 @@
            
         </div>
         <div class="tab-pane fade pt-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            @Html.Partial("_ProfilePartial", new UserProfileViewModel())
+            @* @Html.Partial("_ProfilePartial", new UserProfileViewModel()) *@
         </div>
        
     </div>
