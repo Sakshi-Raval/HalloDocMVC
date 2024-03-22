@@ -281,6 +281,7 @@ function NewStateLoad() {
         // If any other checkbox is checked, uncheck #allCheck
         if (anyChecked) {
             $("#allCheck").prop("checked", false);
+            $(".filter-btn:active").addClass("active-filter-btn");
         }
         FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
     });
@@ -288,6 +289,7 @@ function NewStateLoad() {
         // If #allCheck is checked, uncheck all other checkboxes
         if ($(this).is(":checked")) {
             $(".filter-options").prop("checked", false);
+            $(".filter-btn-all").addClass("active-filter-btn");
             FilteredPartial(currentPartialName, currentStatus, pagesize, currentpage);
         }
     });

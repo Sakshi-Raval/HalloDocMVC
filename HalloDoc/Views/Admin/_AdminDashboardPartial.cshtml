@@ -176,16 +176,31 @@
                 $('#currentStatus').val(currentStatus);
                 var searchFilter = $('#searchInput').val();
                 var districtFilter = $('#districtSelect').find(':selected').data('value');
-                var btnFilter = updateCheckedValues();
+                var btnFilter = [];
+                // Iterate over checked checkboxes
+                $(".filter-options:checked").not("#allCheck").each(function () {
+                    btnFilter.push($(this).val());
+                });
+
+                // If "All" checkbox is checked, empty the checkedValues array
+                if ($("#allCheck").prop("checked")) {
+                    btnFilter = [];
+                }
+                else {
+                    $(".filter-options:checked").each(function () {
+                        btnFilter.push($(this).val());
+                    });
+                }
                 console.log(btnFilter);
                 $('#searchFilter').val(searchFilter);
                 $('#districtFilter').val(districtFilter);
                 $('#btnFilter').val(btnFilter);
-                console.log(typeof currentStatus);
+                console.log(typeof btnFilter);
                 this.submit();
             });
 
             $("#allCheck").prop("checked", true);
+            $(".filter-btn-all").addClass("active-filter-btn");
             
         });
 
@@ -465,15 +480,12 @@
         <div class="row d-flex mx-2 my-2 justify-content-between">
             <div class="d-flex col-lg-6 col-12 ">
                 <div class="row">
-                    <div class="input-group mt-2 mb-2 border rounded col px-0">
-
-                        <button class="btn mb-3 bg-white text-black border-0" style="position:absolute !important;display: block;left: 0px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 50 50">
-                                <path d="M 21 3 C 11.654545 3 4 10.654545 4 20 C 4 29.345455 11.654545 37 21 37 C 24.701287 37 28.127393 35.786719 30.927734 33.755859 L 44.085938 46.914062 L 46.914062 44.085938 L 33.875 31.046875 C 36.43682 28.068316 38 24.210207 38 20 C 38 10.654545 30.345455 3 21 3 z M 21 5 C 29.254545 5 36 11.745455 36 20 C 36 28.254545 29.254545 35 21 35 C 12.745455 35 6 28.254545 6 20 C 6 11.745455 12.745455 5 21 5 z">
-                                </path>
-                            </svg>
-                        </button>
-                        <input type="text" class="form-control ms-5" placeholder="Search patient" style="border:none;" id="searchInput">
+                    <div class="d-flex border rounded align-items-center mx-sm-3 my-2 col px-0 bg-white text-black">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 50 50" class="mx-2 ">
+                            <path d="M 21 3 C 11.654545 3 4 10.654545 4 20 C 4 29.345455 11.654545 37 21 37 C 24.701287 37 28.127393 35.786719 30.927734 33.755859 L 44.085938 46.914062 L 46.914062 44.085938 L 33.875 31.046875 C 36.43682 28.068316 38 24.210207 38 20 C 38 10.654545 30.345455 3 21 3 z M 21 5 C 29.254545 5 36 11.745455 36 20 C 36 28.254545 29.254545 35 21 35 C 12.745455 35 6 28.254545 6 20 C 6 11.745455 12.745455 5 21 5 z">
+                            </path>
+                        </svg>
+                        <input type="text" class="form-control" placeholder="Search patient" style="border:none;" id="searchInput">
 
                     </div>
 
@@ -533,7 +545,7 @@
             <div class="d-flex text-wrap col-lg-6 col-12 ms-lg-auto filters">
 
                 <input type="checkbox" class="btn-check p-0 me-sm-2 me-0 align-items-center rounded d-none d-md-inline" id="allCheck" autocomplete="off">
-                <label class="btn filter-btn" for="allCheck">All</label>
+                <label class="btn filter-btn-all" for="allCheck">All</label>
 
                 <input type="checkbox" class="btn-check filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap " id="patient" value="1" name="filter" autocomplete="off">
                 <label class="btn filter-btn" for="patient">

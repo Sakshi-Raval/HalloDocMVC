@@ -1,14 +1,17 @@
 *{
     font-family: poppins;
 }
-.filter-btn:active {
+.active-filter-btn:active {
     border: 1px solid #040f13 !important;
 }
 .phone:read-only, .phone:disabled {
     background-color: #E9ECEF !important;
 }
 .dark-theme .phone:read-only, .dark-theme .phone:disabled {
-    background-color: #E9ECEF !important;
+    background-color: #939393 !important;
+}
+.dark-theme input:disabled, .dark-theme input:read-only, .dark-theme select:disabled, .dark-theme textarea:disabled, .dark-theme textarea:read-only {
+    background-color: #939393 !important;
 }
 .dark-theme {
     background-color: #212529;
@@ -29,6 +32,25 @@
     .dark-theme .phone{
         background-color: #ffffff !important;
     }
+    .dark-theme .text-muted {
+        color: #ededed !important;
+    }
+    .dark-theme .filter-btn-all, .dark-theme .filter-btn{
+        color:white!important;
+    }
+    .tableHead {
+        background-color: #EDEFF6;
+    }
+.dark-theme .filters{
+    color:white !important;
+}
+.dark-theme .tableHead {
+    background-color: #727272;
+}
+.dark-theme input, .dark-theme select, .dark-theme textarea, .dark-theme .phone{
+    background-color: #6b6b6b !important;
+    color: white !important;
+}
 .dotted-rule {
     border: none; /* Remove default border */
     border-top: 1px dotted #000; /* Add dotted border on top */
@@ -246,11 +268,29 @@ input:focus {
     display: none;
 }
 
-.input {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #dad7d7;
+.selectedOption {
+    background-color: #e5f2f8 !important;
+    color: #31D2F2 !important;
 }
+#providerDropdown{
+    color:black;
+    border-radius:0; 
+}
+    #providerDropdown .dark-theme {
+        color: white;
+        border-radius: 0;
+    }
+    #providerDropdown:active {
+        color: #10BCE9 !important;
+        border-radius: 0;
+        border-bottom: 3px solid #10BCE9;
+    }
+
+    .input {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #dad7d7;
+    }
 
     .input::placeholder {
         color: #BBB;
@@ -266,19 +306,27 @@ input:focus {
 
     .intl-tel-input .country-list {
         z-index: 5;
-        color: black !important;
     }
-
-.input-group .intl-tel-input .form-control {
+.dark-theme .intl-tel-input .country-list {
+    color: black !important;
+}
+        .input-group .intl-tel-input .form-control {
     border-top-left-radius: 4px;
     border-top-right-radius: 0;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 0;
 }
+.dark-theme .iti__country-name {
+    color: black !important;
+}
 
 .iti {
     width: 100% !important;
     height: 75%;
+}
+.dark-theme .modal-body, .dark-theme .modal-footer {
+    background-color: #212529 !important;
+    color: #ffffff !important;
 }
 
 

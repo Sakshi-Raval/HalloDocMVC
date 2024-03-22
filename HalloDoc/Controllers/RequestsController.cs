@@ -39,7 +39,7 @@ namespace HalloDoc.Controllers
             return Json(emailExists);
 
         }
-
+        [HttpGet]
         public IActionResult PatientRequest()
         {
             return View();
@@ -53,6 +53,7 @@ namespace HalloDoc.Controllers
             {
                 _iPatientRequest.CreatePatientRequest(model);
                 TempData["message"] = "Request created successfully";
+                ModelState.Clear();
                 return RedirectToAction("PatientRequest","Requests");
             }
             return View();

@@ -571,7 +571,14 @@ namespace BusinessLogic.Repository
             }
         }
 
-      
+        //public List<ProviderMenuViewModel> GetProvidersList()
+        //{
+        //    var providerMenuViewModel = (from physician in _context.Physicians
+        //                                 join roles in _context.Roles
+        //                                 on physician.Roleid equals roles.Roleid
+
+        //                                )
+        //}     
 
     }
 }

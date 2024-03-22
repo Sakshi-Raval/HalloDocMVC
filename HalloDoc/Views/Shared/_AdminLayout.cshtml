@@ -19,8 +19,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-  <script>
-      function Logout(){
+    <script>
+        function Logout() {
             $.ajax({
                 url: '/Login/Logout',
                 type: 'POST',
@@ -32,20 +32,28 @@
                     console.error('Error in Logging out:', error);
                 }
             });
-      }
-  </script>
+        }
+        $(document).ready(function () {
+            $('.navItem').on('click', function () {
+                $('#providerDropdown').removeClass('active');
+            })
+            $('#providerNavBtn').on('click', function () {
+                $('.navItem').removeClass('active');
+            });
+        });
+    </script>
 </head>
-<body >
+<body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom">
-        <div class="container-fluid">
-        <a class="navbar-brand"><img src="~/images/hallodoc.png" alt="logo" class="navLogo"></a>
-        @* <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-        aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"> *@
-        <ul class="navbar-nav flex-grow-1 ms-auto my-auto ">
+            <div class="container-fluid">
+                <a class="navbar-brand"><img src="~/images/hallodoc.png" alt="logo" class="navLogo"></a>
+                @* <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"> *@
+                <ul class="navbar-nav flex-grow-1 ms-auto my-auto ">
                     <li class="nav-item me-2 ms-auto d-inline d-md-none">
                         @* <a class="btn btn-outline-info " asp-area="" asp-controller="Login" asp-action="Logout"><i class="bi bi-box-arrow-right"></i></a> *@
                         <button class="btn btn-outline-info " onclick="Logout()"><i class="bi bi-box-arrow-right"></i></button>
@@ -58,55 +66,93 @@
                         @* <a class="btn btn-outline-info " asp-area="" asp-controller="Login" asp-action="Logout">Logout</a> *@
                         <button class="btn btn-outline-info " onclick="Logout()">Logout</button>
                     </li>
-                   
+
                     <li class="nav-item">
                         <button class="btn btn-outline-info" type="button" id="darkBtn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-moon" viewBox="0 0 16 16">
+                                 class="bi bi-moon" viewBox="0 0 16 16">
                                 <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286" />
                             </svg>
                         </button>
                     </li>
-        
-        </ul>
-        </div>
-       
+
+                </ul>
+            </div>
+
         </nav>
     </header>
     <div class="" style="min-height: 83vh">
 
         <div class="formdiv">
             <ul class="nav nav-tabs border-0 shadow" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
+                <li class="nav-item navItem" role="presentation">
                     <button class="nav-link tabs active" style="color:black" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Dashboard</button>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item navItem" role="presentation">
                     <button class="nav-link tabs" style="color:black" id="providerLocation-tab" data-bs-toggle="tab" data-bs-target="#providerLocation" type="button" role="tab" aria-controls="providerLocation" aria-selected="false" tabindex="-1">Provider Location</button>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item navItem" role="presentation">
                     <button class="nav-link tabs" style="color:black" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">My Profile</button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link tabs" style="color:black" id="providers-tab" data-bs-toggle="tab" data-bs-target="#providers" type="button" role="tab" aria-controls="providers" aria-selected="false" tabindex="-1">Providers</button>
+                @*    <li class="nav-item" role="presentation">
+                <button class="nav-link tabs" style="color:black" id="providers-tab" data-bs-toggle="tab" data-bs-target="#providers" type="button" role="tab" aria-controls="providers" aria-selected="false" tabindex="-1">Providers</button>
+                </li> *@
+
+                @* <li class="nav-item tabs" role="presentation">
+
+                    <button class="nav-link dropdown-toggle" id="providerDropdown" data-bs-toggle="tab dropdown" data-bs-target="#providers" role="tab" aria-controls="providers" aria-selected="false" tabindex="-1" aria-expanded="false">
+                        Provider
+                    </button>
+                    <div class="dropdown">
+                        <ul class="dropdown-menu" aria-labelledby="providerDropdown">
+                            <li><a id="providerOption" class="dropdown-item providerDropdownOption" value="provider">Provider</a></li>
+                            <li><a id="schedulingOption" class="dropdown-item providerDropdownOption" value="scheduling">Scheduling</a></li>
+                        </ul>
+                    </div>
+                    
+                </li> *@
+                <li class="nav-item" id="providerNavBtn" role="presentation">
+                    <div class="dropdown">
+                        <button class="nav-link dropdown-toggle tabs" id="providerDropdown" data-bs-toggle="dropdown" data-bs-target="#providers" aria-haspopup="true" aria-expanded="false" role="button">
+                            Provider
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="providerDropdown">
+                            <li><a id="providerOption" class="dropdown-item providerDropdownOption" value="provider">Provider</a></li>
+                            <li><a id="schedulingOption" class="dropdown-item providerDropdownOption" value="scheduling">Scheduling</a></li>
+                        </ul>
+                    </div>
                 </li>
-                <li class="nav-item" role="presentation">
+
+                  @*   <div class="dropdown">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Dropdown link
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </div> *@
+
+                <li class="nav-item navItem" role="presentation">
                     <button class="nav-link tabs" style="color:black" id="partners-tab" data-bs-toggle="tab" data-bs-target="#partners" type="button" role="tab" aria-controls="partners" aria-selected="false" tabindex="-1">Partners</button>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item navItem" role="presentation">
                     <button class="nav-link tabs" style="color:black" id="access-tab" data-bs-toggle="tab" data-bs-target="#access" type="button" role="tab" aria-controls="access" aria-selected="false" tabindex="-1">Access</button>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item navItem" role="presentation">
                     <button class="nav-link tabs" style="color:black" id="records-tab" data-bs-toggle="tab" data-bs-target="#records" type="button" role="tab" aria-controls="records" aria-selected="false" tabindex="-1">Records</button>
                 </li>
             </ul>
-           @RenderBody()
+            @RenderBody()
         </div>
 
 
     </div>
     <div class="container-fluid">
         <div class="row ">
-            <div class="col-12 footer footerSubmit bg-dark py-3 text-wrap " >
+            <div class="col-12 footer footerSubmit bg-dark py-3 text-wrap ">
                 <footer class="text-end ">
                     <a href="#" class="text-white-50 text-decoration-none fs-6">
                         Terms and
