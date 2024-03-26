@@ -280,6 +280,12 @@ namespace HalloDoc.Controllers
             return results;
         }
 
+        public List<Role> RoleResults()
+        {
+            List<Role> roles = _context.Roles.ToList();
+            return roles;
+        }
+
         public List<Physician> PhysicianResults(int regionid)
         {
             List<Physician> results = _context.Physicians.Where(x => x.Regionid == regionid).ToList();
@@ -355,7 +361,7 @@ namespace HalloDoc.Controllers
             ViewBag.Id = id;
             var patient = _context.Requestclients.Where(x => x.Requestid == id).FirstOrDefault();
             var request = _context.Requests.FirstOrDefault(x => x.Requestid == id);
-            if(request!=null && request.Status != 2)
+            if (request != null && request.Status != 2)
             {
                 return Content("<h3>Link Expired!</h3>", "text/html", System.Text.Encoding.UTF8);
             }
@@ -559,7 +565,7 @@ namespace HalloDoc.Controllers
             int[] btnFilterArray = new int[0];
             if (btnFilter != null)
             {
-                string[] strInts= btnFilter.Split(',');
+                string[] strInts = btnFilter.Split(',');
                 foreach (string strinInt in strInts)
                 {
                     ints.Add(int.Parse(strinInt));
@@ -601,11 +607,51 @@ namespace HalloDoc.Controllers
             }
             return NotFound();
         }
-
         public IActionResult ProviderMenuPartial()
         {
-
             return PartialView("_ProviderMenuPartial");
+        }
+        public IActionResult ProviderMenuTablePartial(string regionid)
+        {
+            var providerMenuViewModel = _admin.GetProvidersList(regionid);
+            return PartialView("_ProviderMenuTablePartial", providerMenuViewModel);
+        }
+
+        public IActionResult ContactYourProvider(string communication, string message, int physicianid)
+        {
+            var physician = _context.Physicians.FirstOrDefault(x => x.Physicianid == physicianid);
+            if (physician != null)
+            {
+                switch (communication)
+                {
+                    case "both":
+                        var subjectBoth = "Message from Amdin";
+                        _emailService.SendEmailAsync(physician.Email, subjectBoth, message);
+                        TempData["message"] = "Email sent";
+                        break;
+                    case "sms":
+                        break;
+                    case "email":
+                        var subject = "Message from Amdin";
+                        _emailService.SendEmailAsync(physician.Email, subject, message);
+                        TempData["message"] = "Email sent";
+                        break;
+                }
+            }
+            return Ok();
+        }
+
+        public IActionResult CreateProviderPartial()
+        {
+            return PartialView("_CreateProviderPartial");
+        }
+
+        [HttpPost]
+        public IActionResult CreateProviderPartial(CreateProviderViewModel createProviderViewModel)
+        {
+            string email = HttpContext.Session.GetString("Email");
+            _admin.ProviderAccount(createProviderViewModel,email);
+            return PartialView("_CreateProviderPartial",new CreateProviderViewModel());
         }
     }
 }

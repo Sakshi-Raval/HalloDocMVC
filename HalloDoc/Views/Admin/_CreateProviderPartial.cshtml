@@ -1,0 +1,302 @@
+﻿@model CreateProviderViewModel
+<script>
+    function backToProvider() {
+        $('#providerOption').addClass('selectedOption');
+        $('#schedulingOption').removeClass('selectedOption');
+        $('#providers').load('/Admin/ProviderMenuPartial');
+    }
+    $('#photoProvider').on('change', function(){
+        showFileName();
+    });
+    $('#ica').on('change', function () {
+        if (this.files && this.files.length > 0) {
+            console.log(this.files.length);
+            $('#checkIca').prop('checked', true);
+        }
+        else {
+            $('#checkIca').prop('checked', false);
+        }
+    });
+    $('#backgroundCheck').on('change', function () {
+        if (this.files && this.files.length > 0) {
+            console.log(this.files.length);
+            $('#checkBackground').prop('checked', true);
+        }
+        else {
+            $('#checkBackground').prop('checked', false);
+        }
+    });
+    $('#hipaa').on('change', function () {
+        if (this.files && this.files.length > 0) {
+            console.log(this.files.length);
+            $('#checkHipaa').prop('checked', true);
+        }
+        else {
+            $('#checkHipaa').prop('checked', false);
+        }
+    });
+    $('#nonDisclosure').on('change', function () {
+        if (this.files && this.files.length > 0) {
+            console.log(this.files.length);
+            $('#checkNonDisclosure').prop('checked', true);
+        }
+        else {
+            $('#checkNonDisclosure').prop('checked', false);
+        }
+    });
+    $(document).ready(function () {
+        populateRegionDropdown();
+        populateRoleDropdown();
+    });
+</script>
+<div class="row justify-content-center">
+    <div class="col-10 d-inline-flex justify-content-between">
+        <div class="d-flex">
+            <h4 class="h4 mt-5 mb-3">Create Provider Account</h4>
+        </div>
+        <div class="d-flex">
+            <button class="btn btn-outline-info mt-5 mb-3 ms-auto " onclick="backToProvider()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                     height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                </svg>Back
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-10 rounded mb-3" style="box-shadow: 2px 2px 20px rgb(179, 177, 177);">
+        <form asp-action="CreateProviderPartial">
+            <div class="row">
+                <h6 class="my-3">Account Information</h6>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="usernameProvider" asp-for="Username"
+                               placeholder="Username">
+                        <label class="text-muted floating-label">Username</label>
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="passwordProvider" asp-for="Password"
+                               placeholder="Password">
+                        <label class="text-muted floating-label">Password</label>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-floating">
+                        <select class="form-select border text-muted mb-2 roles" id="roleProvider" aria-label="Default select example" asp-for="Role">
+                        </select>
+                        <label for="role">Role</label>
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h6 class="my-3">Provider Information</h6>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="firstnameProvider" asp-for="Firstname"
+                               placeholder="Firstname">
+                        <label class="text-muted floating-label">Firstname</label>
+                        <span asp-validation-for="Firstname" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="lastnameProvider" asp-for="Lastname"
+                               placeholder="Lastname">
+                        <label class="text-muted floating-label">Lastname</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="emailProvider" asp-for="Email"
+                               placeholder="Email">
+                        <label class="text-muted floating-label">Email</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <input type="tel" id="phoneProvider" class="input w-100 h-100 phone" data-error-msg-id="errorMsg1" asp-for="Phone">
+                    <span class="text-danger" id="errorMsg1" asp-validation-for="Phone"></span>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="medLicense" asp-for="MedLicense"
+                               placeholder="Medical License #">
+                        <label class="text-muted floating-label">Medical License #</label>
+                        <span asp-validation-for="MedLicense" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="npiNum" asp-for="NPINum"
+                               placeholder="NPI Number">
+                        <label class="text-muted floating-label">NPI Number</label>
+                        <span asp-validation-for="NPINum" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6" id="physicianRegions">
+                </div>
+            </div>
+            <div class="row">
+                <h6 class="my-3">Mailing & Billing Information</h6>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="address1Provider" asp-for="Address1"
+                               placeholder="Address1">
+                        <label class="text-muted floating-label">Address1</label>
+                        <span asp-validation-for="Address1" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="address2Provider" asp-for="Address2"
+                               placeholder="Address2">
+                        <label class="text-muted floating-label">Address2</label>
+                        <span asp-validation-for="Address2" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="cityProvider" asp-for="City"
+                               placeholder="City">
+                        <label class="text-muted floating-label">City</label>
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select class="form-select border text-muted mb-2 regions" id="stateProvider" aria-label="Default select example" asp-for="State">
+                        </select>
+                        <label for="stateProvider">State</label>
+                        <span asp-validation-for="State" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="zipProvider" asp-for="Zip"
+                               placeholder="Zip">
+                        <label class="text-muted floating-label">Zip</label>
+                        <span asp-validation-for="Zip" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <input type="tel" id="billingPhoneProvider" class="input w-100 h-100 phone" data-error-msg-id="errorMsg2" asp-for="BillingPhone">
+                    <span class="text-danger" id="errorMsg2" asp-validation-for="BillingPhone"></span>
+                </div>
+            </div>
+            <div class="row">
+                <h6 class="my-3">Provider Profile</h6>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="bussinessName" asp-for="BusinessName"
+                               placeholder="Business Name">
+                        <label class="text-muted floating-label">Business Name</label>
+                        <span asp-validation-for="BusinessName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="bussinessWebsite" asp-for="BusinessWebsite"
+                               placeholder="Business Website">
+                        <label class="text-muted floating-label">Business Website</label>
+                        <span asp-validation-for="BusinessWebsite" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="d-flex col-md-6">
+                    <label for="photoProvider" class="col d-flex">
+                        <div class="col p-1 ps-3 text-muted border"><span id="infoArea">Select Photo</span></div>
+                        <div id="btn" class="p-1 btn btn-info">
+
+                            <i class="bi bi-cloud-arrow-up text-white"></i>
+                            <span style="color:white;" class="ps-1">Upload</span>
+
+                        </div>
+                        <input type="file" class="form-control-file" id="photoProvider" accept=".jpg, .png, .jpeg" hidden asp-for="Photo">
+                    </label>
+                    <span asp-validation-for="Photo" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <div class="form-floating mb-3 mt-3">
+                        <textarea class="form-control" placeholder="Admin Notes" id="adminNotes" asp-for="AdminNotes"
+                                  style="height: 15vh;"></textarea>
+                        <label class="text-muted floating-label ms-2">
+                            Admin Notes
+                        </label>
+                        <span asp-validation-for="AdminNotes" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <h6>Onboarding</h6>
+                <div class="col-8 d-flex justify-content-between mb-3">
+                    <div>
+                        <input type="checkbox" id="checkIca" />
+                    </div>
+                    <div>
+                        <span>Independent Contractor Agreement</span>
+                    </div>
+                    <div>
+                        <input type="file" class="form-control" id="ica" hidden asp-for="ICA"/>
+                        <label for="ica" class="input-group-text btn btn-info text-white"><span><i class="bi bi-cloud-arrow-up text-white"></i></span> Upload</label>
+                        <span asp-validation-for="ICA" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-8 d-flex justify-content-between mb-3">
+                    <div>
+                        <input type="checkbox" id="checkBackground" />
+                    </div>
+                    <div>
+                        <span>Background Check</span>
+                    </div>
+                    <div>
+                        <input type="file" class="form-control" id="backgroundCheck" hidden asp-for="BackgroundCheck"/>
+                        <label for="backgroundCheck" class="input-group-text btn btn-info text-white"><span><i class="bi bi-cloud-arrow-up text-white"></i></span> Upload</label>
+                        <span asp-validation-for="BackgroundCheck" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-8 d-flex justify-content-between mb-3">
+                    <div>
+                        <input type="checkbox" id="checkHipaa" />
+                    </div>
+                    <div>
+                        <span>HIPAA Compliance</span>
+                    </div>
+                    <div>
+                        <input type="file" class="form-control" id="hipaa" hidden asp-for="HIPAA"/>
+                        <label for="hipaa" class="input-group-text btn btn-info text-white"><span><i class="bi bi-cloud-arrow-up text-white"></i></span> Upload</label>
+                        <span asp-validation-for="HIPAA" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-8 d-flex justify-content-between mb-3">
+                    <div>
+                        <input type="checkbox" id="checkNonDisclosure" />
+                    </div>
+                    <div>
+                        <span>Non-Disclosure Agreement</span>
+                    </div>
+                    <div>
+                        <input type="file" class="form-control" id="nonDisclosure" hidden asp-for="NonDisclosure" />
+                        <label for="nonDisclosure" class="input-group-text btn btn-info text-white"><span><i class="bi bi-cloud-arrow-up text-white"></i></span> Upload</label>
+                        <span asp-validation-for="NonDisclosure" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="d-grid gap-2 my-4 d-md-flex justify-content-md-end">
+                    <button class="btn btn-success me-md-2 text-white fw-medium" type="submit">Create Account</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

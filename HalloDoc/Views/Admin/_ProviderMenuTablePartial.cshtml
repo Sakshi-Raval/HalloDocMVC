@@ -1,0 +1,152 @@
+﻿@model List<ProviderMenuViewModel>
+
+<script>
+    $(document).ready(function () {
+        $('#contactProviderModal').on('shown.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var physicianid = button.data('physicianid');
+            $('#physicianid').val(physicianid);
+        });
+
+        $('#contactProviderForm').submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+            console.log(formData);
+            $.ajax({
+                url: '/Admin/ContactYourProvider',
+                type: 'GET',
+                data: formData,
+                success: function (response) {
+                    //$('#contactProviderModal').modal('hide');
+                    window.location.href = "/Admin/AdminPage";
+                },
+                error: function (xhr, status, error) {
+
+                    console.error('Error submitting form:', error);
+                }
+            });
+        });
+
+        $('#contactProviderModal').on('hidden.bs.modal', function () {
+            $(this).find('form')[0].reset();
+        });
+    });
+</script>
+
+@* modal for contact your provider *@
+<div class="modal fade" id="contactProviderModal" tabindex="-1" aria-labelledby="contactProviderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h2 class="modal-title fs-5" id="contactProviderModalLabel">Contact your Provider</h2>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="contactProviderForm">
+                <div class="modal-body">
+                    <p class="text-muted">Choose communication to send message</p>
+                    <div class="form-check mt-1">
+                        <input class="form-check-input" type="radio" name="communication" value="sms" id="smsBtn" checked>
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            SMS
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="communication" value="email" id="emailBtn">
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            Email
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="communication" value="both" id="bothBtn">
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            Both
+                        </label>
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control mt-2" name="message" placeholder="Message" id="message"
+                                  style="height: 15vh;"></textarea>
+                        <label class="text-muted floating-label fs-6">
+                            Message
+                        </label>
+                    </div>
+                    <input type="number" name="physicianid" id="physicianid" hidden />
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="submit" class="btn btn-info text-white">Submit</button>
+                    <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table tableDash">
+        <colgroup>
+            <col span="1" style="width: 10%;">
+            <col span="1" style="width: 21%;">
+            <col span="1" style="width: 18%;">
+            <col span="1" style="width: 18%;">
+            <col span="1" style="width: 10%;">
+            <col span="1" style="width: 23%;">
+        </colgroup>
+        <tbody>
+            <tr class="tableHead">
+                <th scope="col">Stop Notification</th>
+                <th scope="col">Provider Name</th>
+                <th scope="col">Role</th>
+                <th scope="col">On Call Status</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+            </tr>
+            @*  <tr>
+            <td><input type="checkbox" class="checkBox" /></td>
+            <td>Provider name</td>
+            <td>Provider</td>
+            <td>Available</td>
+            <td>Active</td>
+            <td>
+            <button class="btn rounded btn-outline-info mb-1">
+            Contact
+            </button>
+            <button class="btn rounded btn-outline-info mb-1">
+            Edit
+            </button>
+            </td>
+            </tr> *@
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @if (item.StopNotification)
+                    {
+                        <td><input type="checkbox" class="checkBox" checked /></td>
+                    }
+                    else
+                    {
+                        <td><input type="checkbox" class="checkBox" /></td>
+                    }
+                    <td>@item.ProviderName</td>
+                    <td>@item.RoleName</td>
+                    @if (item.OnCallStatus)
+                    {
+                        <td>Available</td>
+                    }
+                    else
+                    {
+                        <td>Unavailable</td>
+                    }
+                    <td></td>
+                    <td>
+                        <button class="btn rounded btn-outline-info mb-1" data-bs-toggle="modal" data-bs-target="#contactProviderModal" data-physicianid="@item.PhysicianId">
+                            Contact
+                        </button>
+                        <button class="btn rounded btn-outline-info mb-1">
+                            Edit
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

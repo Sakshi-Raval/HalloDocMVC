@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,19 +50,19 @@ namespace BusinessLogic.Repository
                                             Region = _context.Regions.Where(x => x.Regionid == reqClient.Regionid).FirstOrDefault().Name ?? "",
                                             RequestId = req.Requestid,
                                             Email = reqClient.Email ?? "",
-                                            IsFinalize = _context.EncounterForms.Where(x => x.Requestid == req.Requestid).Select(x=>x.IsFinalize).FirstOrDefault(),
+                                            IsFinalize = _context.EncounterForms.Where(x => x.Requestid == req.Requestid).Select(x => x.IsFinalize).FirstOrDefault(),
                                             PhysicianId = req.Physicianid,
-                                            PhysicianName = _context.Physicians.Where(x=>x.Physicianid==req.Physicianid).Select(x=>x.Firstname).FirstOrDefault() + " " + _context.Physicians.Where(x => x.Physicianid == req.Physicianid).Select(x => x.Firstname).FirstOrDefault() ?? "",
+                                            PhysicianName = _context.Physicians.Where(x => x.Physicianid == req.Physicianid).Select(x => x.Firstname).FirstOrDefault() + " " + _context.Physicians.Where(x => x.Physicianid == req.Physicianid).Select(x => x.Firstname).FirstOrDefault() ?? "",
                                         }
-                                        ).Where(item => (currentStatus.Any(x=>x==item.Status)) 
+                                        ).Where(item => (currentStatus.Any(x => x == item.Status))
                                         && (string.IsNullOrEmpty(SearchValue) || item.Name.ToLower().Contains(SearchValue.ToLower()))
-                                        && (string.IsNullOrEmpty(districtSelect) || item.RegionId == districtSelect) 
-                                        && (checkedFilter.Length==0 || checkedFilter.Any(x=>x==item.RequestTypeId))).ToList();
-          
+                                        && (string.IsNullOrEmpty(districtSelect) || item.RegionId == districtSelect)
+                                        && (checkedFilter.Length == 0 || checkedFilter.Any(x => x == item.RequestTypeId))).ToList();
+
             return newPatientsViewModel;
 
-            
-           
+
+
         }
         public CaseViewModel ViewCase(int requestid)
         {
@@ -137,10 +138,10 @@ namespace BusinessLogic.Repository
             //return result;
             Request request = _context.Requests.FirstOrDefault(x => x.Requestid == requestid);
             NotesViewModel notesViewModel = new();
-            notesViewModel.TransferNotes = _context.Requeststatuslogs.Where(x=>x.Requestid == requestid && x.Status!=3 && x.Status!=7).OrderByDescending(x=>x.Createddate).Select(x=>x.Notes).ToList();
+            notesViewModel.TransferNotes = _context.Requeststatuslogs.Where(x => x.Requestid == requestid && x.Status != 3 && x.Status != 7).OrderByDescending(x => x.Createddate).Select(x => x.Notes).ToList();
             notesViewModel.AdminNotes = _context.Requestnotes.Where(x => x.Requestid == requestid).OrderByDescending(x => x.Createddate).Select(x => x.Adminnotes).ToList();
             notesViewModel.AdminCancelNotes = _context.Requeststatuslogs.Where(x => x.Requestid == requestid && x.Status == 3).OrderByDescending(x => x.Createddate).Select(x => x.Notes).ToList();
-            notesViewModel.PatientCancelNotes= _context.Requeststatuslogs.Where(x => x.Requestid == requestid && x.Status == 7).OrderByDescending(x => x.Createddate).Select(x => x.Notes).ToList();
+            notesViewModel.PatientCancelNotes = _context.Requeststatuslogs.Where(x => x.Requestid == requestid && x.Status == 7).OrderByDescending(x => x.Createddate).Select(x => x.Notes).ToList();
             return notesViewModel;
 
         }
@@ -152,20 +153,20 @@ namespace BusinessLogic.Repository
                 request.Status = 3;
                 request.Casetag = reasons;
 
-               var requestLog = new Requeststatuslog();
-               requestLog.Requestid = requestid;
-               requestLog.Status = 3;
-               requestLog.Notes = cancelNotes ?? "";
-               requestLog.Createddate = DateTime.Now;
-               _context.Add(requestLog);
-               _context.SaveChanges();
-               
-               _context.Update(request);
-               _context.SaveChanges();
+                var requestLog = new Requeststatuslog();
+                requestLog.Requestid = requestid;
+                requestLog.Status = 3;
+                requestLog.Notes = cancelNotes ?? "";
+                requestLog.Createddate = DateTime.Now;
+                _context.Add(requestLog);
+                _context.SaveChanges();
+
+                _context.Update(request);
+                _context.SaveChanges();
             }
-            
+
         }
-        public void AssignCase(int regions,int physician,int requestId, string description)
+        public void AssignCase(int regions, int physician, int requestId, string description)
         {
             var request = _context.Requests.Where(x => x.Requestid == requestId).FirstOrDefault();
             if (request != null)
@@ -329,7 +330,7 @@ namespace BusinessLogic.Repository
                 var requestLog = new Requeststatuslog();
                 requestLog.Requestid = requestid;
                 requestLog.Status = 7;
-                requestLog.Notes = cancelNotes ;
+                requestLog.Notes = cancelNotes;
                 requestLog.Createddate = DateTime.Now;
                 _context.Add(requestLog);
                 _context.SaveChanges();
@@ -345,7 +346,7 @@ namespace BusinessLogic.Repository
             var req = _context.Requests.Where(x => x.Requestid == requestid).FirstOrDefault();
             var reqClient = _context.Requestclients.Where(x => x.Requestid == requestid).FirstOrDefault();
             var ef = _context.EncounterForms.Where(x => x.Requestid == requestid).FirstOrDefault();
-            if(reqClient!=null && req != null)
+            if (reqClient != null && req != null)
             {
                 EncounterFormViewModel encounterFormModel = new();
 
@@ -353,7 +354,7 @@ namespace BusinessLogic.Repository
                 encounterFormModel.Firstname = reqClient.Firstname;
                 encounterFormModel.Lastname = reqClient.Lastname ?? "";
                 encounterFormModel.Location = (reqClient.Street ?? "") + " " + (reqClient.City ?? "") + " " + (reqClient.State ?? "") + " " + (reqClient.Zipcode ?? "");
-                encounterFormModel.Birthdate = reqClient.Intyear != null && reqClient.Strmonth != null && reqClient.Intdate != null?
+                encounterFormModel.Birthdate = reqClient.Intyear != null && reqClient.Strmonth != null && reqClient.Intdate != null ?
                                                     new DateOnly((int)reqClient.Intyear, int.Parse(reqClient.Strmonth), (int)reqClient.Intdate) : new DateOnly();
                 encounterFormModel.DateOfService = reqClient.Intyear != null && reqClient.Strmonth != null && reqClient.Intdate != null ?
                                                     new DateOnly((int)reqClient.Intyear, int.Parse(reqClient.Strmonth), (int)reqClient.Intdate) : new DateOnly();
@@ -389,19 +390,19 @@ namespace BusinessLogic.Repository
                     encounterFormModel.Followup = ef.FollowUp != null ? ef.FollowUp : "";
                     encounterFormModel.IsFinalize = ef.IsFinalize;
                 }
-                   
-                
+
+
                 return encounterFormModel;
             }
             return new EncounterFormViewModel();
-            
-                    
+
+
         }
-        public void SaveEncounterForm(EncounterFormViewModel encFormModel) 
+        public void SaveEncounterForm(EncounterFormViewModel encFormModel)
         {
             var request = _context.Requests.Where(x => x.Requestid == encFormModel.Requestid).FirstOrDefault();
-            EncounterForm encForm= _context.EncounterForms.Where(x => x.Requestid == encFormModel.Requestid).FirstOrDefault();
-            if (request!=null && encForm == null)
+            EncounterForm encForm = _context.EncounterForms.Where(x => x.Requestid == encFormModel.Requestid).FirstOrDefault();
+            if (request != null && encForm == null)
             {
                 EncounterForm form = new();
                 form.Requestid = request.Requestid;
@@ -437,7 +438,7 @@ namespace BusinessLogic.Repository
                 _context.Add(form);
                 _context.SaveChanges();
             }
-            else if(request != null && encForm != null)
+            else if (request != null && encForm != null)
             {
                 encForm.Requestid = encFormModel.Requestid;
                 encForm.HistoryOfPresentIllnessOrInjury = encFormModel.HistoryOfIllness;
@@ -472,7 +473,7 @@ namespace BusinessLogic.Repository
                 _context.Update(encForm);
                 _context.SaveChanges();
             }
-            
+
         }
         public AdminProfileViewModel GetAdminProfile(string email)
         {
@@ -492,10 +493,10 @@ namespace BusinessLogic.Repository
                     adminProfileViewModel.Address1 = admin.Address1;
                     adminProfileViewModel.Address2 = admin.Address2;
                     adminProfileViewModel.City = admin.City;
-                    adminProfileViewModel.State = admin.Regionid??null;
+                    adminProfileViewModel.State = admin.Regionid ?? null;
                     adminProfileViewModel.Zip = admin.Zip;
                     adminProfileViewModel.BillingPhones = admin.Mobile;
-                    adminProfileViewModel.AdminRegions = adminregions; 
+                    adminProfileViewModel.AdminRegions = adminregions;
                     return adminProfileViewModel;
                 }
                 //return new AdminProfileViewModel();
@@ -503,7 +504,7 @@ namespace BusinessLogic.Repository
             return new AdminProfileViewModel();
         }
 
-        public void EditAdminDetails(string oldEmail, string firstname, string lastname, string email,string phoneAdministrator, List<int> adminRegions)
+        public void EditAdminDetails(string oldEmail, string firstname, string lastname, string email, string phoneAdministrator, List<int> adminRegions)
         {
             Aspnetuser aspnetuser = _context.Aspnetusers.FirstOrDefault(x => x.Email == oldEmail);
             if (aspnetuser != null)
@@ -514,7 +515,7 @@ namespace BusinessLogic.Repository
                     List<Adminregion> adminregion = _context.Adminregions.Where(x => x.Adminid == admin.Adminid).ToList();
                     if (adminregion != null)
                     {
-                        foreach(Adminregion item in adminregion)
+                        foreach (Adminregion item in adminregion)
                         {
                             _context.Remove(item);
                             _context.SaveChanges();
@@ -529,8 +530,8 @@ namespace BusinessLogic.Repository
                     aspnetuser.Email = email;
                     aspnetuser.Username = email;
                     aspnetuser.Phonenumber = phoneAdministrator;
-                    
-                    foreach(var item in adminRegions)
+
+                    foreach (var item in adminRegions)
                     {
                         Adminregion region = new();
                         region.Adminid = admin.Adminid;
@@ -572,14 +573,79 @@ namespace BusinessLogic.Repository
             }
         }
 
-        //public List<ProviderMenuViewModel> GetProvidersList()
-        //{
-        //    var providerMenuViewModel = (from physician in _context.Physicians
-        //                                 join roles in _context.Roles
-        //                                 on physician.Roleid equals roles.Roleid
+        public List<ProviderMenuViewModel> GetProvidersList(string regionid)
+        {
+            bool[] trueArray = { true };
+            BitArray trueBitArray = new BitArray(trueArray);
+            var providerMenuViewModel = (
+                            from phy in _context.Physicians
+                            join phyNotif in _context.Physiciannotifications
+                                on phy.Physicianid equals phyNotif.Physicianid into phyNotifGroup
+                            from phyNotif in phyNotifGroup.DefaultIfEmpty() // Left join for PhysicianNotifications
+                            join r in _context.Roles
+                                on phy.Roleid equals r.Roleid into rGroup
+                            from r in rGroup.DefaultIfEmpty() // Left join for Roles
+                            select new ProviderMenuViewModel
+                            {
+                                PhysicianId = phy.Physicianid,
+                                StopNotification = phyNotif.Isnotificationstopped == trueBitArray ? true : false,
+                                ProviderName = phy.Firstname + " " + phy.Lastname,
+                                RoleName = r != null ? r.Name : "",
+                                Status = phy.Status,
+                                Regionid = phy.Regionid
+                            }
+                        ).Where(x => (string.IsNullOrEmpty(regionid) || x.Regionid == int.Parse(regionid))).ToList();
+            return providerMenuViewModel;
+        }
 
-        //                                )
-        //}     
+        public void ProviderAccount(CreateProviderViewModel createProviderViewModel,string email)
+        {
+            Aspnetuser aspnetuser = new();
+            aspnetuser.Username = createProviderViewModel.Username;
+            aspnetuser.Email = createProviderViewModel.Email;
+            aspnetuser.Passwordhash = createProviderViewModel.Password;
+            aspnetuser.Phonenumber = createProviderViewModel.Phone;
+            aspnetuser.Createddate = DateTime.Now;
+
+            _context.Add(aspnetuser);
+            _context.SaveChanges();
+
+            Aspnetuserrole aspnetuserrole = new();
+            aspnetuserrole.Userid = aspnetuser.Id;
+            aspnetuserrole.Roleid = _context.Aspnetroles.Where(x => x.Name == "Provider").Select(x => x.Id).FirstOrDefault() ?? "3";
+
+            _context.Add(aspnetuserrole);
+            _context.SaveChanges();
+
+            Physician physician = new();
+            physician.Aspnetuserid = aspnetuser.Id;
+            physician.Firstname = createProviderViewModel.Firstname;
+            physician.Lastname = createProviderViewModel.Lastname;
+            physician.Email = createProviderViewModel.Email;
+            physician.Mobile = createProviderViewModel.Phone;
+            physician.Medicallicense = createProviderViewModel.MedLicense;
+            physician.Adminnotes = createProviderViewModel.AdminNotes;
+            physician.Address1 = createProviderViewModel.Address1;
+            physician.Address2 = createProviderViewModel.Address2;
+            physician.City = createProviderViewModel.City;
+            physician.Zip = createProviderViewModel.Zip;
+            if (createProviderViewModel.State != null)
+            {
+                physician.Regionid = _context.Regions.Where(x => x.Regionid == int.Parse(createProviderViewModel.State)).Select(x => x.Regionid).FirstOrDefault();
+            }
+            physician.Zip = createProviderViewModel.Zip;
+            var id = _context.Aspnetusers.Where(x => x.Email == email).Select(x => x.Id).FirstOrDefault();
+            physician.Createdby = id;
+            physician.Createddate = DateTime.Now;
+            physician.Businessname = createProviderViewModel.BusinessName;
+            physician.Businesswebsite = createProviderViewModel.BusinessWebsite;
+            physician.Roleid = createProviderViewModel.Role;
+            physician.Npinumber = createProviderViewModel.NPINum;
+
+            _context.Add(physician);
+            _context.SaveChanges();
+
+        }
 
     }
 }

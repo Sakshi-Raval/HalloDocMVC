@@ -14,5 +14,6 @@ namespace DataAccess.ViewModel
         public string RoleName { get; set; }
         public bool OnCallStatus { get; set; } = false;
         public int? Status { get; set; }
+        public int? Regionid { get; set; }
     }
 }

@@ -201,7 +201,7 @@
 
             $("#allCheck").prop("checked", true);
             $(".filter-btn-all").addClass("active-filter-btn");
-            
+
         });
 
     </script>
@@ -434,11 +434,11 @@
 
     <div class="container-fluid pe-md-1 pe-0">
         <div class="row d-flex mx-2 my-2 justify-content-between">
-            <form id="exportToExcelForm" asp-action="ExportToExcel" asp-controller="Admin">
-                <div class="col-5 col-sm-4 p-0">
-                    <p class="my-auto patientHead" style="font-size:1.25rem">Patients<small style="color:#203f9a" id="stateSpan"></small></p>
-                </div>
-                <div class="col-7 col-sm-8 p-0 d-flex justify-content-end">
+            <div class="col-5 col-sm-4 p-0">
+                <p class="my-auto patientHead" style="font-size:1.25rem">Patients<small style="color:#203f9a" id="stateSpan"></small></p>
+            </div>
+            <div class="col-7 col-sm-8 p-0 d-flex justify-content-end">
+                <form id="exportToExcelForm" asp-action="ExportToExcel" asp-controller="Admin">
                     <button type="button" class="btn btn-info text-white me-2" onclick="sendLinkModal()">
                         <i class="bi bi-send  me-md-2 "></i><span class="d-none d-lg-inline">Send Link</span>
                     </button>
@@ -471,8 +471,8 @@
                             Support
                         </span>
                     </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -576,7 +576,7 @@
                     <svg height="15" width="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="svgs">
                         <circle fill="#007fc6" r="45" cx="50" cy="50" stroke="grey" stroke-width="3" />
                     </svg>
-                    <span class="ms-1">Concierge
+                    <span class="ms-1">Concierge</span>
                 </label>
 
                 @* <input type="checkbox" class="btn-check filter-options rounded p-0 me-sm-2 me-0 align-items-center text-wrap " id="vip" name="filter" autocomplete="off">

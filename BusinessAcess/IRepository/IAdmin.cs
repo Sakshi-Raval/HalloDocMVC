@@ -26,5 +26,8 @@ namespace BusinessLogic.IRepository
         public AdminProfileViewModel GetAdminProfile(string email);
         public void EditAdminDetails(string oldEmail, string firstname, string lastname, string email, string phoneAdministrator, List<int> adminRegions);
         public void EditBillingDetails(string email, string address1, string address2, string city, int state, string zip, string phoneBilling);
+        public List<ProviderMenuViewModel> GetProvidersList(string regionid);
+        public void ProviderAccount(CreateProviderViewModel createProviderViewModel,string email);
+
     }
 }

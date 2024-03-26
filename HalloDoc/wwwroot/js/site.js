@@ -548,6 +548,27 @@ function populateRegionDropdown() {
     });
 }
 
+function populateRoleDropdown() {
+    $.ajax({
+        url: '/Admin/RoleResults',
+        type: 'GET',
+        success: function (data) {
+            var dropdownData = data;
+            console.log(dropdownData);
+            var dropdown = $('.roles');
+            dropdown.empty();
+            dropdown.append($('<option>').text('--').val(''));
+            dropdownData.forEach(function (item) {
+                dropdown.append($('<option>').text(item.name).val(item.roleid));
+
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
 function populatePhysicianDropdown(regionid) {
     $.ajax({
         url: '/Admin/PhysicianResults',
@@ -667,4 +688,8 @@ function ExportToExcel() {
             console.error('Error:', error);
         }
     });
+}
+function createProviderPartialLoad() {
+    $('#providers').empty();
+    $('#providers').load('/Admin/CreateProviderPartial');
 }
