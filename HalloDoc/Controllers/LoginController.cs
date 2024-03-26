@@ -14,11 +14,12 @@ namespace HalloDoc.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IEmailService _emailService;
         private readonly IJwtService _jwtService;
-
-        public LoginController(ApplicationDbContext context, IEmailService emailService,IJwtService jwtService) { 
+        private readonly IPatient _patient;
+        public LoginController(ApplicationDbContext context, IEmailService emailService,IJwtService jwtService,IPatient patient) { 
             _context = context;
             _emailService = emailService;
             _jwtService = jwtService;
+            _patient = patient;
         }
         public IActionResult Login()
         {
@@ -145,6 +146,15 @@ namespace HalloDoc.Controllers
                 return new ContentResult
                 {
                     Content = htmlContent,
+                    ContentType = "text/html"
+                };
+            }
+            if (_patient.CheckEmail(email))
+            {
+                string htmlTags = "<html><body><h1>Account already Exists!</h1></body></html>";
+                return new ContentResult
+                {
+                    Content = htmlTags,
                     ContentType = "text/html"
                 };
             }

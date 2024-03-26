@@ -1,9 +1,9 @@
-﻿@{
+﻿@model CaseViewModel
+@{
     Layout = "_AdminLayout";
     ViewData["Title"] = "View Case";
     TempData.Keep("Requestid");
 }
-@model CaseViewModel
 <script src="~/js/site.js" asp-append-version="true"></script>
 @section Scripts{
     <script>
@@ -64,7 +64,14 @@
                 populatePhysicianDropdown(regionid);
             });
 
-
+            var backbtns = document.getElementsByClassName("backBtn");
+            for (var btn of backbtns) {
+                console.log("sdhfj");
+                btn.addEventListener('click', function () {
+                    history.back();
+                    console.log("oiuyo");
+                });
+            }
         });
     </script>
 

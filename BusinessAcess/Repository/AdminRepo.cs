@@ -69,7 +69,8 @@ namespace BusinessLogic.Repository
                                  join req in _context.Requests
                                  on reqClient.Requestid equals req.Requestid
                                  join region in _context.Regions
-                                 on reqClient.Regionid equals region.Regionid
+                                 on reqClient.Regionid equals region.Regionid into regionGroup
+                                 from region in regionGroup.DefaultIfEmpty()
                                  where req.Requestid == requestid
                                  select new CaseViewModel
                                  {

@@ -354,6 +354,11 @@ namespace HalloDoc.Controllers
         {
             ViewBag.Id = id;
             var patient = _context.Requestclients.Where(x => x.Requestid == id).FirstOrDefault();
+            var request = _context.Requests.FirstOrDefault(x => x.Requestid == id);
+            if(request!=null && request.Status != 2)
+            {
+                return Content("<h3>Link Expired!</h3>", "text/html", System.Text.Encoding.UTF8);
+            }
             if (patient != null)
             {
                 ViewBag.Name = patient.Firstname + " " + patient.Lastname ?? "";
