@@ -693,3 +693,7 @@ function createProviderPartialLoad() {
     $('#providers').empty();
     $('#providers').load('/Admin/CreateProviderPartial');
 }
+function CreateRolePartialLoad() {
+
+    $('#access').load('/Admin/CreateRolePartial');
+}

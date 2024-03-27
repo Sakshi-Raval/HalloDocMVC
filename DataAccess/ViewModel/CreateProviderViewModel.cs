@@ -59,7 +59,6 @@ namespace DataAccess.ViewModel
         {
             _extensions = extensions;
         }
-
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             if (value is IFormFile file)
@@ -70,10 +69,8 @@ namespace DataAccess.ViewModel
                     return new ValidationResult("Only JPG and PNG files are allowed.");
                 }
             }
-
             return ValidationResult.Success;
         }
-
         private bool IsValidExtension(string extension)
         {
             return Array.Exists(_extensions, e => e.Equals(extension, StringComparison.OrdinalIgnoreCase));

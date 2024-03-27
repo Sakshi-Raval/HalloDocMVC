@@ -1,0 +1,61 @@
+﻿@model List<AccountAccessViewModel>
+<script>
+    $(document).ready(function () {
+        $('#deleteRole').on('click', function () {
+            var roleid = $(this).data('roleid');
+            console.log(roleid);
+            $.ajax({
+                url: '/Admin/DeleteRole',
+                type: 'POST',
+                data:{roleid:roleid},
+                success: function (response) {
+                    console.log("success");
+                    $('#partialAccountAccess').load('/Admin/AccountAccessTablePartial');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', xhr.status, xhr.statusText, error);
+                }
+            });
+        });
+    });
+</script>
+<partial name="_Notification" />
+<div class="table-responsive">
+    <table class="table tableDash">
+        <colgroup>
+            <col span="1" style="width: 33%;">
+            <col span="1" style="width: 33%;">
+            <col span="1" style="width: 34%;">
+        </colgroup>
+        <tbody>
+            <tr class="tableHead">
+                <th scope="col">Name</th>
+                <th scope="col">Account Type</th>
+                <th scope="col">Actions</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+
+                <tr>
+                    <td>@item.RoleName</td>
+                    @if (item.AccountType == 1)
+                    {
+                        <td>Admin</td>
+                    }
+                    else if (item.AccountType == 2)
+                    {
+                        <td>Provider</td>
+                    }
+                    <td>
+                        <button class="btn rounded btn-outline-info mb-1">
+                            Edit
+                        </button>
+                        <button class="btn rounded btn-outline-info mb-1" id="deleteRole" data-roleid="@item.Roleid">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,110 @@
+﻿<script>
+    function backToAccess() {
+        $('#access').load('/Admin/AccountAccessPartial');
+    }
+    $(document).ready(function () {
+        function LoadMenu() {
+            var accountType = $('#accountType').val();
+            $.ajax({
+                url: '/Admin/MenuResults',
+                type: 'GET',
+                data: { accountType: accountType },
+                success: function (data) {
+                    // menu checkboxes
+                    $('#roleMenu').empty(); // Clear existing checkboxes
+
+                    $.each(data, function (index, menu) {
+                        var checkbox = $('<div class="form-check form-check-inline">' +
+                            '<input class="form-check-input menus" type="checkbox" id="menu' + menu.menuid + '" name="menu" value="' + menu.menuid + '"' + '" > ' +
+                            '<label class="form-check-label" for="menu' + menu.menuid + '">' + menu.name + '</label>' +
+                            '</div>');
+                        $('#roleMenu').append(checkbox);
+                    });
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+        LoadMenu();
+        $('#accountType').on('change', function () {
+            LoadMenu();
+        });
+
+        $('#createRoleForm').submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+            console.log(formData);
+            $.ajax({
+                url: '/Admin/CreateNewRole',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    // $('#providerOption').addClass('selectedOption');
+                    // $('#schedulingOption').removeClass('selectedOption');
+                    $('#access').load('/Admin/AccountAccessPartial');
+                },
+                error: function (xhr, status, error) {
+
+                    console.error('Error submitting form:', error);
+                }
+            });
+        });
+
+    });
+</script>
+<div class="row justify-content-center">
+    <div class="col-10 d-inline-flex justify-content-between">
+        <div class="d-flex">
+            <h4 class="h4 mt-5 mb-3">Create Role</h4>
+        </div>
+        <div class="d-flex">
+            <button class="btn btn-outline-info mt-5 mb-3 ms-auto " onclick="backToAccess()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                     height="16" fill="currentColor" class="bi bi-chevron-left fw-medium mb-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                </svg>Back
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row rounded justify-content-center">
+    <div class="col-10 rounded shadow">
+        <div class="row">
+            <h6 class="h6">Details</h6>
+        </div>
+        <form id="createRoleForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="roleName" name="roleName"
+                               placeholder="Role Name" required>
+                        <label class="text-muted floating-label">Role Name</label>
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select class="form-select border text-muted mb-2" id="accountType" name="accountType" aria-label="Default select example">
+                            <option selected value="0">All</option>
+                            <option value="1">Admin</option>
+                            <option value="2">Provider</option>
+                        </select>
+                        <label for="role">Account Type</label>
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12" id="roleMenu"></div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end my-3">
+                <button class="btn btn-info me-md-2 text-white" type="submit">Save</button>
+                <button class="btn btn-outline-info" type="reset" >Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

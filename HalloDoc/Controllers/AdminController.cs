@@ -654,15 +654,86 @@ namespace HalloDoc.Controllers
                 var email = HttpContext.Session.GetString("Email");
                 _admin.ProviderAccount(createProviderViewModel, email);
                 TempData["message"] = "Provider Create Successfully!";
-                return RedirectToAction("AdminPage","Admin");
+                return RedirectToAction("AdminPage", "Admin");
             }
-            return PartialView("_CreateProviderPartial",createProviderViewModel);
-            
+            return PartialView("_CreateProviderPartial", createProviderViewModel);
+
         }
 
         public IActionResult AccountAccessPartial()
         {
             return PartialView("_AccountAccessPartial");
+        }
+        public IActionResult AccountAccessTablePartial()
+        {
+            bool[] trueArray = { true };
+            BitArray trueBitArray = new BitArray(trueArray);
+            var accountAccessViewModel = (from roles in _context.Roles
+                                          where roles.Isdeleted != trueBitArray
+                                          orderby roles.Createddate
+                                          select new AccountAccessViewModel
+                                          {
+                                              Roleid = roles.Roleid,
+                                              RoleName = roles.Name,
+                                              AccountType = roles.Accounttype
+                                          }
+                                         ).ToList();
+            return PartialView("_AccountAccessTablePartial", accountAccessViewModel);
+        }
+        public void DeleteRole(int roleid)
+        {
+            Role role = _context.Roles.FirstOrDefault(x => x.Roleid == roleid);
+            if (role != null)
+            {
+                bool[] trueArray = { true };
+                BitArray trueBitArray = new BitArray(trueArray);
+                role.Isdeleted = trueBitArray;
+                _context.Update(role);
+                _context.SaveChanges();
+            }
+        }
+
+        public IActionResult CreateRolePartial()
+        {
+            return PartialView("_CreateRolePartial");
+        }
+
+        public List<Menu> MenuResults(int accountType)
+        {
+            List<Menu> results = _context.Menus.Where(x => (x.Accounttype == accountType) || (accountType == 0)).ToList();
+            return results;
+        }
+
+        public void CreateNewRole(string roleName, short accountType, int[] menu)
+        {
+            var email = HttpContext.Session.GetString("Email");
+            Role role = new();
+            role.Name = roleName;
+            role.Createddate = DateTime.Now;
+            role.Createdby = _context.Aspnetusers.Where(x => x.Email == email).Select(x => x.Id).FirstOrDefault() ?? "";
+            if (accountType != 0)
+            {
+                role.Accounttype= accountType;
+            }
+            else
+            {
+
+            }
+
+            _context.Add(role);
+            _context.SaveChanges();
+
+            foreach (var item in menu)
+            {
+                Rolemenu rolemenu = new();
+                rolemenu.Roleid = role.Roleid;
+                rolemenu.Menuid = item;
+
+                _context.Add(rolemenu);
+                _context.SaveChanges();
+            }
+
+            TempData["message"] = "Role Created";
         }
     }
 }
