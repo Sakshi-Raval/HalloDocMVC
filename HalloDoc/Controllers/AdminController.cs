@@ -649,9 +649,20 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult CreateProviderPartial(CreateProviderViewModel createProviderViewModel)
         {
-            string email = HttpContext.Session.GetString("Email");
-            _admin.ProviderAccount(createProviderViewModel,email);
-            return PartialView("_CreateProviderPartial",new CreateProviderViewModel());
+            if (ModelState.IsValid)
+            {
+                var email = HttpContext.Session.GetString("Email");
+                _admin.ProviderAccount(createProviderViewModel, email);
+                TempData["message"] = "Provider Create Successfully!";
+                return RedirectToAction("AdminPage","Admin");
+            }
+            return PartialView("_CreateProviderPartial",createProviderViewModel);
+            
+        }
+
+        public IActionResult AccountAccessPartial()
+        {
+            return PartialView("_AccountAccessPartial");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DataAccess.ViewModel;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace BusinessLogic.IRepository
         public void EditBillingDetails(string email, string address1, string address2, string city, int state, string zip, string phoneBilling);
         public List<ProviderMenuViewModel> GetProvidersList(string regionid);
         public void ProviderAccount(CreateProviderViewModel createProviderViewModel,string email);
+        public void FileUploadPhysician(IFormFile file, int physicianid, string filename);
 
     }
 }

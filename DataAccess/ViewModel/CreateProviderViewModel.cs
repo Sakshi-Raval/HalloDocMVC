@@ -38,10 +38,16 @@ namespace DataAccess.ViewModel
         public string? AdminNotes {  get; set; }
         [AllowedExtensionsAttribute(".jpg",".jpeg",".png",ErrorMessage ="Only jpg, jpeg and png files are allowed.")]
         public IFormFile? Photo {  get; set; }
+        [AllowedExtensionsAttribute(".pdf", ErrorMessage = "Only pdf files are allowed.")]
         public IFormFile? ICA {  get; set; }
+        [AllowedExtensionsAttribute(".pdf", ErrorMessage = "Only pdf files are allowed.")]
         public IFormFile? BackgroundCheck {  get; set; }
+        [AllowedExtensionsAttribute(".pdf", ErrorMessage = "Only pdf files are allowed.")]
         public IFormFile? HIPAA {  get; set; }
+        [AllowedExtensionsAttribute(".pdf", ErrorMessage = "Only pdf files are allowed.")]
         public IFormFile? NonDisclosure {  get; set; }
+        [Required(ErrorMessage ="Select Atleast one Region")]
+        public List<int> PhysicianRegions {  get; set; }
 
     }
 

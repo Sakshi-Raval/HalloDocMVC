@@ -12,6 +12,7 @@
         if (this.files && this.files.length > 0) {
             console.log(this.files.length);
             $('#checkIca').prop('checked', true);
+            console.log(this.files[0].name);
         }
         else {
             $('#checkIca').prop('checked', false);
@@ -47,6 +48,52 @@
     $(document).ready(function () {
         populateRegionDropdown();
         populateRoleDropdown();
+
+        //get regions in checkbox
+        $.ajax({
+            url: '/Admin/RegionResults',
+            type: 'GET',
+            success: function (data) {
+                // region checkboxes
+                console.log("checkboxes initialization");
+                $('#physicianRegionsContainer').empty(); // Clear existing checkboxes
+
+                $.each(data, function (index, region) {
+                console.log(typeof region.regionid);
+                    var checkbox = $('<div class="form-check form-check-inline">' +
+                        '<input class="form-check-input physicianRegions" type="checkbox" id="physicianRegion' + region.regionid + '" name="physicianRegions" value="' + region.regionid + '" asp-for="PhysicianRegions[' +(region.regionid-1)+']" > ' +
+                        '<label class="form-check-label" for="region' + region.regionid + '">' + region.name + '</label>' +
+                        '</div>');
+                $('#physicianRegionsContainer').append(checkbox);
+                });
+
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+
+        //form submit
+        $('#createProvdierAccount').submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+            console.log(formData);
+            $.ajax({
+                url: '/Admin/CreateProviderPartial',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    // $('#providerOption').addClass('selectedOption');
+                    // $('#schedulingOption').removeClass('selectedOption');
+                    $('#providers').load('/Admin/CreateProviderPartial');
+                },
+                error: function (xhr, status, error) {
+
+                    console.error('Error submitting form:', error);
+                }
+            });
+        });
     });
 </script>
 <div class="row justify-content-center">
@@ -67,7 +114,7 @@
 </div>
 <div class="row justify-content-center">
     <div class="col-10 rounded mb-3" style="box-shadow: 2px 2px 20px rgb(179, 177, 177);">
-        <form asp-action="CreateProviderPartial">
+        <form id="createProvdierAccount" enctype="multipart/form-data">
             <div class="row">
                 <h6 class="my-3">Account Information</h6>
             </div>
@@ -142,7 +189,8 @@
                         <span asp-validation-for="NPINum" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-6" id="physicianRegions">
+                <div class="col-md-6" id="physicianRegionsContainer">
+
                 </div>
             </div>
             <div class="row">
@@ -245,7 +293,7 @@
                         <span>Independent Contractor Agreement</span>
                     </div>
                     <div>
-                        <input type="file" class="form-control" id="ica" hidden asp-for="ICA"/>
+                        <input type="file" class="form-control" id="ica" asp-for="ICA" accept=".pdf" hidden />
                         <label for="ica" class="input-group-text btn btn-info text-white"><span><i class="bi bi-cloud-arrow-up text-white"></i></span> Upload</label>
                         <span asp-validation-for="ICA" class="text-danger"></span>
                     </div>
@@ -258,7 +306,7 @@
                         <span>Background Check</span>
                     </div>
                     <div>
-                        <input type="file" class="form-control" id="backgroundCheck" hidden asp-for="BackgroundCheck"/>
+                        <input type="file" class="form-control" id="backgroundCheck" accept=".pdf" hidden asp-for="BackgroundCheck" />
                         <label for="backgroundCheck" class="input-group-text btn btn-info text-white"><span><i class="bi bi-cloud-arrow-up text-white"></i></span> Upload</label>
                         <span asp-validation-for="BackgroundCheck" class="text-danger"></span>
                     </div>
@@ -271,7 +319,7 @@
                         <span>HIPAA Compliance</span>
                     </div>
                     <div>
-                        <input type="file" class="form-control" id="hipaa" hidden asp-for="HIPAA"/>
+                        <input type="file" class="form-control" id="hipaa" accept=".pdf" hidden asp-for="HIPAA" />
                         <label for="hipaa" class="input-group-text btn btn-info text-white"><span><i class="bi bi-cloud-arrow-up text-white"></i></span> Upload</label>
                         <span asp-validation-for="HIPAA" class="text-danger"></span>
                     </div>
@@ -284,7 +332,7 @@
                         <span>Non-Disclosure Agreement</span>
                     </div>
                     <div>
-                        <input type="file" class="form-control" id="nonDisclosure" hidden asp-for="NonDisclosure" />
+                        <input type="file" class="form-control" id="nonDisclosure" accept=".pdf" hidden asp-for="NonDisclosure" />
                         <label for="nonDisclosure" class="input-group-text btn btn-info text-white"><span><i class="bi bi-cloud-arrow-up text-white"></i></span> Upload</label>
                         <span asp-validation-for="NonDisclosure" class="text-danger"></span>
                     </div>

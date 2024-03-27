@@ -2,6 +2,7 @@
 using DataAccess.DataContext;
 using DataAccess.DataModels;
 using DataAccess.ViewModel;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,11 @@ namespace BusinessLogic.Repository
     public class AdminRepo : IAdmin
     {
         private readonly ApplicationDbContext _context;
-        public AdminRepo(ApplicationDbContext context)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public AdminRepo(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public List<PatientsListViewModel> GetPatients(string SearchValue, string districtSelect, int[] checkedFilter, int[] currentStatus)
@@ -601,6 +604,8 @@ namespace BusinessLogic.Repository
         public void ProviderAccount(CreateProviderViewModel createProviderViewModel,string email)
         {
             Aspnetuser aspnetuser = new();
+            Guid aspid = Guid.NewGuid();
+            aspnetuser.Id = aspid.ToString();
             aspnetuser.Username = createProviderViewModel.Username;
             aspnetuser.Email = createProviderViewModel.Email;
             aspnetuser.Passwordhash = createProviderViewModel.Password;
@@ -635,7 +640,7 @@ namespace BusinessLogic.Repository
             }
             physician.Zip = createProviderViewModel.Zip;
             var id = _context.Aspnetusers.Where(x => x.Email == email).Select(x => x.Id).FirstOrDefault();
-            physician.Createdby = id;
+            physician.Createdby = id??"";
             physician.Createddate = DateTime.Now;
             physician.Businessname = createProviderViewModel.BusinessName;
             physician.Businesswebsite = createProviderViewModel.BusinessWebsite;
@@ -645,7 +650,65 @@ namespace BusinessLogic.Repository
             _context.Add(physician);
             _context.SaveChanges();
 
+            for(var i=0;i<createProviderViewModel.PhysicianRegions.Count;i++)
+            {
+                Physicianregion physicianregion = new();
+                physicianregion.Physicianid = physician.Physicianid;
+                physicianregion.Regionid = createProviderViewModel.PhysicianRegions[i];
+
+                _context.Add(physicianregion);
+                _context.SaveChanges();
+            }
+
+            //files upload in folder
+            if (createProviderViewModel.Photo != null)
+            {
+                FileUploadPhysician(createProviderViewModel.Photo, physician.Physicianid, "Photo");
+                physician.Photo = Path.Combine(_hostingEnvironment.WebRootPath, "Physician" + physician.Physicianid,"Photo");
+                _context.Update(physician);
+                _context.SaveChanges();
+            }
+            if (createProviderViewModel.ICA!= null)
+            {
+                FileUploadPhysician(createProviderViewModel.ICA, physician.Physicianid, "ICA");
+            }
+            if (createProviderViewModel.BackgroundCheck!= null)
+            {
+                FileUploadPhysician(createProviderViewModel.BackgroundCheck, physician.Physicianid, "BackgroundCheck");
+            }
+            if (createProviderViewModel.HIPAA!= null)
+            {
+                FileUploadPhysician(createProviderViewModel.HIPAA, physician.Physicianid, "HIPAA");
+            }
+            if (createProviderViewModel.NonDisclosure!= null)
+            {
+                FileUploadPhysician(createProviderViewModel.NonDisclosure, physician.Physicianid, "NonDisclosure");
+            }
+
         }
+        public void FileUploadPhysician(IFormFile file,int physicianid, string filename)
+        {
+            if (file.Length > 0)
+            {
+                var physicianFolder = Path.Combine(_hostingEnvironment.WebRootPath, "Physician"+physicianid);
+                if (!Directory.Exists(physicianFolder))
+                {
+                    Directory.CreateDirectory(physicianFolder);
+                }
+                var fileExtension = Path.GetExtension(file.FileName);
+                var fileName = filename + fileExtension;
+                var filePath = Path.Combine(physicianFolder, fileName);
+                if(File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    file.CopyTo(stream);
+                }
+            }
+        }
+
 
     }
 }
