@@ -30,6 +30,7 @@ namespace BusinessLogic.IRepository
         public List<ProviderMenuViewModel> GetProvidersList(string regionid);
         public void ProviderAccount(CreateProviderViewModel createProviderViewModel,string email);
         public void FileUploadPhysician(IFormFile file, int physicianid, string filename);
+        public CreateProviderViewModel ProviderProfile(int physicianId);
 
     }
 }

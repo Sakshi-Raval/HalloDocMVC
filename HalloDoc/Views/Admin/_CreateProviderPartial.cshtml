@@ -1,10 +1,5 @@
 ﻿@model CreateProviderViewModel
 <script>
-    function backToProvider() {
-        $('#providerOption').addClass('selectedOption');
-        $('#schedulingOption').removeClass('selectedOption');
-        $('#providers').load('/Admin/ProviderMenuPartial');
-    }
     $('#photoProvider').on('change', function(){
         showFileName();
     });

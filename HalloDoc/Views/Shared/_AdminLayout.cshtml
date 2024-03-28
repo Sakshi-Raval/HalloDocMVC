@@ -34,11 +34,17 @@
             });
         }
         $(document).ready(function () {
-            $('.navItem').on('click', function () {
+            $('.navItem').not('#providerNavBtn', '#accessNavBtn').on('click', function () {
                 $('#providerDropdown').removeClass('active');
-            })
+                $('#access-tab').removeClass('active');
+            });
             $('#providerNavBtn').on('click', function () {
-                $('.navItem').removeClass('active');
+                // $('#providerDropdown').addClass('active');
+                $('.navItem').not(this).removeClass('active');
+            });
+            $('#accessNavBtn').on('click', function () {
+                // $('#access-tab').addClass('active');
+                $('.navItem').not(this).removeClass('active');
             });
         });
     </script>
@@ -94,24 +100,7 @@
                 <li class="nav-item navItem" role="presentation">
                     <button class="nav-link tabs" style="color:black" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">My Profile</button>
                 </li>
-                @*    <li class="nav-item" role="presentation">
-                <button class="nav-link tabs" style="color:black" id="providers-tab" data-bs-toggle="tab" data-bs-target="#providers" type="button" role="tab" aria-controls="providers" aria-selected="false" tabindex="-1">Providers</button>
-                </li> *@
-
-                @* <li class="nav-item tabs" role="presentation">
-
-                    <button class="nav-link dropdown-toggle" id="providerDropdown" data-bs-toggle="tab dropdown" data-bs-target="#providers" role="tab" aria-controls="providers" aria-selected="false" tabindex="-1" aria-expanded="false">
-                        Provider
-                    </button>
-                    <div class="dropdown">
-                        <ul class="dropdown-menu" aria-labelledby="providerDropdown">
-                            <li><a id="providerOption" class="dropdown-item providerDropdownOption" value="provider">Provider</a></li>
-                            <li><a id="schedulingOption" class="dropdown-item providerDropdownOption" value="scheduling">Scheduling</a></li>
-                        </ul>
-                    </div>
-                    
-                </li> *@
-                <li class="nav-item" id="providerNavBtn" role="presentation">
+                <li class="nav-item navItem" id="providerNavBtn" role="presentation">
                     <div class="dropdown">
                         <button class="nav-link dropdown-toggle tabs" id="providerDropdown" data-bs-toggle="dropdown" data-bs-target="#providers" aria-haspopup="true" aria-expanded="false" role="button">
                             Provider
@@ -123,23 +112,20 @@
                     </div>
                 </li>
 
-                  @*   <div class="dropdown">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown link
-                        </a>
-
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </div> *@
-
                 <li class="nav-item navItem" role="presentation">
                     <button class="nav-link tabs" style="color:black" id="partners-tab" data-bs-toggle="tab" data-bs-target="#partners" type="button" role="tab" aria-controls="partners" aria-selected="false" tabindex="-1">Partners</button>
                 </li>
-                <li class="nav-item navItem" role="presentation">
-                    <button class="nav-link tabs" style="color:black" id="access-tab" data-bs-toggle="tab" data-bs-target="#access" type="button" role="tab" aria-controls="access" aria-selected="false" tabindex="-1">Access</button>
+                <li class="nav-item navItem" id="accessNavBtn" role="presentation">
+                    @* <button class="nav-link tabs" style="color:black" id="access-tab" data-bs-toggle="tab" data-bs-target="#access" type="button" role="tab" aria-controls="access" aria-selected="false" tabindex="-1">Access</button> *@
+                    <div class="dropdown">
+                        <button class="nav-link dropdown-toggle tabs" id="access-tab" data-bs-toggle="dropdown" data-bs-target="#access" aria-haspopup="true" aria-expanded="false" role="button">
+                            Access
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="access-tab">
+                            <li><a id="accountAccessOption" class="dropdown-item accessDropdownOption" value="account">Account Access</a></li>
+                            <li><a id="userAccessOption" class="dropdown-item accessDropdownOption" value="user">User Access</a></li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="nav-item navItem" role="presentation">
                     <button class="nav-link tabs" style="color:black" id="records-tab" data-bs-toggle="tab" data-bs-target="#records" type="button" role="tab" aria-controls="records" aria-selected="false" tabindex="-1">Records</button>

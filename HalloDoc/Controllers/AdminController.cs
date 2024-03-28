@@ -654,32 +654,6 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult StopNotificationUpdate(int[] stopNotifCheckboxes)
         {
-            //foreach(var item in stopNotifCheckboxes)
-            //{
-            //    int[] physicians = _context.Physicians.Select(x => x.Physicianid).ToArray();
-            //    var physicianNotif = _context.Physiciannotifications.Find(item);
-            //    if (physicianNotif != null)
-            //    {
-            //        bool[] boolArray = { true };
-            //        BitArray bitArray = new BitArray(boolArray);
-            //        physicianNotif.Isnotificationstopped = bitArray;
-
-            //        _context.Update(physicianNotif);
-            //        _context.SaveChanges();
-            //    }
-            //    else
-            //    {
-            //        bool[] boolArray = { true };
-            //        BitArray bitArray = new BitArray(boolArray);
-            //        Physiciannotification physiciannotification = new();
-            //        physiciannotification.Physicianid = item;
-
-            //        physiciannotification.Isnotificationstopped = bitArray;
-
-            //        _context.Add(physiciannotification);
-            //        _context.SaveChanges();
-            //    }
-            //}
             List<Physician> physicians = _context.Physicians.ToList();
             foreach (var item in physicians)
             {
@@ -761,6 +735,13 @@ namespace HalloDoc.Controllers
 
         }
 
+        public IActionResult EditProviderPartial(int physicianId)
+        {
+            ViewBag.Physicianid = physicianId; 
+            var viewModel = _admin.ProviderProfile(physicianId);
+            return PartialView("_EditProviderPartial", viewModel);
+        }
+
         public IActionResult AccountAccessPartial()
         {
             return PartialView("_AccountAccessPartial");
@@ -838,6 +819,11 @@ namespace HalloDoc.Controllers
             }
 
             TempData["message"] = "Role Created";
+        }
+
+        public IActionResult UserAccessPartial()
+        {
+            return PartialView("_UserAccessPartial");
         }
        
     }

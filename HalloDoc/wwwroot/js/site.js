@@ -697,3 +697,9 @@ function CreateRolePartialLoad() {
 
     $('#access').load('/Admin/CreateRolePartial');
 }
+
+function backToProvider() {
+    $('#providerOption').addClass('selectedOption');
+    $('#schedulingOption').removeClass('selectedOption');
+    $('#providers').load('/Admin/ProviderMenuPartial');
+}

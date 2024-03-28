@@ -1,6 +1,23 @@
 ﻿@model List<ProviderMenuViewModel>
 
 <script>
+    function LoadEditProfilePartial(btn) {
+        var physicianId = btn.getAttribute('data-physicianId');
+        console.log(physicianId);
+        // $('#providers').load('/Admin/EditProviderPartial?physicianId='+physicianId);
+        $.ajax({
+            url: '/Admin/EditProviderPartial',
+            type: 'GET',
+            data: { physicianId: physicianId },
+            success: function (response) {
+                $('#providers').html(response);
+            },
+            error: function (xhr, status, error) {
+
+                console.error('Error submitting form:', error);
+            }
+        });
+    }
     $(document).ready(function () {
         $('#saveRow').hide();
         $('.checkBox').on('change', function () {
@@ -71,6 +88,7 @@
         $('#contactProviderModal').on('hidden.bs.modal', function () {
             $(this).find('form')[0].reset();
         });
+
     });
 </script>
 
@@ -176,7 +194,7 @@
                         <button class="btn rounded btn-outline-info mb-1" type="button" data-bs-toggle="modal" data-bs-target="#contactProviderModal" data-physicianid="@item.PhysicianId">
                             Contact
                         </button>
-                        <button class="btn rounded btn-outline-info mb-1" type="button">
+                            <button class="btn rounded btn-outline-info mb-1 editProviderBtn" type="button" onclick="LoadEditProfilePartial(this)" data-physicianId="@item.PhysicianId">
                             Edit
                         </button>
                     </td>

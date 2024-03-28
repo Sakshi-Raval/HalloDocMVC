@@ -637,7 +637,8 @@ namespace BusinessLogic.Repository
             physician.Zip = createProviderViewModel.Zip;
             if (createProviderViewModel.State != null)
             {
-                physician.Regionid = _context.Regions.Where(x => x.Regionid == int.Parse(createProviderViewModel.State)).Select(x => x.Regionid).FirstOrDefault();
+                physician.Regionid = int.Parse(createProviderViewModel.State);
+                //physician.Regionid = _context.Regions.Where(x => x.Regionid == int.Parse(createProviderViewModel.State)).Select(x => x.Regionid).FirstOrDefault();
             }
             physician.Zip = createProviderViewModel.Zip;
             var id = _context.Aspnetusers.Where(x => x.Email == email).Select(x => x.Id).FirstOrDefault();
@@ -645,8 +646,9 @@ namespace BusinessLogic.Repository
             physician.Createddate = DateTime.Now;
             physician.Businessname = createProviderViewModel.BusinessName;
             physician.Businesswebsite = createProviderViewModel.BusinessWebsite;
-            physician.Roleid = createProviderViewModel.Role;
+            physician.Roleid = int.Parse(createProviderViewModel.Role);
             physician.Npinumber = createProviderViewModel.NPINum;
+            physician.Status = 1;
 
             _context.Add(physician);
             _context.SaveChanges();
@@ -660,7 +662,11 @@ namespace BusinessLogic.Repository
                 _context.Add(physicianregion);
                 _context.SaveChanges();
             }
+            bool[] trueArray = { true };
+            BitArray trueBitArray = new BitArray(trueArray);
 
+            bool[] falseArray = { false };
+            BitArray falseBitArray = new BitArray(falseArray);
             //files upload in folder
             if (createProviderViewModel.Photo != null)
             {
@@ -672,20 +678,42 @@ namespace BusinessLogic.Repository
             if (createProviderViewModel.ICA!= null)
             {
                 FileUploadPhysician(createProviderViewModel.ICA, physician.Physicianid, "ICA");
+                physician.Isagreementdoc = trueBitArray;
+            }
+            else
+            {
+                physician.Isagreementdoc = falseBitArray;
             }
             if (createProviderViewModel.BackgroundCheck!= null)
             {
                 FileUploadPhysician(createProviderViewModel.BackgroundCheck, physician.Physicianid, "BackgroundCheck");
+                physician.Isbackgrounddoc = trueBitArray;
+            }
+            else
+            {
+                physician.Isbackgrounddoc= falseBitArray;
             }
             if (createProviderViewModel.HIPAA!= null)
             {
                 FileUploadPhysician(createProviderViewModel.HIPAA, physician.Physicianid, "HIPAA");
+                physician.Istrainingdoc = trueBitArray;
+            }
+            else
+            {
+                physician.Istrainingdoc = falseBitArray;
             }
             if (createProviderViewModel.NonDisclosure!= null)
             {
                 FileUploadPhysician(createProviderViewModel.NonDisclosure, physician.Physicianid, "NonDisclosure");
+                physician.Isnondisclosuredoc = trueBitArray;
             }
-
+            else
+            {
+                physician.Isnondisclosuredoc= falseBitArray;
+            }
+            physician.Islicensedoc = falseBitArray;
+            _context.Update(physician);
+            _context.SaveChanges();
         }
         public void FileUploadPhysician(IFormFile file,int physicianid, string filename)
         {
@@ -710,6 +738,49 @@ namespace BusinessLogic.Repository
             }
         }
 
+        public CreateProviderViewModel ProviderProfile(int physicianId)
+        {
+            Physician physician = _context.Physicians.Find(physicianId);
+
+            if (physician != null)
+            {
+                CreateProviderViewModel providerView = new();
+                providerView.Username = _context.Aspnetusers.Where(x => x.Id == physician.Aspnetuserid).Select(x => x.Username).FirstOrDefault();
+                providerView.Role = physician.Roleid.ToString()??"";
+                providerView.Status = physician.Status.ToString();
+                providerView.Physicianid = physician.Physicianid;
+
+                providerView.Firstname = physician.Firstname;
+                providerView.Lastname = physician.Lastname;
+                providerView.Email = physician.Email;
+                providerView.Phone = physician.Mobile;
+                providerView.MedLicense = physician.Medicallicense;
+                providerView.NPINum = physician.Npinumber;
+                providerView.SyncEmail = physician.Syncemailaddress;
+                providerView.PhysicianRegions = _context.Physicianregions.Where(x => x.Physicianid == physician.Physicianid).Select(x =>(int) x.Regionid).ToList();
+
+                providerView.Address1 = physician.Address1;
+                providerView.Address2 = physician.Address2;
+                providerView.City = physician.City;
+                providerView.State = physician.Regionid.ToString();
+                providerView.Zip = physician.Zip;
+
+                providerView.BusinessName = physician.Businessname;
+                providerView.BusinessWebsite = physician.Businesswebsite;
+                providerView.PhotoPath = physician.Photo;
+                providerView.SignaturePath = physician.Signature;
+                providerView.AdminNotes = physician.Adminnotes;
+
+                providerView.IsAgreementDoc = physician.Isagreementdoc;
+                providerView.IsBackgroundDoc = physician.Isbackgrounddoc;
+                providerView.IsHippaDoc = physician.Istrainingdoc;
+                providerView.IsNonDisclosureDoc = physician.Isnondisclosuredoc;
+                providerView.IsLicenseDoc = physician.Islicensedoc;
+
+                return providerView;
+            }
+            return new CreateProviderViewModel();           
+        }
 
     }
 }

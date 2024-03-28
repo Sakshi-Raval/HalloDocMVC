@@ -10,7 +10,7 @@
             $('#home').load('/Admin/AdminDashboardPartial');
             $('#profile').load('/Admin/MyProfileAdminPartial');
             // $('#providers').load('/Admin/ProviderMenuPartial');
-            $('#access').load('/Admin/AccountAccessPartial');
+            //$('#access').load('/Admin/AccountAccessPartial');
 
             $('.providerDropdownOption').click(function () {
                 var optionValue = $(this).attr('value');
@@ -30,6 +30,26 @@
                 $('#providerDropdown').attr('data-bs-toggle', 'tab');
                 $('#providerDropdown').click();
                 $('#providerDropdown').attr('data-bs-toggle', 'dropdown');
+            });
+
+            $('.accessDropdownOption').click(function () {
+                var optionValue = $(this).attr('value');
+                switch (optionValue) {
+                    case 'account':
+                        $('#accountAccessOption').addClass('selectedOption');
+                        $('#userAccessOption').removeClass('selectedOption');
+                        $('#access').load('/Admin/AccountAccessPartial');
+                        break;
+                    case 'user':
+                        $('#userAccessOption').addClass('selectedOption');
+                        $('#accountAccessOption').removeClass('selectedOption');
+                        $('#access').load('/Admin/UserAccessPartial');
+                        break;
+                }
+                // Change the button behavior to tab
+                $('#access-tab').attr('data-bs-toggle', 'tab');
+                $('#access-tab').click();
+                $('#access-tab').attr('data-bs-toggle', 'dropdown');
             });
 
            
