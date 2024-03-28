@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
+using NuGet.Packaging;
 using OfficeOpenXml;
 using Rotativa.AspNetCore;
 using System.Collections;
@@ -819,6 +820,29 @@ namespace HalloDoc.Controllers
             }
 
             TempData["message"] = "Role Created";
+        }
+
+        public IActionResult EditRolePartial(int roleid)
+        {
+            ViewBag.Roleid = roleid;
+            Role role = _context.Roles.Find(roleid);
+            if(role != null)
+            {
+                EditRoleViewModel viewModel = new EditRoleViewModel();
+                List<Rolemenu> rolemenus = _context.Rolemenus.Where(x=>x.Roleid==roleid).ToList();
+                viewModel.SelectedMenu = new int[0];
+                int i = 0;
+                foreach (var rolemenu in rolemenus)
+                {
+                    //viewModel.SelectedMenu.((int)rolemenu.Menuid);
+                }
+                viewModel.RoleName=role.Name;
+                viewModel.AccountType = role.Accounttype.ToString();
+                viewModel.Menus = _context.Menus.Where(x=>x.Accounttype==role.Accounttype).ToList();
+
+                return PartialView("_EditRolePartial", viewModel);
+            }
+            return PartialView("_EditRolePartial",new EditRoleViewModel());
         }
 
         public IActionResult UserAccessPartial()

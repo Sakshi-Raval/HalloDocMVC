@@ -17,6 +17,21 @@
                 }
             });
         });
+        $('.editRoleBtn').on('click', function () {
+            var roleid = $(this).data('roleid');
+            console.log(roleid);
+            $.ajax({
+                url: '/Admin/EditRolePartial',
+                type: 'POST',
+                data: { roleid: roleid },
+                success: function (response) {
+                    $('#access').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', xhr.status, xhr.statusText, error);
+                }
+            });
+        });
     });
 </script>
 <partial name="_Notification" />
@@ -47,7 +62,7 @@
                         <td>Provider</td>
                     }
                     <td>
-                        <button class="btn rounded btn-outline-info mb-1">
+                        <button class="btn rounded btn-outline-info mb-1 editRoleBtn"  data-roleid="@item.Roleid">
                             Edit
                         </button>
                         <button class="btn rounded btn-outline-info mb-1" id="deleteRole" data-roleid="@item.Roleid">
