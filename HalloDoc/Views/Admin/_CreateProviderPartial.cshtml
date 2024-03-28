@@ -86,7 +86,9 @@
                 success: function (response) {
                     // $('#providerOption').addClass('selectedOption');
                     // $('#schedulingOption').removeClass('selectedOption');
-                    $('#providers').load('/Admin/CreateProviderPartial');
+                    // $('#providers').load('/Admin/CreateProviderPartial');
+                     $('#providers').html(response);
+
                 },
                 error: function (xhr, status, error) {
 

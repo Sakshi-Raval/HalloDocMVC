@@ -20,6 +20,9 @@
                             '</div>');
                         $('#roleMenu').append(checkbox);
                     });
+                    if (accountType == 0) {
+                        $('.menus').prop('disabled', true);
+                    }
 
                 },
                 error: function (xhr, status, error) {

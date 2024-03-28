@@ -588,6 +588,7 @@ namespace BusinessLogic.Repository
                             join r in _context.Roles
                                 on phy.Roleid equals r.Roleid into rGroup
                             from r in rGroup.DefaultIfEmpty() // Left join for Roles
+                            orderby phy.Createddate descending
                             select new ProviderMenuViewModel
                             {
                                 PhysicianId = phy.Physicianid,

@@ -9,6 +9,39 @@
         $('#btnCancel').on('click', function () {
             $('#saveRow').hide();
         });
+        $('#stopNotifForm').submit( function () {
+            event.preventDefault();
+            // var jsonData = {};
+            // var i = 0;
+            // $('.checkBox').each(function () {
+            //     physicianid = $(this).val();
+            //     var stopNotif = $(this).prop('checked');
+            //     jsonData[i] = { "physicianid": physicianid, "stopNotif": stopNotif };
+            //     console.log(jsonData[i]);
+            //     i++;
+            // });
+            // debugger;
+            // var jsonObject = JSON.stringify(jsonData);
+            // console.log(typeof jsonObject);
+            var formData = $(this).serialize();
+            console.log(formData);
+            $.ajax({
+                url: '/Admin/StopNotificationUpdate',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    // $('#providerOption').addClass('selectedOption');
+                    // $('#schedulingOption').removeClass('selectedOption');
+                    // $('#providers').load('/Admin/CreateProviderPartial');
+                    $('#providers').html(response);
+                },
+                error: function (xhr, status, error) {
+
+                    console.error('Error:', error);
+                }
+            });
+
+        });
         $('#contactProviderModal').on('shown.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             var physicianid = button.data('physicianid');
@@ -89,6 +122,8 @@
 </div>
 
 <div class="table-responsive">
+    <form id="stopNotifForm">
+
     <table class="table tableDash">
         <colgroup>
             <col span="1" style="width: 10%;">
@@ -125,14 +160,7 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    @if (item.StopNotification)
-                    {
-                        <td><input type="checkbox" class="checkBox" value="@item.PhysicianId" checked /></td>
-                    }
-                    else
-                    {
-                        <td><input type="checkbox" class="checkBox" value="@item.PhysicianId" /></td>
-                    }
+                    <td><input type="checkbox" class="checkBox" value="@item.PhysicianId" name="stopNotifCheckboxes" checked="@item.StopNotification" /></td>
                     <td>@item.ProviderName</td>
                     <td>@item.RoleName</td>
                     @if (item.OnCallStatus)
@@ -145,10 +173,10 @@
                     }
                     <td>--</td>
                     <td>
-                        <button class="btn rounded btn-outline-info mb-1" data-bs-toggle="modal" data-bs-target="#contactProviderModal" data-physicianid="@item.PhysicianId">
+                        <button class="btn rounded btn-outline-info mb-1" type="button" data-bs-toggle="modal" data-bs-target="#contactProviderModal" data-physicianid="@item.PhysicianId">
                             Contact
                         </button>
-                        <button class="btn rounded btn-outline-info mb-1">
+                        <button class="btn rounded btn-outline-info mb-1" type="button">
                             Edit
                         </button>
                     </td>
@@ -158,8 +186,9 @@
     </table>
     <div id="saveRow">
         <div class="d-grid gap-2 my-3 d-md-flex justify-content-md-end">
-            <button class="btn btn-info me-md-2 text-white fw-medium" type="button" id="btnSave">Save</button>
+            <button class="btn btn-info me-md-2 text-white fw-medium" type="submit" id="btnSave">Save</button>
             <button class="btn btn-outline-info fw-medium link-info" type="button" id="btnCancel">Cancel</button>
         </div>
     </div>
+    </form>
 </div>

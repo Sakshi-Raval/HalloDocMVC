@@ -3,6 +3,7 @@ using BusinessLogic.Repository;
 using DataAccess.DataContext;
 using DataAccess.DataModels;
 using DataAccess.ViewModel;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
@@ -10,8 +11,11 @@ using OfficeOpenXml;
 using Rotativa.AspNetCore;
 using System.Collections;
 using System.Drawing.Printing;
+using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
+using System.Text.Json.Serialization;
+using System.Web.Helpers;
 
 namespace HalloDoc.Controllers
 {
@@ -641,6 +645,103 @@ namespace HalloDoc.Controllers
             return Ok();
         }
 
+        public class PhysicianNotificationData
+        {
+            public int physicianid { get; set; }
+            public bool stopNotif { get; set; }
+        }
+
+        [HttpPost]
+        public IActionResult StopNotificationUpdate(int[] stopNotifCheckboxes)
+        {
+            //foreach(var item in stopNotifCheckboxes)
+            //{
+            //    int[] physicians = _context.Physicians.Select(x => x.Physicianid).ToArray();
+            //    var physicianNotif = _context.Physiciannotifications.Find(item);
+            //    if (physicianNotif != null)
+            //    {
+            //        bool[] boolArray = { true };
+            //        BitArray bitArray = new BitArray(boolArray);
+            //        physicianNotif.Isnotificationstopped = bitArray;
+
+            //        _context.Update(physicianNotif);
+            //        _context.SaveChanges();
+            //    }
+            //    else
+            //    {
+            //        bool[] boolArray = { true };
+            //        BitArray bitArray = new BitArray(boolArray);
+            //        Physiciannotification physiciannotification = new();
+            //        physiciannotification.Physicianid = item;
+
+            //        physiciannotification.Isnotificationstopped = bitArray;
+
+            //        _context.Add(physiciannotification);
+            //        _context.SaveChanges();
+            //    }
+            //}
+            List<Physician> physicians = _context.Physicians.ToList();
+            foreach (var item in physicians)
+            {
+                if (stopNotifCheckboxes.Contains(item.Physicianid))
+                {
+                    var physicianNotif = _context.Physiciannotifications.FirstOrDefault(x => x.Physicianid == item.Physicianid);
+
+                    if (physicianNotif != null)
+                    {
+
+                        bool[] boolArray = { true };
+                        BitArray bitArray = new BitArray(boolArray);
+                        physicianNotif.Isnotificationstopped = bitArray;
+
+                        _context.Update(item);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        bool[] boolArray = { true };
+                        BitArray bitArray = new BitArray(boolArray);
+                        Physiciannotification physiciannotification = new();
+                        physiciannotification.Physicianid = item.Physicianid;
+
+                        physiciannotification.Isnotificationstopped = bitArray;
+
+                        _context.Add(physiciannotification);
+                        _context.SaveChanges();
+                    }
+
+                }
+                else 
+                {
+                    var physicianNotif = _context.Physiciannotifications.FirstOrDefault(x=>x.Physicianid==item.Physicianid);
+                    if (physicianNotif != null)
+                    {
+
+                        bool[] boolArray = { false };
+                        BitArray bitArray = new BitArray(boolArray);
+                        physicianNotif.Isnotificationstopped = bitArray;
+
+                        _context.Update(item);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        bool[] boolArray = { false };
+                        BitArray bitArray = new BitArray(boolArray);
+                        Physiciannotification physiciannotification = new();
+                        physiciannotification.Physicianid = item.Physicianid;
+
+                        physiciannotification.Isnotificationstopped = bitArray;
+
+                        _context.Add(physiciannotification);
+                        _context.SaveChanges();
+                    }
+                }
+            }
+            
+            return RedirectToAction("ProviderMenuPartial");
+        }
+
         public IActionResult CreateProviderPartial()
         {
             return PartialView("_CreateProviderPartial");
@@ -654,7 +755,7 @@ namespace HalloDoc.Controllers
                 var email = HttpContext.Session.GetString("Email");
                 _admin.ProviderAccount(createProviderViewModel, email);
                 TempData["message"] = "Provider Create Successfully!";
-                return RedirectToAction("AdminPage", "Admin");
+                return RedirectToAction("CreateProviderPartial", "Admin");
             }
             return PartialView("_CreateProviderPartial", createProviderViewModel);
 
@@ -711,6 +812,9 @@ namespace HalloDoc.Controllers
             role.Name = roleName;
             role.Createddate = DateTime.Now;
             role.Createdby = _context.Aspnetusers.Where(x => x.Email == email).Select(x => x.Id).FirstOrDefault() ?? "";
+            bool[] falseArray = { false };
+            BitArray falseBitArray = new BitArray(falseArray);
+            role.Isdeleted = falseBitArray;
             if (accountType != 0)
             {
                 role.Accounttype= accountType;
@@ -735,5 +839,6 @@ namespace HalloDoc.Controllers
 
             TempData["message"] = "Role Created";
         }
+       
     }
 }
